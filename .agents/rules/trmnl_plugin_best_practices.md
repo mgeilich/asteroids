@@ -44,3 +44,21 @@ This rule outlines template styling, layout constraints, and deployment guidelin
 ## 6. JS Transform Reference Safety
 * **Issue**: If the transform backend receives empty data, an early exit check might execute. If configuration constants (like layout maps) are defined at the bottom of the function, referencing them earlier causes a Temporal Dead Zone (TDZ) ReferenceError.
 * **Guideline**: In `transform.js`, always declare all configuration objects and constants at the very top of the `run(input)` function, before any conditional logic or early exit checks are executed.
+
+## 7. SVG Text Wrapping
+* **Issue**: SVG `<tspan>` tags with `dy` relative offsets are fragile, renderer-dependent, and fail when `<text>` lacks absolute positioning.
+* **Guideline**: Avoid relative text offset elements. If text needs to wrap, pre-split the string in `transform.js` and calculate y-offsets there. Render them as two separate, stacked `<text>` elements in Liquid, each with absolute `x` and `y` attributes.
+
+## 8. Display Candidate Prioritization
+* **Issue**: On 1-bit displays, rendering unimportant or unnamed objects leads to clutter and obscures critical events (like hazardous encounters).
+* **Guideline**: 
+  * Filter out candidates that have no valid name: `.filter(c => c.name && c.name.trim() !== '')`.
+  * Prioritize hazardous encounters first in the sorting before distance:
+    ```javascript
+    .sort((a, b) => {
+      if (a.is_hazardous && !b.is_hazardous) return -1;
+      if (!a.is_hazardous && b.is_hazardous) return 1;
+      return a.miss_distance_ld - b.miss_distance_ld;
+    })
+    ```
+
