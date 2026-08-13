@@ -1,0 +1,104 @@
+<div class="layout layout--col gap--space-between p--1">
+  <div class="flex flex--col lg:flex--row portrait:flex--col landscape:flex--row gap--small w--full">
+    
+    <!-- Left Column: Tiny Radar (140x140px screen size) -->
+    <div class="flex flex--col items--center">
+      {% if radar_ticks_quadrant and radar_ticks_quadrant.size > 0 %}
+        <div class="radar-container">
+          <div class="text--black">
+            <svg width="140" height="140" viewBox="0 0 150 150" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <!-- Radar Grid boundaries -->
+              <g stroke="currentColor" fill="none">
+                <circle cx="75" cy="75" r="70" stroke-width="1" stroke-dasharray="1,4" />
+                <circle cx="75" cy="75" r="67" stroke-width="1.5" />
+                
+                <!-- Concentric rings -->
+                <g stroke-width="1" stroke-dasharray="2,5">
+                  <circle cx="75" cy="75" r="50" />
+                  <circle cx="75" cy="75" r="33" />
+                  <circle cx="75" cy="75" r="16" />
+                </g>
+                
+                <!-- Crosshairs -->
+                <line x1="75" y1="5" x2="75" y2="145" stroke-width="1" stroke-dasharray="2,4" />
+                <line x1="5" y1="75" x2="145" y2="75" stroke-width="1" stroke-dasharray="2,4" />
+              </g>
+              
+              <!-- Center Earth marker -->
+              <circle cx="75" cy="75" r="2.5" fill="currentColor" />
+              
+              <!-- Day Ticks (Scaled 70/190, no labels to prevent overlap) -->
+              <g stroke="currentColor" stroke-width="1">
+                {% for tick in radar_ticks_quadrant %}
+                  <line x1="{{ tick.x1 | default: 0 }}" y1="{{ tick.y1 | default: 0 }}" x2="{{ tick.x2 | default: 0 }}" y2="{{ tick.y2 | default: 0 }}" />
+                {% endfor %}
+              </g>
+              
+              <!-- Asteroids (Scaled 70/190, no labels) -->
+              {% if radar_asteroids_quadrant and radar_asteroids_quadrant.size > 0 %}
+                <g stroke="currentColor" stroke-width="1.5" fill="none">
+                  {% for ast in radar_asteroids_quadrant %}
+                    <circle cx="{{ ast.x | default: 0 }}" cy="{{ ast.y | default: 0 }}" r="{{ ast.r | default: 3 }}" {% if ast.is_hazardous %}fill="currentColor"{% endif %} />
+                  {% endfor %}
+                </g>
+              {% endif %}
+            </svg>
+          </div>
+        </div>
+      {% else %}
+        <div class="p--3 bg--gray-75 text--black rounded text--center label grow layout--center">
+          Scan in progress... No telemetry data available.
+        </div>
+      {% endif %}
+    </div>
+    
+    <!-- Right Column: Simplified Telemetry (240px wide) -->
+    <div class="flex flex--col gap--small grow layout--center-y">
+      {% if radar_ticks_quadrant and radar_ticks_quadrant.size > 0 %}
+        <!-- Title & Status Inline -->
+        <div class="flex flex--row layout--center-y gap--space-between w--full">
+          <div class="title text--bold text--xsmall lg:text--small">ASTEROIDS</div>
+          {% if system_status %}
+            {% if system_status contains "WARNING" %}
+              <span class="bg--black text--white px--1 rounded text--bold text--xxsmall">ALERT</span>
+            {% else %}
+              <span class="p--1 rounded bg--gray-70 text--black text--bold text--xxsmall">NOMINAL</span>
+            {% endif %}
+          {% endif %}
+        </div>
+        
+        <!-- Essential Metrics Stack -->
+        <div class="flex flex--col gap--small w--full">
+          <!-- Count & Distance Side-by-Side -->
+          <div class="flex flex--row gap--small w--full">
+            <div class="grow text--center bg--gray-75 text--black rounded p--1">
+              <div class="label text--xxsmall text--bold">COUNT</div>
+              <div class="value text--bold text--xsmall">{{ total_count | default: '—' }}</div>
+            </div>
+            <div class="grow text--center bg--gray-75 text--black rounded p--1">
+              <div class="label text--xxsmall text--bold">CLOSEST</div>
+              <div class="value text--bold text--xsmall">{{ closest_dist_ld | default: '—' }}</div>
+            </div>
+          </div>
+          
+          <!-- Closest Name Box -->
+          <div class="flex flex--row layout--center-y gap--space-between bg--gray-75 text--black rounded p--1 w--full">
+            <span class="label text--xxsmall">CLOSEST NAME</span>
+            <span class="value text--bold text--xsmall">{{ closest_name | default: '—' }}</span>
+          </div>
+        </div>
+      {% else %}
+        <div class="p--2 bg--gray-75 text--black rounded text--center label grow layout--center w--full">
+          Telemetry offline.
+        </div>
+      {% endif %}
+    </div>
+  </div>
+  
+  <!-- Footer Title Bar -->
+  <div class="title_bar">
+    <img class="image image-stroke" src="data:image/svg+xml;base64,{{ svg_logo | base64_encode }}" />
+    <span class="title">NEO Radar</span>
+    <span class="meta">{{ last_updated | default: '—' }}</span>
+  </div>
+</div>

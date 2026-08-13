@@ -1,0 +1,47 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Rounded dark background tile -->
+  <rect width="512" height="512" rx="96" fill="#111111" />
+  
+  <!-- Outer radar circle border -->
+  <circle cx="256" cy="256" r="210" stroke="#FFFFFF" stroke-width="8" opacity="0.9" />
+  <circle cx="256" cy="256" r="225" stroke="#FFFFFF" stroke-width="2" stroke-dasharray="4 8" opacity="0.4" />
+  
+  <!-- Concentric radar range rings -->
+  <circle cx="256" cy="256" r="160" stroke="#FFFFFF" stroke-width="4" stroke-dasharray="8 8" opacity="0.5" />
+  <circle cx="256" cy="256" r="110" stroke="#FFFFFF" stroke-width="4" stroke-dasharray="6 6" opacity="0.4" />
+  <circle cx="256" cy="256" r="60" stroke="#FFFFFF" stroke-width="4" stroke-dasharray="4 4" opacity="0.3" />
+
+  <!-- Radar crosshair axes -->
+  <line x1="256" y1="46" x2="256" y2="466" stroke="#FFFFFF" stroke-width="2" stroke-dasharray="4 8" opacity="0.3" />
+  <line x1="46" y1="256" x2="466" y2="256" stroke="#FFFFFF" stroke-width="2" stroke-dasharray="4 8" opacity="0.3" />
+  
+  <!-- Radar sweep line (active scanning beam) -->
+  <line x1="256" y1="256" x2="404" y2="108" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round" opacity="0.8" />
+  
+  <!-- Fading sweep gradient wedge -->
+  <path d="M256 256 L404 108 A210 210 0 0 0 338 62 Z" fill="url(#sweepGrad)" opacity="0.2" />
+
+  <!-- Earth (Center target) -->
+  <circle cx="256" cy="256" r="18" fill="#111111" stroke="#FFFFFF" stroke-width="6" />
+  <circle cx="256" cy="256" r="6" fill="#FFFFFF" />
+
+  <!-- Incoming Large Hazardous Asteroid (top-left) -->
+  <circle cx="160" cy="160" r="20" fill="#FFFFFF" />
+  <!-- Motion trail -->
+  <line x1="90" y1="90" x2="135" y2="135" stroke="#FFFFFF" stroke-width="4" stroke-dasharray="6 6" stroke-linecap="round" opacity="0.7" />
+  
+  <!-- Medium Asteroid (bottom-right) -->
+  <circle cx="370" cy="330" r="14" fill="none" stroke="#FFFFFF" stroke-width="5" />
+  <line x1="410" y1="370" x2="385" y2="345" stroke="#FFFFFF" stroke-width="3" stroke-dasharray="4 4" stroke-linecap="round" opacity="0.5" />
+
+  <!-- Small Asteroid (top-right) -->
+  <circle cx="360" cy="180" r="8" fill="#FFFFFF" opacity="0.9" />
+
+  <!-- Gradients definitions -->
+  <defs>
+    <radialGradient id="sweepGrad" cx="256" cy="256" r="210" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="1" />
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+</svg>
