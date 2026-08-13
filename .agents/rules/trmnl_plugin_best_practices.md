@@ -101,6 +101,15 @@ This rule outlines template styling, layout constraints, and deployment guidelin
 * **Issue**: Defining mock layout divs (e.g. `<div class="layout layout--col">`) in a shared partial (`shared.liquid`) will cause nesting errors when the file is prepended before the main layout file's `title_bar` rendering call.
 * **Guideline**: Never define root layout container elements inside partial helper files. Keep layout containers isolated to main screen templates.
 
+## 18. Include Tag for Custom Templates
+* **Issue**: Reusable template blocks defined inside shared partials (e.g. `{% template title_bar %}`) must be included using `{% include 'title_bar' %}` in TRMNL layout templates, as `render` expects separate standalone partial files.
+* **Guideline**: Use `{% include 'template_name' %}` when referencing block templates defined via `{% template template_name %}`.
+
+## 19. Variable Fallback Initialization
+* **Issue**: During template-only validation runs on empty mock contexts, variables referenced by child loop scopes (like `closest_list`) will cause compiler errors if they are not explicitly initialized.
+* **Guideline**: Always define and initialize array variables with fallback empty arrays in `shared.liquid` to prevent missing variable errors (e.g. `{% assign list = list | default: trmnl.data.list %}{% if list == nil %}{% assign list = "" | split: "," %}{% endif %}`).
+
+
 
 
 
