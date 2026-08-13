@@ -39,7 +39,8 @@ This rule outlines template styling, layout constraints, and deployment guidelin
 
 ## 5. CSS Utility Constraints
 * **Vertical Centering in Rows**: `layout--center-y` is only valid on column layout contexts (`flex--col`). For row layout contexts (`flex--row`), use `items--center` to center elements vertically.
-* **Nesting Simplification**: Avoid deep flex column nesting inside row wrappers. If splitting a layout 50/50, use the native `grid grid--cols-2` class on the container instead of manual `w--[50%]` sizing.
+* **Nesting Simplification**: Avoid deep flex column nesting inside row wrappers. If splitting a layout 50/50, use the native 12-column grid system (`grid grid--cols-12`) with explicit `col--span-6` splits instead of manual layout/column sizing classes.
+
 
 ## 6. JS Transform Reference Safety
 * **Issue**: If the transform backend receives empty data, an early exit check might execute. If configuration constants (like layout maps) are defined at the bottom of the function, referencing them earlier causes a Temporal Dead Zone (TDZ) ReferenceError.
@@ -79,11 +80,11 @@ This rule outlines template styling, layout constraints, and deployment guidelin
 * **Guideline**: To ensure distortion-free scaling on e-paper screens, always set `preserveAspectRatio="xMidYMid meet"` directly on all `<svg>` elements.
 
 ## 13. SVG Text Font-Sizing & Color Safety
-* **Issue**: SVG text nodes do not support HTML class font-sizing utilities (e.g. `class="text--small"`). Furthermore, inline HTML `style` attributes are completely banned on TRMNL elements.
+* **Issue**: SVG text nodes do not support HTML class font-sizing utilities (e.g. `class="text--small"`). Furthermore, inline HTML `style` attributes and custom CSS `<style>` blocks (even nested inside SVGs) are completely banned or flagged by the validator.
 * **Guideline**: 
-  * Nest a standard `<style>` block *inside* the `<svg>` tag itself (e.g. `<svg ...><style>.tick-label { font-size: 12px; fill: currentColor; }</style>...</svg>`).
-  * Group standard `<text>` elements together under `<g>` tags and reference the nested stylesheet class (e.g. `<g class="tick-label">`).
-  * Keep the total number of `font-size` style definitions in the stylesheets to 6 or fewer across all layout files to satisfy the local linter's property frequency limits.
+  * Style SVG text elements using standard SVG XML presentation attributes (e.g. `font-size="12px"`, `font-weight="bold"`, `fill="currentColor"`) rather than CSS classes or styles.
+  * These presentation attributes are fully inherited by descendant `<text>` nodes, so they can be set cleanly on parent `<g>` grouping containers (e.g. `<g font-size="12px" font-weight="bold" fill="currentColor">`).
+
 
 
 ## 14. Responsive Prefixing for Main Titles
