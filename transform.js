@@ -42,10 +42,6 @@ function run(input) {
     };
   }
 
-  // Handle case where input is from our Python Cloud Function
-  // If the Cloud Function already did the processing, we pass it through but calculate 4-way layout coordinates if not present
-  const has_neo_dict = input.near_earth_objects ? true : false;
-  
   const now = new Date();
   const now_ms = now.getTime();
   const end_ms = now_ms + 7 * 24 * 3600 * 1000;
@@ -53,37 +49,7 @@ function run(input) {
   let candidates = [];
   let total_count = 0;
   
-  if (has_neo_dict) {
-    const neo_dict = input.near_earth_objects;
-    for (const date_str in neo_dict) {
-      const asteroid_list = neo_dict[date_str];
-      for (const asteroid of asteroid_list) {
-        if (!asteroid.close_approach_data || asteroid.close_approach_data.length === 0) continue;
-        const approach = asteroid.close_approach_data[0];
-        const epoch = approach.epoch_date_close_approach;
-        if (!epoch) continue;
-        
-        if (epoch >= now_ms && epoch <= end_ms) {
-          total_count++;
-          const diam_min = asteroid.estimated_diameter.meters.estimated_diameter_min;
-          const diam_max = asteroid.estimated_diameter.meters.estimated_diameter_max;
-          const avg_diam = (diam_min + diam_max) / 2;
-          const miss_dist = parseFloat(approach.miss_distance.lunar);
-          const vel = parseFloat(approach.relative_velocity.kilometers_per_hour);
-          
-          candidates.push({
-            id: asteroid.id,
-            name: cleanAsteroidName(asteroid.name),
-            miss_distance_ld: miss_dist,
-            velocity_kph: vel,
-            avg_diameter: avg_diam,
-            is_hazardous: asteroid.is_potentially_hazardous_asteroid,
-            epoch: epoch
-          });
-        }
-      }
-    }
-  } else if (input.candidates) {
+  if (input.candidates) {
     candidates = input.candidates;
     total_count = input.total_count || candidates.length;
   } else if (input.radar_asteroids) {
