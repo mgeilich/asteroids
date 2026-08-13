@@ -3,7 +3,7 @@
     <div class="flex flex--col lg:flex--row portrait:flex--col landscape:flex--row gap--medium w--full grow p--1">
     
     <!-- Left Column: Compact Radar (220x160px) -->
-    <div class="flex flex--col items--center">
+    <div class="flex flex--col layout--center">
       {% if radar_ticks_half_horizontal and radar_ticks_half_horizontal.size > 0 %}
         <svg width="220" height="160" viewBox="0 0 220 160" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg" class="text--black">
               <!-- Radar Grid boundaries -->
@@ -89,11 +89,11 @@
         
         <!-- Metrics row -->
         <div class="flex flex--row gap--small mb--1">
-          <div class="grow text--center bg--gray-75 text--black rounded p--1 flex flex--row gap--small items--center">
+          <div class="grow text--center bg--gray-75 text--black rounded p--1 flex flex--row gap--small layout--center">
             <span class="label text--xsmall">COUNT:</span>
             <span class="value text--bold text--xsmall">{{ total_count | default: '—' }}</span>
           </div>
-          <div class="grow text--center bg--gray-75 text--black rounded p--1 flex flex--row gap--small items--center">
+          <div class="grow text--center bg--gray-75 text--black rounded p--1 flex flex--row gap--small layout--center">
             <span class="label text--xsmall">CLOSEST:</span>
             <span class="value text--bold text--xsmall">{{ closest_dist_ld | default: '—' }}</span>
           </div>
@@ -105,7 +105,7 @@
             {% assign list_count = 0 %}
             {% for item in closest_list %}
               {% if list_count < 1 %}
-                <div class="flex flex--row items--center gap--small p--2 rounded 1bit:bg--white 4bit:bg--gray-75 text--black grow">
+                <div class="flex flex--row layout--center gap--small p--2 rounded 1bit:bg--white 4bit:bg--gray-75 text--black grow">
                   <div class="grow">
                     <div class="text--bold text--medium">{{ item.name | default: '—' }}</div>
                     <div class="label text--small">{{ item.time_str | default: '—' }} &bull; Size: {{ item.size_m | default: '—' }}</div>

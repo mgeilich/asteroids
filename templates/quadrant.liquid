@@ -3,7 +3,7 @@
     <div class="flex flex--col lg:flex--row portrait:flex--col landscape:flex--row gap--small w--full grow p--1">
     
     <!-- Left Column: Tiny Radar (140x140px screen size) -->
-    <div class="flex flex--col items--center">
+    <div class="flex flex--col layout--center">
       {% if radar_ticks_quadrant and radar_ticks_quadrant.size > 0 %}
         <svg width="140" height="140" viewBox="0 0 150 150" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg" class="text--black">
               <!-- Radar Grid boundaries -->
@@ -53,7 +53,7 @@
     <div class="flex flex--col gap--small grow layout--center-y">
       {% if radar_ticks_quadrant and radar_ticks_quadrant.size > 0 %}
         <!-- Title & Status Inline -->
-        <div class="flex flex--row items--center gap--space-between w--full">
+        <div class="flex flex--row layout--center gap--space-between w--full">
           <div class="title text--bold text--xsmall lg:text--small">ASTEROIDS</div>
           {% if system_status %}
             {% if system_status contains "WARNING" %}
@@ -79,7 +79,7 @@
           </div>
           
           <!-- Closest Name Box -->
-          <div class="flex flex--row items--center gap--space-between bg--gray-75 text--black rounded p--1 w--full">
+          <div class="flex flex--row layout--center gap--space-between bg--gray-75 text--black rounded p--1 w--full">
             <span class="label text--xxsmall">CLOSEST NAME</span>
             <span class="value text--bold text--xsmall">{{ closest_name | default: '—' }}</span>
           </div>

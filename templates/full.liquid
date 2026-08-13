@@ -3,7 +3,7 @@
     <div class="grid grid--cols-2 gap--large p--2 w--full">
     
     <!-- Left Column: Radar (450px wide) -->
-    <div class="flex flex--col items--center">
+    <div class="flex flex--col layout--center">
       {% if radar_ticks_full and radar_ticks_full.size > 0 %}
         <svg width="440" height="420" viewBox="0 0 440 420" fill="none" xmlns="http://www.w3.org/2000/svg" class="text--black">
               <!-- Radar Grid Boundaries and Rings -->
@@ -135,7 +135,7 @@
             {% assign list_count = 0 %}
             {% for item in closest_list %}
               {% if list_count < 2 %}
-                <div class="flex flex--row items--center gap--small p--2 rounded 1bit:bg--white 4bit:bg--gray-75 text--black">
+                <div class="flex flex--row layout--center gap--small p--2 rounded 1bit:bg--white 4bit:bg--gray-75 text--black">
                   <div class="grow">
                     <div class="text--bold text--medium">{{ item.name | default: '—' }}</div>
                     <div class="label text--small">{{ item.time_str | default: '—' }} &bull; Size: {{ item.size_m | default: '—' }}</div>
