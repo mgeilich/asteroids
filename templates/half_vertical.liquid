@@ -42,7 +42,7 @@
               <g fill="currentColor">
                 {% for tick in radar_ticks_half_vertical %}
                   {% if tick and tick.label_x and tick.label_y %}
-                    <text x="{{ tick.label_x }}" y="{{ tick.label_y }}" class="text--small" text-anchor="{{ tick.anchor | default: 'middle' }}" fill="currentColor">
+                    <text x="{{ tick.label_x }}" y="{{ tick.label_y }}" class="tick-label-regular" text-anchor="{{ tick.anchor | default: 'middle' }}">
                       {{- tick.label | default: '—' -}}
                     </text>
                   {% endif %}
@@ -63,10 +63,10 @@
                 {% for ast in radar_asteroids_half_vertical %}
                   {% if ast and ast.label_x1 and ast.label_y1 %}
                     {% if ast.name_part_2 %}
-                      <text x="{{ ast.label_x1 }}" y="{{ ast.label_y1 }}" class="text--xsmall text--bold" text-anchor="{{ ast.anchor | default: 'start' }}" fill="currentColor">{{ ast.name_part_1 }}</text>
-                      <text x="{{ ast.label_x2 }}" y="{{ ast.label_y2 }}" class="text--xsmall text--bold" text-anchor="{{ ast.anchor | default: 'start' }}" fill="currentColor">{{ ast.name_part_2 }}</text>
+                      <text x="{{ ast.label_x1 }}" y="{{ ast.label_y1 }}" class="ast-label" text-anchor="{{ ast.anchor | default: 'start' }}">{{ ast.name_part_1 }}</text>
+                      <text x="{{ ast.label_x2 }}" y="{{ ast.label_y2 }}" class="ast-label" text-anchor="{{ ast.anchor | default: 'start' }}">{{ ast.name_part_2 }}</text>
                     {% else %}
-                      <text x="{{ ast.label_x1 }}" y="{{ ast.label_y1 }}" class="text--xsmall text--bold" text-anchor="{{ ast.anchor | default: 'start' }}" fill="currentColor">{{ ast.name_part_1 }}</text>
+                      <text x="{{ ast.label_x1 }}" y="{{ ast.label_y1 }}" class="ast-label" text-anchor="{{ ast.anchor | default: 'start' }}">{{ ast.name_part_1 }}</text>
                     {% endif %}
                   {% endif %}
                 {% endfor %}
