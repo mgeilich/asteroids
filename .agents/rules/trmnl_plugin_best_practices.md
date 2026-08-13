@@ -62,3 +62,12 @@ This rule outlines template styling, layout constraints, and deployment guidelin
     })
     ```
 
+## 9. Custom Server Proxies & Static Analysis
+* **Issue**: The TRMNL online validator performs static code analysis on `transform.js`. If it detects references to a target API response format (e.g. NASA's `near_earth_objects`), it will assume a direct integration is intended and require corresponding credentials or a direct polling URL.
+* **Guideline**: When utilizing a custom proxy server (such as a Firebase Cloud Function) that handles authentication and caching automatically, completely remove all direct target API parsing paths and keywords (like `near_earth_objects`) from `transform.js`. Let `transform.js` only expect the proxy server's returned structure.
+
+## 10. Custom Fields Configuration
+* **Issue**: Adding author/creator metadata fields inside the `custom_fields` section in `settings.yml` causes the platform to render them as empty input form fields on the plugin's configuration settings page.
+* **Guideline**: Empty the `custom_fields` array (`custom_fields: []`) if no configuration parameters are required from the end-user. Do not place static metadata (like `author_bio` or documentation links) inside `custom_fields`.
+
+

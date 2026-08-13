@@ -30,7 +30,13 @@ oauth_token_field_name: ''
 oauth_expiry_field_name: ''
 oauth_expiry_strategy: ''
 oauth_fixed_expiry_ms: ''
-custom_fields: []
+custom_fields:
+- keyname: author_bio
+  field_type: author_bio
+  name: Support & Creator Info
+  description: Near-earth objects represented by polar coordinates.  Angle represents time with closest being @ 12:00 (NOW).  Distance from center represents distance from Earth.
+  email_address: michaelbgeilich@gmail.com
+  category: discovery,education
 name: Asteroids
 description: Asteroids and Near-Earth Objects
 refresh_interval: 60
