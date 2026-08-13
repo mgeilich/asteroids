@@ -70,4 +70,13 @@ This rule outlines template styling, layout constraints, and deployment guidelin
 * **Issue**: Adding author/creator metadata fields inside the `custom_fields` section in `settings.yml` causes the platform to render them as empty input form fields on the plugin's configuration settings page.
 * **Guideline**: Empty the `custom_fields` array (`custom_fields: []`) if no configuration parameters are required from the end-user. Do not place static metadata (like `author_bio` or documentation links) inside `custom_fields`.
 
+## 11. HTML Wrapper Divs in SVGs
+* **Issue**: Redundant wrapper divs (like `.radar-container` or `.text--black`) surrounding an `<svg>` element can introduce nesting bugs and cause platform template parsers to flag unclosed div errors during mock evaluation.
+* **Guideline**: Avoid nested wrapper divs around SVGs. Instead, apply styling (like text colors) directly to the `<svg>` element (e.g. `class="text--black"`) and set the dimensions directly on the `<svg>`.
+
+## 12. SVG Scaling and Mismatches
+* **Issue**: A mismatch between the SVG `viewBox` coordinates (e.g., `0 0 150 150`) and the container `width`/`height` attributes (e.g., `140`) can cause clipping or pixel distortion on e-ink displays.
+* **Guideline**: To ensure distortion-free scaling on e-paper screens, always set `preserveAspectRatio="xMidYMid meet"` directly on all `<svg>` elements.
+
+
 
