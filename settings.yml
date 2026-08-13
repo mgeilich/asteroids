@@ -1,4 +1,4 @@
-name: "Planetary Defense Radar"
+name: "Asteroids"
 strategy: "polling"
 refresh_interval: 60
 polling_url: "https://neo-radar-t4xw3htxya-uc.a.run.app"
