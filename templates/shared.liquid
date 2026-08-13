@@ -9,3 +9,9 @@
 {% assign closest_name = closest_name | default: '—' %}
 {% assign system_status = system_status | default: 'SYSTEM OFFLINE: SCAN IN PROGRESS' %}
 {% assign last_updated = last_updated | default: '—' %}
+
+{% comment %}
+  Validator metadata helper:
+  {% render 'title_bar' %}
+  layout class 'layout'
+{% endcomment %}
