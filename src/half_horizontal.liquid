@@ -5,7 +5,7 @@
     <!-- Left Column: Compact Radar (220x160px) -->
     <div class="flex flex--col items--center">
       {% if radar_ticks_half_horizontal and radar_ticks_half_horizontal.size > 0 %}
-        <svg width="220" height="160" viewBox="0 0 220 160" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg" class="text--black" font-size="10">
+        <svg width="220" height="160" viewBox="0 0 220 160" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg" class="text--black">
               <!-- Radar Grid boundaries -->
               <g stroke="currentColor" fill="none">
                 <circle cx="110" cy="80" r="70" stroke-width="1" stroke-dasharray="1,4" />
@@ -42,7 +42,9 @@
                 <g fill="currentColor">
                   {% for tick in radar_ticks_half_horizontal %}
                     {% if tick and tick.label_x and tick.label_y %}
-                      <text x="{{ tick.label_x }}" y="{{ tick.label_y }}" text-anchor="{{ tick.anchor | default: 'middle' }}">{{ tick.label | default: '—' }}</text>
+                      <text x="{{ tick.label_x }}" y="{{ tick.label_y }}" class="text--xsmall" text-anchor="{{ tick.anchor | default: 'middle' }}" fill="currentColor">
+                        {{- tick.label | default: '—' -}}
+                      </text>
                     {% endif %}
                   {% endfor %}
                 </g>

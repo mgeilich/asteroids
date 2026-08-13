@@ -5,7 +5,7 @@
     <!-- Left Column: Radar (450px wide) -->
     <div class="flex flex--col items--center">
       {% if radar_ticks_full and radar_ticks_full.size > 0 %}
-        <svg width="440" height="420" viewBox="0 0 440 420" fill="none" xmlns="http://www.w3.org/2000/svg" class="text--black" font-size="12">
+        <svg width="440" height="420" viewBox="0 0 440 420" fill="none" xmlns="http://www.w3.org/2000/svg" class="text--black">
               <!-- Radar Grid Boundaries and Rings -->
               <g stroke="currentColor" fill="none">
                 <!-- Outer tick border and radar boundary -->
@@ -28,17 +28,17 @@
               <circle cx="220" cy="220" r="5" fill="currentColor" />
               
               <!-- Distance Labels along horizontal axis -->
-              <g fill="currentColor" font-weight="bold">
-                <text x="270" y="215" text-anchor="middle">10 LD</text>
-                <text x="320" y="215" text-anchor="middle">20 LD</text>
-                <text x="370" y="215" text-anchor="middle">30 LD</text>
-                <text x="415" y="215" text-anchor="end">40 LD</text>
+              <g fill="currentColor">
+                <text x="270" y="215" class="text--small text--bold" text-anchor="middle" fill="currentColor">10 LD</text>
+                <text x="320" y="215" class="text--small text--bold" text-anchor="middle" fill="currentColor">20 LD</text>
+                <text x="370" y="215" class="text--small text--bold" text-anchor="middle" fill="currentColor">30 LD</text>
+                <text x="415" y="215" class="text--small text--bold" text-anchor="end" fill="currentColor">40 LD</text>
               </g>
               
               <!-- Center and Time dial labels -->
-              <g fill="currentColor" font-weight="bold">
-                <text x="220" y="234" text-anchor="middle">EARTH</text>
-                <text x="220" y="15" text-anchor="middle">NOW (T-0)</text>
+              <g fill="currentColor">
+                <text x="220" y="234" class="text--small text--bold" text-anchor="middle" fill="currentColor">EARTH</text>
+                <text x="220" y="15" class="text--small text--bold" text-anchor="middle" fill="currentColor">NOW (T-0)</text>
               </g>
               
               <!-- Day Ticks (calculated by backend) -->
@@ -57,7 +57,9 @@
                 <g fill="currentColor">
                   {% for tick in radar_ticks_full %}
                     {% if tick and tick.label_x and tick.label_y %}
-                      <text x="{{ tick.label_x }}" y="{{ tick.label_y }}" text-anchor="{{ tick.anchor | default: 'middle' }}">{{ tick.label | default: '—' }}</text>
+                      <text x="{{ tick.label_x }}" y="{{ tick.label_y }}" class="text--small" text-anchor="{{ tick.anchor | default: 'middle' }}" fill="currentColor">
+                        {{- tick.label | default: '—' -}}
+                      </text>
                     {% endif %}
                   {% endfor %}
                 </g>
@@ -76,10 +78,10 @@
                   {% for ast in radar_asteroids_full %}
                     {% if ast and ast.label_x1 and ast.label_y1 %}
                       {% if ast.name_part_2 %}
-                        <text x="{{ ast.label_x1 }}" y="{{ ast.label_y1 }}" text-anchor="{{ ast.anchor | default: 'start' }}">{{ ast.name_part_1 }}</text>
-                        <text x="{{ ast.label_x2 }}" y="{{ ast.label_y2 }}" text-anchor="{{ ast.anchor | default: 'start' }}">{{ ast.name_part_2 }}</text>
+                        <text x="{{ ast.label_x1 }}" y="{{ ast.label_y1 }}" class="text--xsmall text--bold" text-anchor="{{ ast.anchor | default: 'start' }}" fill="currentColor">{{ ast.name_part_1 }}</text>
+                        <text x="{{ ast.label_x2 }}" y="{{ ast.label_y2 }}" class="text--xsmall text--bold" text-anchor="{{ ast.anchor | default: 'start' }}" fill="currentColor">{{ ast.name_part_2 }}</text>
                       {% else %}
-                        <text x="{{ ast.label_x1 }}" y="{{ ast.label_y1 }}" text-anchor="{{ ast.anchor | default: 'start' }}">{{ ast.name_part_1 }}</text>
+                        <text x="{{ ast.label_x1 }}" y="{{ ast.label_y1 }}" class="text--xsmall text--bold" text-anchor="{{ ast.anchor | default: 'start' }}" fill="currentColor">{{ ast.name_part_1 }}</text>
                       {% endif %}
                     {% endif %}
                   {% endfor %}
@@ -97,7 +99,7 @@
     <div class="flex flex--col gap--medium">
       {% if radar_ticks_full and radar_ticks_full.size > 0 %}
         <!-- Header -->
-        <div class="title text--bold lg:text--large">PLANETARY DEFENSE</div>
+        <div class="title text--bold text--xsmall lg:text--large portrait:text--xsmall">PLANETARY DEFENSE</div>
         <div class="label mb--1">NEO RADAR MONITOR</div>
         
         <!-- System Status Banner -->
