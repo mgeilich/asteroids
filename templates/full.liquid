@@ -46,38 +46,50 @@
               </g>
               
               <!-- Day Ticks (calculated by backend) -->
-              <g stroke="currentColor" stroke-width="1.5">
-                {% for tick in radar_ticks_full %}
-                  <line x1="{{ tick.x1 | default: 0 }}" y1="{{ tick.y1 | default: 0 }}" x2="{{ tick.x2 | default: 0 }}" y2="{{ tick.y2 | default: 0 }}" />
-                {% endfor %}
-              </g>
+              {% if radar_ticks_full %}
+                <g stroke="currentColor" stroke-width="1.5">
+                  {% for tick in radar_ticks_full %}
+                    {% if tick and tick.x1 and tick.y1 and tick.x2 and tick.y2 %}
+                      <line x1="{{ tick.x1 }}" y1="{{ tick.y1 }}" x2="{{ tick.x2 }}" y2="{{ tick.y2 }}" />
+                    {% endif %}
+                  {% endfor %}
+                </g>
+              {% endif %}
               
               <!-- Day Ticks Labels -->
-              <g fill="currentColor">
-                {% for tick in radar_ticks_full %}
-                  <text x="{{ tick.label_x | default: 0 }}" y="{{ tick.label_y | default: 0 }}" text-anchor="{{ tick.anchor | default: 'middle' }}">{{ tick.label | default: '—' }}</text>
-                {% endfor %}
-              </g>
+              {% if radar_ticks_full %}
+                <g fill="currentColor">
+                  {% for tick in radar_ticks_full %}
+                    {% if tick and tick.label_x and tick.label_y %}
+                      <text x="{{ tick.label_x }}" y="{{ tick.label_y }}" text-anchor="{{ tick.anchor | default: 'middle' }}">{{ tick.label | default: '—' }}</text>
+                    {% endif %}
+                  {% endfor %}
+                </g>
+              {% endif %}
               
               <!-- Asteroids (calculated by backend) -->
               {% if radar_asteroids_full and radar_asteroids_full.size > 0 %}
                 <g stroke="currentColor" stroke-width="1.5" fill="none">
                   {% for ast in radar_asteroids_full %}
-                    <circle cx="{{ ast.x | default: 0 }}" cy="{{ ast.y | default: 0 }}" r="{{ ast.r | default: 3 }}" {% if ast.is_hazardous %}fill="currentColor"{% endif %} />
+                    {% if ast and ast.x and ast.y %}
+                      <circle cx="{{ ast.x }}" cy="{{ ast.y }}" r="{{ ast.r | default: 3 }}" {% if ast.is_hazardous %}fill="currentColor"{% endif %} />
+                    {% endif %}
                   {% endfor %}
                 </g>
-                  <g fill="currentColor">
-                    {% for ast in radar_asteroids_full %}
+                <g fill="currentColor">
+                  {% for ast in radar_asteroids_full %}
+                    {% if ast and ast.label_x and ast.label_y %}
                       {% if ast.name_parts and ast.name_parts.size > 1 %}
                         <text text-anchor="{{ ast.anchor | default: 'start' }}">
-                          <tspan x="{{ ast.label_x | default: 0 }}" y="{{ ast.label_y | default: 0 }}" dy="-3">{{ ast.name_parts[0] }}</tspan>
-                          <tspan x="{{ ast.label_x | default: 0 }}" y="{{ ast.label_y | default: 0 }}" dy="7">{{ ast.name_parts[1] }}</tspan>
+                          <tspan x="{{ ast.label_x }}" y="{{ ast.label_y }}" dy="-3">{{ ast.name_parts[0] }}</tspan>
+                          <tspan x="{{ ast.label_x }}" y="{{ ast.label_y }}" dy="7">{{ ast.name_parts[1] }}</tspan>
                         </text>
                       {% else %}
-                        <text x="{{ ast.label_x | default: 0 }}" y="{{ ast.label_y | default: 0 }}" text-anchor="{{ ast.anchor | default: 'start' }}">{{ ast.name | default: '—' }}</text>
+                        <text x="{{ ast.label_x }}" y="{{ ast.label_y }}" text-anchor="{{ ast.anchor | default: 'start' }}">{{ ast.name | default: '—' }}</text>
                       {% endif %}
-                    {% endfor %}
-                  </g>
+                    {% endif %}
+                  {% endfor %}
+                </g>
               {% endif %}
             </svg>
           </div>

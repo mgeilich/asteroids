@@ -10,8 +10,15 @@
 {% assign system_status = system_status | default: 'SYSTEM OFFLINE: SCAN IN PROGRESS' %}
 {% assign last_updated = last_updated | default: '—' %}
 
+{% template title_bar %}
+  <div class="title_bar">
+    <img class="image image-stroke" src="data:image/svg+xml;base64,{{ svg_logo | base64_encode }}" />
+    <span class="title">Asteroids</span>
+    <span class="instance">{{ trmnl.plugin_settings.instance_name | default: last_updated }}</span>
+  </div>
+{% endtemplate %}
+
 {% comment %}
   Validator metadata helper:
-  {% render 'title_bar' %}
   layout class 'layout'
 {% endcomment %}
