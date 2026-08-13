@@ -3,7 +3,7 @@
     <div class="flex flex--col portrait:flex--col landscape:flex--row lg:flex--row gap--space-between p--1 grow w--full">
   
   <!-- Radar Face (380x350 px) -->
-  <div class="flex flex--col layout--center">
+  <div class="flex flex--col layout--center-x">
     {% if radar_ticks_half_vertical and radar_ticks_half_vertical.size > 0 %}
       <svg width="380" height="350" viewBox="0 0 380 350" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg" class="text--black">
             <!-- Radar Grid boundaries -->
@@ -39,7 +39,7 @@
             
             <!-- Day Ticks Labels -->
             {% if radar_ticks_half_vertical %}
-              <g font-size="12px" fill="currentColor">
+              <g fill="currentColor">
                 {% for tick in radar_ticks_half_vertical %}
                   {% if tick and tick.label_x and tick.label_y %}
                     <text x="{{ tick.label_x }}" y="{{ tick.label_y }}" text-anchor="{{ tick.anchor | default: 'middle' }}">
@@ -59,7 +59,7 @@
                   {% endif %}
                 {% endfor %}
               </g>
-              <g font-size="10px" font-weight="bold" fill="currentColor">
+              <g font-weight="bold" fill="currentColor">
                 {% for ast in radar_asteroids_half_vertical %}
                   {% if ast and ast.label_x1 and ast.label_y1 %}
                     {% if ast.name_part_2 %}
@@ -74,14 +74,14 @@
             {% endif %}
           </svg>
     {% else %}
-      <div class="p--4 bg--gray-75 text--black rounded text--center label grow layout--center">
+      <div class="p--4 bg--gray-75 text--black rounded text--center label grow flex layout--center-x layout--center-y">
         Scan in progress... No telemetry data available.
       </div>
     {% endif %}
   </div>
   
   <!-- Bottom Telemetry Banner -->
-  <div class="flex flex--row layout--center gap--space-between p--2 mb--1 w--full landscape:w--auto lg:w--auto">
+  <div class="flex flex--row layout--center-y gap--space-between p--2 mb--1 w--full landscape:w--auto lg:w--auto">
     {% if radar_ticks_half_vertical and radar_ticks_half_vertical.size > 0 %}
       <div class="flex flex--col">
         <div class="title text--bold text--small lg:text--medium">ASTEROIDS</div>
@@ -102,7 +102,7 @@
         <span class="value text--bold text--small">{{ closest_dist_ld | default: '—' }}</span>
       </div>
     {% else %}
-      <div class="p--2 bg--gray-75 text--black rounded text--center label grow layout--center w--full">
+      <div class="p--2 bg--gray-75 text--black rounded text--center label grow flex layout--center-x layout--center-y w--full">
         Telemetry offline. Checking for orbital tracking updates...
       </div>
     {% endif %}

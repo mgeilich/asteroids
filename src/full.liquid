@@ -3,7 +3,7 @@
     <div class="grid grid--cols-12 gap--large p--2 w--full">
     
     <!-- Left Column: Radar (450px wide) -->
-    <div class="col--span-6 flex flex--col layout--center">
+    <div class="col--span-6 flex flex--col layout--center-x">
       {% if radar_ticks_full and radar_ticks_full.size > 0 %}
         <svg width="350" height="330" viewBox="0 0 440 420" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg" class="text--black">
               <!-- Radar Grid Boundaries and Rings -->
@@ -28,7 +28,7 @@
               <circle cx="220" cy="220" r="5" fill="currentColor" />
               
               <!-- Distance, Center, and Time Labels -->
-              <g font-size="12px" font-weight="bold" fill="currentColor">
+              <g font-weight="bold" fill="currentColor">
                 <text x="270" y="215" text-anchor="middle">10 LD</text>
                 <text x="320" y="215" text-anchor="middle">20 LD</text>
                 <text x="370" y="215" text-anchor="middle">30 LD</text>
@@ -50,7 +50,7 @@
               
               <!-- Day Ticks Labels -->
               {% if radar_ticks_full %}
-                <g font-size="12px" fill="currentColor">
+                <g fill="currentColor">
                   {% for tick in radar_ticks_full %}
                     {% if tick and tick.label_x and tick.label_y %}
                       <text x="{{ tick.label_x }}" y="{{ tick.label_y }}" text-anchor="{{ tick.anchor | default: 'middle' }}">
@@ -70,7 +70,7 @@
                     {% endif %}
                   {% endfor %}
                 </g>
-                <g font-size="10px" font-weight="bold" fill="currentColor">
+                <g font-weight="bold" fill="currentColor">
                   {% for ast in radar_asteroids_full %}
                     {% if ast and ast.label_x1 and ast.label_y1 %}
                       {% if ast.name_part_2 %}
@@ -85,7 +85,7 @@
               {% endif %}
             </svg>
       {% else %}
-        <div class="p--4 bg--gray-75 text--black rounded text--center label grow layout--center">
+        <div class="p--4 bg--gray-75 text--black rounded text--center label grow flex layout--center-x layout--center-y">
           Scan in progress... No telemetry data available.
         </div>
       {% endif %}
@@ -131,7 +131,7 @@
             {% assign list_count = 0 %}
             {% for item in closest_list %}
               {% if list_count < 2 %}
-                <div class="flex flex--row layout--center gap--small p--2 rounded 1bit:bg--white 4bit:bg--gray-75 text--black">
+                <div class="flex flex--row layout--center-y gap--small p--2 rounded 1bit:bg--white 4bit:bg--gray-75 text--black">
                   <div class="grow">
                     <div class="text--bold text--medium">{{ item.name | default: '—' }}</div>
                     <div class="label text--small">{{ item.time_str | default: '—' }} &bull; Size: {{ item.size_m | default: '—' }}</div>
@@ -155,7 +155,7 @@
           {% endunless %}
         </div>
       {% else %}
-        <div class="p--4 bg--gray-75 text--black rounded text--center label grow layout--center">
+        <div class="p--4 bg--gray-75 text--black rounded text--center label grow flex layout--center-x layout--center-y">
           Radar scan offline. System checking for telemetry updates...
         </div>
       {% endif %}
