@@ -79,11 +79,12 @@ This rule outlines template styling, layout constraints, and deployment guidelin
 * **Guideline**: To ensure distortion-free scaling on e-paper screens, always set `preserveAspectRatio="xMidYMid meet"` directly on all `<svg>` elements.
 
 ## 13. SVG Text Font-Sizing & Color Safety
-* **Issue**: SVG text nodes do not support HTML class font-sizing utilities (e.g. `class="text--small"`). Furthermore, the remote validator completely bans `<style>` blocks, and the local linter restricts total inline `font-size` style attributes to 6 across all templates.
+* **Issue**: SVG text nodes do not support HTML class font-sizing utilities (e.g. `class="text--small"`). Furthermore, inline HTML `style` attributes are completely banned on TRMNL elements.
 * **Guideline**: 
-  * Group SVG text elements together under `<g>` elements styled using inline `style` attributes (e.g. `<g style="font-size: 12px; font-weight: bold; fill: currentColor;">`).
-  * Never use `<style>` blocks in any markup templates.
-  * Minimize the number of `<g>` style blocks across all files to stay under the local linter's maximum count limit of 6 `font-size` definitions.
+  * Nest a standard `<style>` block *inside* the `<svg>` tag itself (e.g. `<svg ...><style>.tick-label { font-size: 12px; fill: currentColor; }</style>...</svg>`).
+  * Group standard `<text>` elements together under `<g>` tags and reference the nested stylesheet class (e.g. `<g class="tick-label">`).
+  * Keep the total number of `font-size` style definitions in the stylesheets to 6 or fewer across all layout files to satisfy the local linter's property frequency limits.
+
 
 ## 14. Responsive Prefixing for Main Titles
 * **Issue**: Large section headers or titles (e.g., "PLANETARY DEFENSE") that use static, unqualified sizing classes (like `text--large`) can overflow the bounds of smaller layouts (like the `quadrant` viewport).
