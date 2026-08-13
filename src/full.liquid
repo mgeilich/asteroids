@@ -76,14 +76,12 @@
                 </g>
                 <g fill="currentColor">
                   {% for ast in radar_asteroids_full %}
-                    {% if ast and ast.label_x and ast.label_y %}
-                      {% if ast.name_parts and ast.name_parts.size > 1 %}
-                        <text text-anchor="{{ ast.anchor | default: 'start' }}">
-                          <tspan x="{{ ast.label_x }}" y="{{ ast.label_y }}" dy="-3">{{ ast.name_parts[0] }}</tspan>
-                          <tspan x="{{ ast.label_x }}" y="{{ ast.label_y }}" dy="7">{{ ast.name_parts[1] }}</tspan>
-                        </text>
+                    {% if ast and ast.label_x1 and ast.label_y1 %}
+                      {% if ast.name_part_2 %}
+                        <text x="{{ ast.label_x1 }}" y="{{ ast.label_y1 }}" text-anchor="{{ ast.anchor | default: 'start' }}">{{ ast.name_part_1 }}</text>
+                        <text x="{{ ast.label_x2 }}" y="{{ ast.label_y2 }}" text-anchor="{{ ast.anchor | default: 'start' }}">{{ ast.name_part_2 }}</text>
                       {% else %}
-                        <text x="{{ ast.label_x }}" y="{{ ast.label_y }}" text-anchor="{{ ast.anchor | default: 'start' }}">{{ ast.name | default: '—' }}</text>
+                        <text x="{{ ast.label_x1 }}" y="{{ ast.label_y1 }}" text-anchor="{{ ast.anchor | default: 'start' }}">{{ ast.name_part_1 }}</text>
                       {% endif %}
                     {% endif %}
                   {% endfor %}

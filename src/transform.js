@@ -226,8 +226,12 @@ function run(input) {
   // Helper to compute asteroids
   function computeAsteroids(layout) {
     const radar_candidates = candidates
-      .filter(c => c.miss_distance_ld <= layout.D_max)
-      .sort((a, b) => a.miss_distance_ld - b.miss_distance_ld)
+      .filter(c => c.miss_distance_ld <= layout.D_max && c.name && c.name.trim() !== '')
+      .sort((a, b) => {
+        if (a.is_hazardous && !b.is_hazardous) return -1;
+        if (!a.is_hazardous && b.is_hazardous) return 1;
+        return a.miss_distance_ld - b.miss_distance_ld;
+      })
       .slice(0, 10);
       
     return radar_candidates.map(item => {
@@ -260,13 +264,35 @@ function run(input) {
       }
       const label_y = y + 3;
       
+      const parts = item.name.split(" ");
+      let name_part_1 = "";
+      let name_part_2 = "";
+      let label_x1 = label_x;
+      let label_y1 = label_y;
+      let label_x2 = null;
+      let label_y2 = null;
+
+      if (parts.length > 1) {
+        name_part_1 = parts[0];
+        name_part_2 = parts.slice(1).join(" ");
+        label_y1 = label_y - 5;
+        label_y2 = label_y + 7;
+        label_x2 = label_x;
+      } else {
+        name_part_1 = item.name;
+      }
+      
       return {
         name: item.name,
+        name_part_1: name_part_1,
+        name_part_2: name_part_2 ? name_part_2 : null,
         x: parseFloat(x.toFixed(1)),
         y: parseFloat(y.toFixed(1)),
         r: r,
-        label_x: parseFloat(label_x.toFixed(1)),
-        label_y: parseFloat(label_y.toFixed(1)),
+        label_x1: parseFloat(label_x1.toFixed(1)),
+        label_y1: parseFloat(label_y1.toFixed(1)),
+        label_x2: label_x2 ? parseFloat(label_x2.toFixed(1)) : null,
+        label_y2: label_y2 ? parseFloat(label_y2.toFixed(1)) : null,
         anchor: anchor,
         is_hazardous: item.is_hazardous
       };
