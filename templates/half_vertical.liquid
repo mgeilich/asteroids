@@ -6,6 +6,9 @@
       <div class="radar-container">
         <div class="text--black">
           <svg width="380" height="350" viewBox="0 0 380 350" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <style>
+              .radar-label { font-size: 12px; }
+            </style>
             <!-- Radar Grid boundaries -->
             <g stroke="currentColor" fill="none">
               <circle cx="190" cy="175" r="155" stroke-width="1" stroke-dasharray="1,5" />
@@ -36,7 +39,7 @@
             <!-- Day Ticks Labels -->
             <g fill="currentColor">
               {% for tick in radar_ticks_half_vertical %}
-                <text x="{{ tick.label_x | default: 0 }}" y="{{ tick.label_y | default: 0 }}" text-anchor="{{ tick.anchor | default: 'middle' }}" class="label label--xsmall">{{ tick.label | default: '—' }}</text>
+                <text x="{{ tick.label_x | default: 0 }}" y="{{ tick.label_y | default: 0 }}" text-anchor="{{ tick.anchor | default: 'middle' }}" class="radar-label">{{ tick.label | default: '—' }}</text>
               {% endfor %}
             </g>
             
@@ -50,12 +53,12 @@
               <g fill="currentColor">
                 {% for ast in radar_asteroids_half_vertical %}
                   {% if ast.name_parts and ast.name_parts.size > 1 %}
-                    <text class="label label--xsmall" text-anchor="{{ ast.anchor | default: 'start' }}">
+                    <text class="radar-label" text-anchor="{{ ast.anchor | default: 'start' }}">
                       <tspan x="{{ ast.label_x | default: 0 }}" y="{{ ast.label_y | default: 0 }}" dy="-3">{{ ast.name_parts[0] }}</tspan>
                       <tspan x="{{ ast.label_x | default: 0 }}" y="{{ ast.label_y | default: 0 }}" dy="7">{{ ast.name_parts[1] }}</tspan>
                     </text>
                   {% else %}
-                    <text x="{{ ast.label_x | default: 0 }}" y="{{ ast.label_y | default: 0 }}" text-anchor="{{ ast.anchor | default: 'start' }}" class="label label--xsmall">{{ ast.name | default: '—' }}</text>
+                    <text x="{{ ast.label_x | default: 0 }}" y="{{ ast.label_y | default: 0 }}" text-anchor="{{ ast.anchor | default: 'start' }}" class="radar-label">{{ ast.name | default: '—' }}</text>
                   {% endif %}
                 {% endfor %}
               </g>

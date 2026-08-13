@@ -8,6 +8,10 @@
         <div class="radar-container">
           <div class="text--black">
             <svg width="440" height="420" viewBox="0 0 440 420" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <style>
+                .radar-label { font-size: 12px; }
+                .radar-title { font-size: 12px; font-weight: bold; }
+              </style>
               <!-- Radar Grid Boundaries and Rings -->
               <g stroke="currentColor" fill="none">
                 <!-- Outer tick border and radar boundary -->
@@ -31,17 +35,17 @@
               
               <!-- Distance Labels along horizontal axis -->
               <g fill="currentColor">
-                <text x="270" y="215" text-anchor="middle" class="title title--xsmall">10 LD</text>
-                <text x="320" y="215" text-anchor="middle" class="title title--xsmall">20 LD</text>
-                <text x="370" y="215" text-anchor="middle" class="title title--xsmall">30 LD</text>
-                <text x="415" y="215" text-anchor="end" class="title title--xsmall">40 LD</text>
+                <text x="270" y="215" text-anchor="middle" class="radar-title">10 LD</text>
+                <text x="320" y="215" text-anchor="middle" class="radar-title">20 LD</text>
+                <text x="370" y="215" text-anchor="middle" class="radar-title">30 LD</text>
+                <text x="415" y="215" text-anchor="end" class="radar-title">40 LD</text>
               </g>
               
               <!-- Center marker label -->
-              <text x="220" y="234" text-anchor="middle" class="title title--xsmall" fill="currentColor">EARTH</text>
+              <text x="220" y="234" text-anchor="middle" class="radar-title" fill="currentColor">EARTH</text>
               
               <!-- Time dial labels -->
-              <text x="220" y="15" text-anchor="middle" class="title title--xsmall" fill="currentColor">NOW (T-0)</text>
+              <text x="220" y="15" text-anchor="middle" class="radar-title" fill="currentColor">NOW (T-0)</text>
               
               <!-- Day Ticks (calculated by backend) -->
               <g stroke="currentColor" stroke-width="1.5">
@@ -53,7 +57,7 @@
               <!-- Day Ticks Labels -->
               <g fill="currentColor">
                 {% for tick in radar_ticks_full %}
-                  <text x="{{ tick.label_x | default: 0 }}" y="{{ tick.label_y | default: 0 }}" text-anchor="{{ tick.anchor | default: 'middle' }}" class="label label--xsmall">{{ tick.label | default: '—' }}</text>
+                  <text x="{{ tick.label_x | default: 0 }}" y="{{ tick.label_y | default: 0 }}" text-anchor="{{ tick.anchor | default: 'middle' }}" class="radar-label">{{ tick.label | default: '—' }}</text>
                 {% endfor %}
               </g>
               
@@ -64,18 +68,18 @@
                     <circle cx="{{ ast.x | default: 0 }}" cy="{{ ast.y | default: 0 }}" r="{{ ast.r | default: 3 }}" {% if ast.is_hazardous %}fill="currentColor"{% endif %} />
                   {% endfor %}
                 </g>
-                <g fill="currentColor">
-                  {% for ast in radar_asteroids_full %}
-                    {% if ast.name_parts and ast.name_parts.size > 1 %}
-                      <text class="label label--xsmall" text-anchor="{{ ast.anchor | default: 'start' }}">
-                        <tspan x="{{ ast.label_x | default: 0 }}" y="{{ ast.label_y | default: 0 }}" dy="-3">{{ ast.name_parts[0] }}</tspan>
-                        <tspan x="{{ ast.label_x | default: 0 }}" y="{{ ast.label_y | default: 0 }}" dy="7">{{ ast.name_parts[1] }}</tspan>
-                      </text>
-                    {% else %}
-                      <text x="{{ ast.label_x | default: 0 }}" y="{{ ast.label_y | default: 0 }}" text-anchor="{{ ast.anchor | default: 'start' }}" class="label label--xsmall">{{ ast.name | default: '—' }}</text>
-                    {% endif %}
-                  {% endfor %}
-                </g>
+                  <g fill="currentColor">
+                    {% for ast in radar_asteroids_full %}
+                      {% if ast.name_parts and ast.name_parts.size > 1 %}
+                        <text class="radar-label" text-anchor="{{ ast.anchor | default: 'start' }}">
+                          <tspan x="{{ ast.label_x | default: 0 }}" y="{{ ast.label_y | default: 0 }}" dy="-3">{{ ast.name_parts[0] }}</tspan>
+                          <tspan x="{{ ast.label_x | default: 0 }}" y="{{ ast.label_y | default: 0 }}" dy="7">{{ ast.name_parts[1] }}</tspan>
+                        </text>
+                      {% else %}
+                        <text x="{{ ast.label_x | default: 0 }}" y="{{ ast.label_y | default: 0 }}" text-anchor="{{ ast.anchor | default: 'start' }}" class="radar-label">{{ ast.name | default: '—' }}</text>
+                      {% endif %}
+                    {% endfor %}
+                  </g>
               {% endif %}
             </svg>
           </div>

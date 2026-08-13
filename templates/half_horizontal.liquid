@@ -7,6 +7,9 @@
         <div class="radar-container">
           <div class="text--black">
             <svg width="220" height="160" viewBox="0 0 220 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <style>
+                .radar-label { font-size: 10px; }
+              </style>
               <!-- Radar Grid boundaries -->
               <g stroke="currentColor" fill="none">
                 <circle cx="110" cy="80" r="70" stroke-width="1" stroke-dasharray="1,4" />
@@ -37,7 +40,7 @@
               <!-- Day Tick Labels -->
               <g fill="currentColor">
                 {% for tick in radar_ticks_half_horizontal %}
-                  <text x="{{ tick.label_x | default: 0 }}" y="{{ tick.label_y | default: 0 }}" text-anchor="{{ tick.anchor | default: 'middle' }}" class="label label--xsmall">{{ tick.label | default: '—' }}</text>
+                  <text x="{{ tick.label_x | default: 0 }}" y="{{ tick.label_y | default: 0 }}" text-anchor="{{ tick.anchor | default: 'middle' }}" class="radar-label">{{ tick.label | default: '—' }}</text>
                 {% endfor %}
               </g>
               
