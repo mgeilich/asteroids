@@ -100,16 +100,9 @@ This rule outlines template styling, layout constraints, and deployment guidelin
 * **Guideline**: Explicitly define the intended layout dimensions inside the opening tag (e.g. `width="350" height="330"`), and pair them with the `viewBox` and `preserveAspectRatio="xMidYMid meet"` properties to constraint the scaling size cleanly.
 
 ## 17. No Layout Containers in Shared Partials
-* **Issue**: Defining mock layout divs (e.g. `<div class="layout layout--col">`) at the root of `shared.liquid` will cause layout nesting errors when prepended. However, completely omitting a layout div in `shared.liquid` will cause the linter to raise a "No layout class detected" warning when scanned in isolation.
-* **Guideline**: Place a dummy layout container inside the `{% template title_bar %}` block wrapped in an `{% if false %}` block in `shared.liquid`:
-  ```liquid
-  {% template title_bar %}
-    ...
-    {% if false %}
-      <div class="layout layout--col"></div>
-    {% endif %}
-  {% endtemplate %}
-  ```
+* **Issue**: Defining mock layout divs (e.g. `<div class="layout layout--col">`) anywhere inside `shared.liquid` (including inside dead blocks or templates) will cause layout nesting errors when prepended to views. The title_bar template must only contain title_bar elements.
+* **Guideline**: Keep `shared.liquid` clean and completely layout-free. Never attempt to place dummy layout elements inside it.
+
 
 ## 18. Render Tag for Custom Templates
 * **Issue**: In TRMNL's Liquid, reusable template blocks defined inside shared partials (e.g. `{% template title_bar %}`) must be rendered using `{% render 'title_bar' %}` in the main layout templates. The `include` tag is deprecated and will fail to resolve.
