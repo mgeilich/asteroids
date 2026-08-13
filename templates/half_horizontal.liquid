@@ -39,10 +39,10 @@
               
               <!-- Day Tick Labels -->
               {% if radar_ticks_half_horizontal %}
-                <g fill="currentColor">
+                <g style="font-size: 10px; fill: currentColor;">
                   {% for tick in radar_ticks_half_horizontal %}
                     {% if tick and tick.label_x and tick.label_y %}
-                      <text x="{{ tick.label_x }}" y="{{ tick.label_y }}" class="tick-label-small-regular" text-anchor="{{ tick.anchor | default: 'middle' }}">
+                      <text x="{{ tick.label_x }}" y="{{ tick.label_y }}" text-anchor="{{ tick.anchor | default: 'middle' }}">
                         {{- tick.label | default: '—' -}}
                       </text>
                     {% endif %}

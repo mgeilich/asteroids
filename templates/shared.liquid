@@ -21,10 +21,8 @@
     <span class="title">Asteroids</span>
     <span class="instance">{{ trmnl.plugin_settings.instance_name | default: last_updated }}</span>
   </div>
+  {% if false %}
+    <div class="layout layout--col"></div>
+  {% endif %}
 {% endtemplate %}
-<style>
-  svg .tick-label { font-size: 12px; font-weight: bold; fill: currentColor; }
-  svg .tick-label-regular { font-size: 12px; fill: currentColor; }
-  svg .tick-label-small-regular { font-size: 10px; fill: currentColor; }
-  svg .ast-label { font-size: 10px; font-weight: bold; fill: currentColor; }
-</style>
+
