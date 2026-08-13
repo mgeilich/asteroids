@@ -1,4 +1,3 @@
-<div class="view">
   {% render 'title_bar' %}
   <div class="layout layout--col">
     <div class="flex flex--col portrait:flex--col landscape:flex--row lg:flex--row gap--space-between p--1 grow w--full">
@@ -86,7 +85,7 @@
   </div>
   
   <!-- Bottom Telemetry Banner -->
-  <div class="flex flex--row layout--center-y gap--space-between p--2 mb--1 w--full landscape:w--auto lg:w--auto">
+  <div class="flex flex--row items--center gap--space-between p--2 mb--1 w--full landscape:w--auto lg:w--auto">
     {% if radar_ticks_half_vertical and radar_ticks_half_vertical.size > 0 %}
       <div class="flex flex--col">
         <div class="title text--bold text--small lg:text--medium">ASTEROIDS</div>
@@ -115,4 +114,3 @@
   
     </div>
   </div>
-</div>

@@ -1,11 +1,9 @@
-<div class="view">
   {% render 'title_bar' %}
-  <div class="layout layout--col">
-    <div class="flex flex--col gap--space-between p--2 grow w--full">
-  <div class="flex flex--row gap--large">
+  <div class="layout">
+    <div class="grid grid--cols-2 gap--large p--2 w--full">
     
     <!-- Left Column: Radar (450px wide) -->
-    <div class="flex flex--col items--center w--[50%]">
+    <div class="flex flex--col items--center">
       {% if radar_ticks_full and radar_ticks_full.size > 0 %}
         <div class="radar-container">
           <div class="text--black">
@@ -102,7 +100,7 @@
     </div>
     
     <!-- Right Column: Status & Schedule Details -->
-    <div class="flex flex--col gap--medium grow">
+    <div class="flex flex--col gap--medium">
       {% if radar_ticks_full and radar_ticks_full.size > 0 %}
         <!-- Header -->
         <div class="title text--bold lg:text--large">PLANETARY DEFENSE</div>
@@ -141,7 +139,7 @@
             {% assign list_count = 0 %}
             {% for item in closest_list %}
               {% if list_count < 2 %}
-                <div class="flex flex--row layout--center-y gap--small p--2 rounded 1bit:bg--white 4bit:bg--gray-75 text--black">
+                <div class="flex flex--row items--center gap--small p--2 rounded 1bit:bg--white 4bit:bg--gray-75 text--black">
                   <div class="grow">
                     <div class="text--bold text--medium">{{ item.name | default: '—' }}</div>
                     <div class="label text--small">{{ item.time_str | default: '—' }} &bull; Size: {{ item.size_m | default: '—' }}</div>
@@ -171,7 +169,4 @@
       {% endif %}
     </div>
   </div>
-  
-  </div>
-</div>
 </div>

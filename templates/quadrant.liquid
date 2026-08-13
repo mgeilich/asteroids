@@ -1,4 +1,3 @@
-<div class="view">
   {% render 'title_bar' %}
   <div class="layout layout--col">
     <div class="flex flex--col lg:flex--row portrait:flex--col landscape:flex--row gap--small w--full grow p--1">
@@ -58,7 +57,7 @@
     <div class="flex flex--col gap--small grow layout--center-y">
       {% if radar_ticks_quadrant and radar_ticks_quadrant.size > 0 %}
         <!-- Title & Status Inline -->
-        <div class="flex flex--row layout--center-y gap--space-between w--full">
+        <div class="flex flex--row items--center gap--space-between w--full">
           <div class="title text--bold text--xsmall lg:text--small">ASTEROIDS</div>
           {% if system_status %}
             {% if system_status contains "WARNING" %}
@@ -84,7 +83,7 @@
           </div>
           
           <!-- Closest Name Box -->
-          <div class="flex flex--row layout--center-y gap--space-between bg--gray-75 text--black rounded p--1 w--full">
+          <div class="flex flex--row items--center gap--space-between bg--gray-75 text--black rounded p--1 w--full">
             <span class="label text--xxsmall">CLOSEST NAME</span>
             <span class="value text--bold text--xsmall">{{ closest_name | default: '—' }}</span>
           </div>
@@ -99,4 +98,3 @@
   
     </div>
   </div>
-</div>
