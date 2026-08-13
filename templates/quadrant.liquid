@@ -1,5 +1,6 @@
-<div class="layout layout--col gap--space-between p--1">
-  <div class="flex flex--col lg:flex--row portrait:flex--col landscape:flex--row gap--small w--full">
+<div class="layout layout--col">
+  {% render "title_bar", title: "Asteroids", trmnl: trmnl %}
+  <div class="flex flex--col lg:flex--row portrait:flex--col landscape:flex--row gap--small w--full grow p--1">
     
     <!-- Left Column: Tiny Radar (140x140px screen size) -->
     <div class="flex flex--col items--center">
@@ -95,10 +96,5 @@
     </div>
   </div>
   
-  <!-- Footer Title Bar -->
-  <div class="title_bar">
-    <img class="image image-stroke" src="data:image/svg+xml;base64,{{ svg_logo | base64_encode }}" />
-    <span class="title">NEO Radar</span>
-    <span class="meta">{{ last_updated | default: '—' }}</span>
   </div>
 </div>
