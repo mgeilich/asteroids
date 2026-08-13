@@ -6,6 +6,10 @@
   <div class="flex flex--col layout--center">
     {% if radar_ticks_half_vertical and radar_ticks_half_vertical.size > 0 %}
       <svg width="380" height="350" viewBox="0 0 380 350" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg" class="text--black">
+        <style>
+          .tick-label-regular { font-size: 12px; fill: currentColor; }
+          .ast-label { font-size: 10px; font-weight: bold; fill: currentColor; }
+        </style>
             <!-- Radar Grid boundaries -->
             <g stroke="currentColor" fill="none">
               <circle cx="190" cy="175" r="155" stroke-width="1" stroke-dasharray="1,5" />
@@ -39,7 +43,7 @@
             
             <!-- Day Ticks Labels -->
             {% if radar_ticks_half_vertical %}
-              <g style="font-size: 12px; fill: currentColor;">
+              <g class="tick-label-regular">
                 {% for tick in radar_ticks_half_vertical %}
                   {% if tick and tick.label_x and tick.label_y %}
                     <text x="{{ tick.label_x }}" y="{{ tick.label_y }}" text-anchor="{{ tick.anchor | default: 'middle' }}">
@@ -59,7 +63,7 @@
                   {% endif %}
                 {% endfor %}
               </g>
-              <g style="font-size: 10px; font-weight: bold; fill: currentColor;">
+              <g class="ast-label">
                 {% for ast in radar_asteroids_half_vertical %}
                   {% if ast and ast.label_x1 and ast.label_y1 %}
                     {% if ast.name_part_2 %}

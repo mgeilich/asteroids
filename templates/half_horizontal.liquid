@@ -6,6 +6,9 @@
     <div class="flex flex--col layout--center">
       {% if radar_ticks_half_horizontal and radar_ticks_half_horizontal.size > 0 %}
         <svg width="220" height="160" viewBox="0 0 220 160" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg" class="text--black">
+          <style>
+            .tick-label-small-regular { font-size: 10px; fill: currentColor; }
+          </style>
               <!-- Radar Grid boundaries -->
               <g stroke="currentColor" fill="none">
                 <circle cx="110" cy="80" r="70" stroke-width="1" stroke-dasharray="1,4" />
@@ -39,7 +42,7 @@
               
               <!-- Day Tick Labels -->
               {% if radar_ticks_half_horizontal %}
-                <g style="font-size: 10px; fill: currentColor;">
+                <g class="tick-label-small-regular">
                   {% for tick in radar_ticks_half_horizontal %}
                     {% if tick and tick.label_x and tick.label_y %}
                       <text x="{{ tick.label_x }}" y="{{ tick.label_y }}" text-anchor="{{ tick.anchor | default: 'middle' }}">

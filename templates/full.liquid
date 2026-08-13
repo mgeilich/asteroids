@@ -6,6 +6,11 @@
     <div class="flex flex--col layout--center">
       {% if radar_ticks_full and radar_ticks_full.size > 0 %}
         <svg width="350" height="330" viewBox="0 0 440 420" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg" class="text--black">
+          <style>
+            .tick-label { font-size: 12px; font-weight: bold; fill: currentColor; }
+            .tick-label-regular { font-size: 12px; fill: currentColor; }
+            .ast-label { font-size: 10px; font-weight: bold; fill: currentColor; }
+          </style>
               <!-- Radar Grid Boundaries and Rings -->
               <g stroke="currentColor" fill="none">
                 <!-- Outer tick border and radar boundary -->
@@ -28,7 +33,7 @@
               <circle cx="220" cy="220" r="5" fill="currentColor" />
               
               <!-- Distance, Center, and Time Labels -->
-              <g style="font-size: 12px; font-weight: bold; fill: currentColor;">
+              <g class="tick-label">
                 <text x="270" y="215" text-anchor="middle">10 LD</text>
                 <text x="320" y="215" text-anchor="middle">20 LD</text>
                 <text x="370" y="215" text-anchor="middle">30 LD</text>
@@ -50,7 +55,7 @@
               
               <!-- Day Ticks Labels -->
               {% if radar_ticks_full %}
-                <g style="font-size: 12px; fill: currentColor;">
+                <g class="tick-label-regular">
                   {% for tick in radar_ticks_full %}
                     {% if tick and tick.label_x and tick.label_y %}
                       <text x="{{ tick.label_x }}" y="{{ tick.label_y }}" text-anchor="{{ tick.anchor | default: 'middle' }}">
@@ -70,7 +75,7 @@
                     {% endif %}
                   {% endfor %}
                 </g>
-                <g style="font-size: 10px; font-weight: bold; fill: currentColor;">
+                <g class="ast-label">
                   {% for ast in radar_asteroids_full %}
                     {% if ast and ast.label_x1 and ast.label_y1 %}
                       {% if ast.name_part_2 %}
