@@ -78,5 +78,17 @@ This rule outlines template styling, layout constraints, and deployment guidelin
 * **Issue**: A mismatch between the SVG `viewBox` coordinates (e.g., `0 0 150 150`) and the container `width`/`height` attributes (e.g., `140`) can cause clipping or pixel distortion on e-ink displays.
 * **Guideline**: To ensure distortion-free scaling on e-paper screens, always set `preserveAspectRatio="xMidYMid meet"` directly on all `<svg>` elements.
 
+## 13. SVG Text Font-Sizing & Color Safety
+* **Issue**: Specifying raw inline `font-size="..."` attributes on parent `<svg>` elements is fragile on 1-bit e-paper, causing text labels to either disappear or render inconsistently.
+* **Guideline**: 
+  * Avoid raw `font-size` XML attributes on `<svg>` or `<g>` tags.
+  * Instead, apply framework typography class utilities (e.g. `class="text--small"` or `class="text--xsmall text--bold"`) directly to all child `<text>` nodes.
+  * Always set `fill="currentColor"` explicitly on `<text>` elements to guarantee proper contrast inheritance.
+
+## 14. Responsive Prefixing for Main Titles
+* **Issue**: Large section headers or titles (e.g., "PLANETARY DEFENSE") that use static, unqualified sizing classes (like `text--large`) can overflow the bounds of smaller layouts (like the `quadrant` viewport).
+* **Guideline**: Always use responsive prefixing sizes on main layout titles (e.g., `class="title text--bold text--xsmall lg:text--large portrait:text--xsmall"`) so the typography scales down safely to fit smaller screens.
+
+
 
 
