@@ -80,20 +80,22 @@ This rule outlines template styling, layout constraints, and deployment guidelin
 * **Guideline**: To ensure distortion-free scaling on e-paper screens, always set `preserveAspectRatio="xMidYMid meet"` directly on all `<svg>` elements.
 
 ## 13. SVG Text Font-Sizing & Color Safety
-* **Issue**: SVG text nodes do not support HTML class font-sizing utilities (e.g. `class="text--small"`). Furthermore, inline HTML `style` attributes and custom CSS `<style>` blocks (even nested inside SVGs) are completely banned or flagged by the validator.
+* **Issue**: SVG text nodes do not support HTML class font-sizing utilities. Hardcoding `font-size="..."` presentation attributes inside the SVG causes text to scale incorrectly (too large/disproportional) relative to the radar geometry on smaller devices (like quadrant and half-horizontal viewports).
 * **Guideline**: 
-  * Style SVG text elements using standard SVG XML presentation attributes (e.g. `font-size="12px"`, `font-weight="bold"`, `fill="currentColor"`) rather than CSS classes or styles.
-  * These presentation attributes are fully inherited by descendant `<text>` nodes, so they can be set cleanly on parent `<g>` grouping containers (e.g. `<g font-size="12px" font-weight="bold" fill="currentColor">`).
-
-
+  * Let the SVG text scale naturally by completely omitting explicit `font-size` styles or attributes.
+  * Use presentation attributes like `font-weight="bold"` or `fill="currentColor"` inside `<g>` group elements to control other text characteristics cleanly.
 
 ## 14. Responsive Prefixing for Main Titles
 * **Issue**: Large section headers or titles (e.g., "PLANETARY DEFENSE") that use static, unqualified sizing classes (like `text--large`) can overflow the bounds of smaller layouts (like the `quadrant` viewport).
 * **Guideline**: Always use responsive prefixing sizes on main layout titles (e.g., `class="title text--bold text--xsmall lg:text--large portrait:text--xsmall"`) so the typography scales down safely to fit smaller screens.
 
 ## 15. Standard Alignment Class Utilities
-* **Issue**: Custom Tailwind-style alignment classes (e.g. `items--center`) are not supported by the TRMNL CSS framework.
-* **Guideline**: Use standard framework layout alignment utilities: `layout--center` or `flex--center` to align/center elements.
+* **Issue**: Class names like `layout--center` or `items--center` are invalid under the TRMNL framework. Using them causes horizontal/vertical positioning alignment glitches on e-paper.
+* **Guideline**: Use standard framework alignment classes:
+  * For column layout contexts (`flex--col`): Use `layout--center-x` for horizontal centering.
+  * For row layout contexts (`flex--row`): Use `layout--center-y` for vertical centering.
+  * For general elements: Use a combination of `flex layout--center-x layout--center-y` to center contents vertically and horizontally.
+
 
 ## 16. SVG Sizing and Scaling
 * **Issue**: Sizing SVGs using layout classes (`w--full`, `image--contain`) without hardcoded dimensions can cause layout distortion and label misalignment on smaller e-ink columns.
