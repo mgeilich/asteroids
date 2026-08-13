@@ -5,9 +5,7 @@
     <!-- Left Column: Compact Radar (220x160px) -->
     <div class="flex flex--col items--center">
       {% if radar_ticks_half_horizontal and radar_ticks_half_horizontal.size > 0 %}
-        <div class="radar-container">
-          <div class="text--black">
-            <svg width="220" height="160" viewBox="0 0 220 160" fill="none" xmlns="http://www.w3.org/2000/svg" font-size="10">
+        <svg width="220" height="160" viewBox="0 0 220 160" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg" class="text--black" font-size="10">
               <!-- Radar Grid boundaries -->
               <g stroke="currentColor" fill="none">
                 <circle cx="110" cy="80" r="70" stroke-width="1" stroke-dasharray="1,4" />
@@ -61,8 +59,6 @@
                 </g>
               {% endif %}
             </svg>
-          </div>
-        </div>
       {% else %}
         <div class="p--3 bg--gray-75 text--black rounded text--center label grow layout--center">
           Scan in progress... No telemetry data available.

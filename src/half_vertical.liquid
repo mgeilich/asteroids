@@ -5,9 +5,7 @@
   <!-- Radar Face (380x350 px) -->
   <div class="flex flex--col items--center">
     {% if radar_ticks_half_vertical and radar_ticks_half_vertical.size > 0 %}
-      <div class="radar-container">
-        <div class="text--black">
-          <svg width="380" height="350" viewBox="0 0 380 350" fill="none" xmlns="http://www.w3.org/2000/svg" font-size="12">
+      <svg width="380" height="350" viewBox="0 0 380 350" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg" class="text--black" font-size="12">
             <!-- Radar Grid boundaries -->
             <g stroke="currentColor" fill="none">
               <circle cx="190" cy="175" r="155" stroke-width="1" stroke-dasharray="1,5" />
@@ -73,8 +71,6 @@
               </g>
             {% endif %}
           </svg>
-        </div>
-      </div>
     {% else %}
       <div class="p--4 bg--gray-75 text--black rounded text--center label grow layout--center">
         Scan in progress... No telemetry data available.
