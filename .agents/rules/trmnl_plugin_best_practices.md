@@ -89,6 +89,19 @@ This rule outlines template styling, layout constraints, and deployment guidelin
 * **Issue**: Large section headers or titles (e.g., "PLANETARY DEFENSE") that use static, unqualified sizing classes (like `text--large`) can overflow the bounds of smaller layouts (like the `quadrant` viewport).
 * **Guideline**: Always use responsive prefixing sizes on main layout titles (e.g., `class="title text--bold text--xsmall lg:text--large portrait:text--xsmall"`) so the typography scales down safely to fit smaller screens.
 
+## 15. Standard Alignment Class Utilities
+* **Issue**: Custom Tailwind-style alignment classes (e.g. `items--center`) are not supported by the TRMNL CSS framework.
+* **Guideline**: Use standard framework layout alignment utilities: `layout--center` or `flex--center` to align/center elements.
+
+## 16. Responsive SVG Scaling
+* **Issue**: Explicit `width` and `height` pixel dimensions on large SVGs will cause horizontal overflow on smaller containers or 50% split columns.
+* **Guideline**: Remove hardcoded dimensions from SVGs. Combine `preserveAspectRatio="xMidYMid meet"` with the framework's `image--contain` and `w--full` classes to scale the SVG dynamically.
+
+## 17. No Layout Containers in Shared Partials
+* **Issue**: Defining mock layout divs (e.g. `<div class="layout layout--col">`) in a shared partial (`shared.liquid`) will cause nesting errors when the file is prepended before the main layout file's `title_bar` rendering call.
+* **Guideline**: Never define root layout container elements inside partial helper files. Keep layout containers isolated to main screen templates.
+
+
 
 
 
