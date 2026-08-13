@@ -79,11 +79,11 @@ This rule outlines template styling, layout constraints, and deployment guidelin
 * **Guideline**: To ensure distortion-free scaling on e-paper screens, always set `preserveAspectRatio="xMidYMid meet"` directly on all `<svg>` elements.
 
 ## 13. SVG Text Font-Sizing & Color Safety
-* **Issue**: Specifying raw inline `font-size="..."` attributes on parent `<svg>` elements is fragile on 1-bit e-paper, causing text labels to either disappear or render inconsistently.
+* **Issue**: SVG text nodes do not support HTML class font-sizing utilities (e.g. `class="text--small"`). SVG text styling requires actual CSS rules or inline style attributes.
 * **Guideline**: 
-  * Avoid raw `font-size` XML attributes on `<svg>` or `<g>` tags.
-  * Instead, apply framework typography class utilities (e.g. `class="text--small"` or `class="text--xsmall text--bold"`) directly to all child `<text>` nodes.
-  * Always set `fill="currentColor"` explicitly on `<text>` elements to guarantee proper contrast inheritance.
+  * Define standard CSS styling rules inside a `<style>` block in `shared.liquid` (e.g. `svg .tick-label { font-size: 12px; font-weight: bold; fill: currentColor; }`).
+  * Apply styling classes to text tags (e.g. `class="tick-label"`) instead of HTML framework classes.
+  * Avoid raw parent SVG `font-size` configuration where possible.
 
 ## 14. Responsive Prefixing for Main Titles
 * **Issue**: Large section headers or titles (e.g., "PLANETARY DEFENSE") that use static, unqualified sizing classes (like `text--large`) can overflow the bounds of smaller layouts (like the `quadrant` viewport).
@@ -93,9 +93,9 @@ This rule outlines template styling, layout constraints, and deployment guidelin
 * **Issue**: Custom Tailwind-style alignment classes (e.g. `items--center`) are not supported by the TRMNL CSS framework.
 * **Guideline**: Use standard framework layout alignment utilities: `layout--center` or `flex--center` to align/center elements.
 
-## 16. Responsive SVG Scaling
-* **Issue**: Explicit `width` and `height` pixel dimensions on large SVGs will cause horizontal overflow on smaller containers or 50% split columns.
-* **Guideline**: Remove hardcoded dimensions from SVGs. Combine `preserveAspectRatio="xMidYMid meet"` with the framework's `image--contain` and `w--full` classes to scale the SVG dynamically.
+## 16. SVG Sizing and Scaling
+* **Issue**: Sizing SVGs using layout classes (`w--full`, `image--contain`) without hardcoded dimensions can cause layout distortion and label misalignment on smaller e-ink columns.
+* **Guideline**: Explicitly define the intended layout dimensions inside the opening tag (e.g. `width="350" height="330"`), and pair them with the `viewBox` and `preserveAspectRatio="xMidYMid meet"` properties to constraint the scaling size cleanly.
 
 ## 17. No Layout Containers in Shared Partials
 * **Issue**: Defining mock layout divs (e.g. `<div class="layout layout--col">`) in a shared partial (`shared.liquid`) will cause nesting errors when the file is prepended before the main layout file's `title_bar` rendering call.
