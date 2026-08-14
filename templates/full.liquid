@@ -5,30 +5,30 @@
     <!-- Left Column: Radar (450px wide) -->
     <div class="col--span-6 flex flex--col layout--center-x">
       {% if radar_ticks_full and radar_ticks_full.size > 0 %}
-        <svg width="350" height="330" viewBox="0 0 440 420" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg" class="text--black">
+        <svg width="350" height="330" style="width: 350px; height: 330px;" viewBox="0 0 440 420" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg" class="text--black radar-svg">
               <!-- Radar Grid Boundaries and Rings -->
-              <g stroke="currentColor" fill="none">
+              <g class="radar-grid-group">
                 <!-- Outer tick border and radar boundary -->
-                <circle cx="220" cy="220" r="200" stroke-width="1" stroke-dasharray="1,5" />
-                <circle cx="220" cy="220" r="195" stroke-width="2" />
+                <circle cx="220" cy="220" r="200" class="grid-outer-boundary grid-outer-boundary--large" />
+                <circle cx="220" cy="220" r="195" class="grid-inner-boundary--large" />
                 
                 <!-- Concentric distance rings (10, 20, 30, 40 LD) -->
-                <g stroke-width="1" stroke-dasharray="3,6">
+                <g class="grid-range-rings grid-range-rings--large">
                   <circle cx="220" cy="220" r="150" />
                   <circle cx="220" cy="220" r="100" />
                   <circle cx="220" cy="220" r="50" />
                 </g>
                 
                 <!-- Crosshair grid axes -->
-                <line x1="220" y1="20" x2="220" y2="420" stroke-width="1" stroke-dasharray="2,4" />
-                <line x1="20" y1="220" x2="420" y2="220" stroke-width="1" stroke-dasharray="2,4" />
+                <line x1="220" y1="20" x2="220" y2="420" class="grid-crosshairs" />
+                <line x1="20" y1="220" x2="420" y2="220" class="grid-crosshairs" />
               </g>
               
               <!-- Center marker representing Earth -->
-              <circle cx="220" cy="220" r="5" fill="currentColor" />
+              <circle cx="220" cy="220" r="5" class="radar-center-marker" />
               
               <!-- Distance, Center, and Time Labels -->
-              <g font-weight="bold" fill="currentColor">
+              <g fill="currentColor" class="text--bold">
                 <text x="270" y="215" text-anchor="middle">10 LD</text>
                 <text x="320" y="215" text-anchor="middle">20 LD</text>
                 <text x="370" y="215" text-anchor="middle">30 LD</text>
@@ -39,7 +39,7 @@
               
               <!-- Day Ticks (calculated by backend) -->
               {% if radar_ticks_full %}
-                <g stroke="currentColor" stroke-width="1.5">
+                <g class="radar-ticks-group">
                   {% for tick in radar_ticks_full %}
                     {% if tick and tick.x1 and tick.y1 and tick.x2 and tick.y2 %}
                       <line x1="{{ tick.x1 }}" y1="{{ tick.y1 }}" x2="{{ tick.x2 }}" y2="{{ tick.y2 }}" />
@@ -63,7 +63,7 @@
               
               <!-- Asteroids (calculated by backend) -->
               {% if radar_asteroids_full and radar_asteroids_full.size > 0 %}
-                <g stroke="currentColor" stroke-width="1.5" fill="none">
+                <g class="radar-asteroids-group">
                   {% for ast in radar_asteroids_full %}
                     {% if ast and ast.x and ast.y %}
                       <circle cx="{{ ast.x }}" cy="{{ ast.y }}" r="{{ ast.r | default: 3 }}" {% if ast.is_hazardous %}fill="currentColor"{% endif %} />
@@ -131,13 +131,13 @@
             {% assign list_count = 0 %}
             {% for item in closest_list %}
               {% if list_count < 2 %}
-                <div class="flex flex--row layout--center-y gap--small p--2 rounded 1bit:bg--white 4bit:bg--gray-75 text--black">
+                <div class="flex flex--row layout--center-y gap--small p--2 rounded 1bit:bg--white 4bit:bg--gray-75 text--black" style="max-height: 48px; overflow: hidden;">
                   <div class="grow">
-                    <div class="text--bold text--medium" data-clamp="2">{{ item.name | default: '—' }}</div>
-                    <div class="label text--small" data-clamp="2">{{ item.time_str | default: '—' }} &bull; Size: {{ item.size_m | default: '—' }}</div>
+                    <div class="text--bold text--medium" data-overflow="true" data-clamp="2">{{ item.name | default: '—' }}</div>
+                    <div class="label text--small" data-overflow="true" data-clamp="2">{{ item.time_str | default: '—' }} &bull; Size: {{ item.size_m | default: '—' }}</div>
                   </div>
                   <div class="text--right flex flex--col layout--right">
-                    <div class="text--bold text--medium">{{ item.dist_ld | default: '—' }} LD</div>
+                    <div class="text--bold text--medium" data-overflow="true" data-clamp="2">{{ item.dist_ld | default: '—' }} LD</div>
                     {% if item.is_hazardous != "" and item.is_hazardous != nil %}
                       <span class="bg--black text--white px--2 rounded text--bold text--small">HAZARD</span>
                     {% endif %}

@@ -16,8 +16,70 @@
 
 
 {% template title_bar %}
+  <style>
+    /* Radar SVG Styles */
+    .radar-svg {
+      color: inherit;
+    }
+    .radar-grid-group {
+      stroke: currentColor;
+      fill: none;
+    }
+    .radar-center-marker {
+      fill: currentColor;
+    }
+    .radar-ticks-group {
+      stroke: currentColor;
+      stroke-width: 1.5;
+    }
+    .radar-ticks-quadrant-group {
+      stroke: currentColor;
+      stroke-width: 1.0;
+    }
+    .radar-asteroids-group {
+      stroke: currentColor;
+      stroke-width: 1.5;
+      fill: none;
+    }
+
+    /* Outer tick border and radar boundary */
+    .grid-outer-boundary {
+      stroke-width: 1;
+    }
+    .grid-outer-boundary--large {
+      stroke-dasharray: 1 5;
+    }
+    .grid-outer-boundary--small {
+      stroke-dasharray: 1 4;
+    }
+
+    /* Inner main boundary */
+    .grid-inner-boundary--large {
+      stroke-width: 2;
+    }
+    .grid-inner-boundary--small {
+      stroke-width: 1.5;
+    }
+
+    /* Concentric range rings */
+    .grid-range-rings {
+      stroke-width: 1;
+    }
+    .grid-range-rings--large {
+      stroke-dasharray: 3 6;
+    }
+    .grid-range-rings--small {
+      stroke-dasharray: 2 5;
+    }
+
+    /* Crosshairs lines */
+    .grid-crosshairs {
+      stroke-width: 1;
+      stroke-dasharray: 2 4;
+    }
+  </style>
   <div class="title_bar">
-    <img class="image image-stroke" src="data:image/svg+xml;base64,{{ svg_logo | base64_encode }}" />
+    <img class="image image-stroke" src="data:image/svg+xml;base64,{{ svg_logo | base64_encode }}" style="width: 24px; height: 24px;" />
     <span class="title">Asteroids</span>
     <span class="instance">{{ trmnl.plugin_settings.instance_name | default: last_updated }}</span>
   </div>

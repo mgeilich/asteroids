@@ -16,4 +16,9 @@ Always follow these guidelines when editing or deploying files in this repositor
 ## 4. Automatically Commit and Push to Git
 * **Rule**: Whenever you modify, create, or delete files in this repository (e.g. templates, rules, backend functions), automatically stage them (`git add`), commit them with a descriptive commit message (`git commit`), and push them to the remote repository (`git push`).
 * **Reasoning**: This keeps the codebase in sync immediately without requiring explicit user prompts to commit/push.
-
+## 5. Test Publishing and Chef Verification Process
+* **Rule**: After making edits to the templates, follow the test publishing process to verify Chef checks:
+  1. Validate templates locally if needed using the command: `export LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 && /usr/local/lib/ruby/gems/4.0.0/bin/trmnlp lint`.
+  2. Push templates to the TRMNL server using: `/usr/local/lib/ruby/gems/4.0.0/bin/trmnlp push`.
+  3. Navigate to the plugin settings edit page (e.g. `https://trmnl.com/plugin_settings/411563/edit`), click the "Publish" button (or "Publish plugin?"), check "Acknowledge best practices", and try to publish as a public plugin to trigger Chef's full validation.
+  4. Inspect Chef's warnings or error messages, and iterate until validation is successful.
