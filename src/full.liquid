@@ -70,14 +70,14 @@
                     {% endif %}
                   {% endfor %}
                 </g>
-                <g font-weight="bold" fill="currentColor">
+                <g fill="currentColor">
                   {% for ast in radar_asteroids_full %}
                     {% if ast and ast.label_x1 and ast.label_y1 %}
                       {% if ast.name_part_2 %}
-                        <text x="{{ ast.label_x1 }}" y="{{ ast.label_y1 }}" text-anchor="{{ ast.anchor | default: 'start' }}">{{ ast.name_part_1 }}</text>
-                        <text x="{{ ast.label_x2 }}" y="{{ ast.label_y2 }}" text-anchor="{{ ast.anchor | default: 'start' }}">{{ ast.name_part_2 }}</text>
+                        <text x="{{ ast.label_x1 }}" y="{{ ast.label_y1 }}" text-anchor="{{ ast.anchor | default: 'start' }}" data-fit-value="true" textLength="65" lengthAdjust="spacingAndGlyphs" class="text--bold">{{ ast.name_part_1 }}</text>
+                        <text x="{{ ast.label_x2 }}" y="{{ ast.label_y2 }}" text-anchor="{{ ast.anchor | default: 'start' }}" data-fit-value="true" textLength="65" lengthAdjust="spacingAndGlyphs" class="text--bold">{{ ast.name_part_2 }}</text>
                       {% else %}
-                        <text x="{{ ast.label_x1 }}" y="{{ ast.label_y1 }}" text-anchor="{{ ast.anchor | default: 'start' }}">{{ ast.name_part_1 }}</text>
+                        <text x="{{ ast.label_x1 }}" y="{{ ast.label_y1 }}" text-anchor="{{ ast.anchor | default: 'start' }}" data-fit-value="true" textLength="65" lengthAdjust="spacingAndGlyphs" class="text--bold">{{ ast.name_part_1 }}</text>
                       {% endif %}
                     {% endif %}
                   {% endfor %}
@@ -124,7 +124,7 @@
         </div>
         
         <!-- Closest Scheduled Objects -->
-        <div class="flex flex--col gap--small">
+        <div class="flex flex--col gap--small" data-overflow="true">
           <div class="label text--bold">CLOSEST SCHEDULED FLYBYS</div>
           
           {% if closest_list and closest_list.size > 0 %}
@@ -133,8 +133,8 @@
               {% if list_count < 2 %}
                 <div class="flex flex--row layout--center-y gap--small p--2 rounded 1bit:bg--white 4bit:bg--gray-75 text--black">
                   <div class="grow">
-                    <div class="text--bold text--medium" data-overflow="true" data-clamp="2">{{ item.name | default: '—' }}</div>
-                    <div class="label text--small" data-overflow="true" data-clamp="2">{{ item.time_str | default: '—' }} &bull; Size: {{ item.size_m | default: '—' }}</div>
+                    <div class="text--bold text--medium" data-clamp="2">{{ item.name | default: '—' }}</div>
+                    <div class="label text--small" data-clamp="2">{{ item.time_str | default: '—' }} &bull; Size: {{ item.size_m | default: '—' }}</div>
                   </div>
                   <div class="text--right flex flex--col layout--right">
                     <div class="text--bold text--medium">{{ item.dist_ld | default: '—' }} LD</div>
