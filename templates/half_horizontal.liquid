@@ -107,8 +107,8 @@
               {% if list_count < 1 %}
                 <div class="flex flex--row layout--center-y gap--small p--2 rounded 1bit:bg--white 4bit:bg--gray-75 text--black grow">
                   <div class="grow">
-                    <div class="text--bold text--medium">{{ item.name | default: '—' }}</div>
-                    <div class="label text--small">{{ item.time_str | default: '—' }} &bull; Size: {{ item.size_m | default: '—' }}</div>
+                    <div class="text--bold text--medium" data-overflow="true" data-clamp="2">{{ item.name | default: '—' }}</div>
+                    <div class="label text--small" data-overflow="true" data-clamp="2">{{ item.time_str | default: '—' }} &bull; Size: {{ item.size_m | default: '—' }}</div>
                   </div>
                   <div class="text--right flex flex--col layout--right">
                     <div class="text--bold text--medium">{{ item.dist_ld | default: '—' }} LD</div>
