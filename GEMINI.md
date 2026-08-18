@@ -22,3 +22,9 @@ Always follow these guidelines when editing or deploying files in this repositor
   2. Push templates to the TRMNL server using: `/usr/local/lib/ruby/gems/4.0.0/bin/trmnlp push`.
   3. Navigate to the plugin settings edit page (e.g. `https://trmnl.com/plugin_settings/411563/edit`), click the "Publish" button (or "Publish plugin?"), check "Acknowledge best practices", and try to publish as a public plugin to trigger Chef's full validation.
   4. Inspect Chef's warnings or error messages, and iterate until validation is successful.
+
+## 6. Strict Styling and Layout Class Guardrails
+*   **No custom CSS or `<style>` blocks**: Do not include `<style>` tags anywhere in templates or shared components. Move all styling to standard HTML/SVG attributes (e.g. `fill`, `stroke`, `stroke-width`, `stroke-dasharray`).
+*   **No inline `style` attributes**: Do not use inline `style="..."` attributes on any tags. Use native layout/sizing attributes (like `width="..."` and `height="..."` on images or SVGs) or TRMNL utility classes instead.
+*   **Root Layout Class Wrapping**: Ensure that the very first HTML element in each view template file is a layout container class (e.g. `<div class="layout layout--col">`). Rendered components like `{% render 'title_bar' %}` must be placed inside this container, rather than before it, so the compiler immediately registers a layout class as the root of the file.
+
