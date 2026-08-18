@@ -42,7 +42,7 @@
               <g fill="currentColor">
                 {% for tick in radar_ticks_half_vertical %}
                   {% if tick and tick.label_x and tick.label_y %}
-                    <text x="{{ tick.label_x }}" y="{{ tick.label_y }}" text-anchor="{{ tick.anchor | default: 'middle' }}" data-fit-value="true" textLength="30" lengthAdjust="spacingAndGlyphs">
+                    <text x="{{ tick.label_x }}" y="{{ tick.label_y }}" text-anchor="{{ tick.anchor | default: 'middle' }}" textLength="30" lengthAdjust="spacingAndGlyphs">
                       {{- tick.label | default: '—' -}}
                     </text>
                   {% endif %}
@@ -63,10 +63,10 @@
                 {% for ast in radar_asteroids_half_vertical %}
                   {% if ast and ast.label_x1 and ast.label_y1 %}
                     {% if ast.name_part_2 %}
-                      <text x="{{ ast.label_x1 }}" y="{{ ast.label_y1 }}" text-anchor="{{ ast.anchor | default: 'start' }}" data-fit-value="true" textLength="55" lengthAdjust="spacingAndGlyphs" class="text--bold">{{ ast.name_part_1 }}</text>
-                      <text x="{{ ast.label_x2 }}" y="{{ ast.label_y2 }}" text-anchor="{{ ast.anchor | default: 'start' }}" data-fit-value="true" textLength="55" lengthAdjust="spacingAndGlyphs" class="text--bold">{{ ast.name_part_2 }}</text>
+                      <text x="{{ ast.label_x1 }}" y="{{ ast.label_y1 }}" text-anchor="{{ ast.anchor | default: 'start' }}" textLength="55" lengthAdjust="spacingAndGlyphs" class="text--bold">{{ ast.name_part_1 }}</text>
+                      <text x="{{ ast.label_x2 }}" y="{{ ast.label_y2 }}" text-anchor="{{ ast.anchor | default: 'start' }}" textLength="55" lengthAdjust="spacingAndGlyphs" class="text--bold">{{ ast.name_part_2 }}</text>
                     {% else %}
-                      <text x="{{ ast.label_x1 }}" y="{{ ast.label_y1 }}" text-anchor="{{ ast.anchor | default: 'start' }}" data-fit-value="true" textLength="55" lengthAdjust="spacingAndGlyphs" class="text--bold">{{ ast.name_part_1 }}</text>
+                      <text x="{{ ast.label_x1 }}" y="{{ ast.label_y1 }}" text-anchor="{{ ast.anchor | default: 'start' }}" textLength="55" lengthAdjust="spacingAndGlyphs" class="text--bold">{{ ast.name_part_1 }}</text>
                     {% endif %}
                   {% endif %}
                 {% endfor %}

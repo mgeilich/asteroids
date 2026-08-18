@@ -42,7 +42,7 @@
                 <g fill="currentColor">
                   {% for tick in radar_ticks_half_horizontal %}
                     {% if tick and tick.label_x and tick.label_y %}
-                      <text x="{{ tick.label_x }}" y="{{ tick.label_y }}" text-anchor="{{ tick.anchor | default: 'middle' }}" data-fit-value="true" textLength="30" lengthAdjust="spacingAndGlyphs">
+                      <text x="{{ tick.label_x }}" y="{{ tick.label_y }}" text-anchor="{{ tick.anchor | default: 'middle' }}" textLength="30" lengthAdjust="spacingAndGlyphs">
                         {{- tick.label | default: '—' -}}
                       </text>
                     {% endif %}
@@ -100,7 +100,7 @@
         </div>
         
         <!-- Closest list schedule (only 1 closest object to fit in horizontal e-ink view height) -->
-        <div class="flex flex--col gap--small" data-overflow="true">
+        <div class="flex flex--col gap--small">
           {% if closest_list and closest_list.size > 0 %}
             {% assign list_count = 0 %}
             {% for item in closest_list %}
