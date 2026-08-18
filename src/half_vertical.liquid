@@ -5,7 +5,7 @@
   <!-- Radar Face (380x350 px) -->
   <div class="flex flex--col layout--center-x">
     {% if radar_ticks_half_vertical and radar_ticks_half_vertical.size > 0 %}
-      <svg width="380" height="350" style="width: 380px; height: 350px;" viewBox="0 0 380 350" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg" class="text--black radar-svg">
+      <svg width="380" height="350" viewBox="0 0 380 350" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" class="text--black radar-svg radar-svg--half-vertical">
             <!-- Radar Grid boundaries -->
             <g class="radar-grid-group">
               <circle cx="190" cy="175" r="155" class="grid-outer-boundary grid-outer-boundary--large" />
@@ -42,7 +42,7 @@
               <g fill="currentColor">
                 {% for tick in radar_ticks_half_vertical %}
                   {% if tick and tick.label_x and tick.label_y %}
-                    <text x="{{ tick.label_x }}" y="{{ tick.label_y }}" text-anchor="{{ tick.anchor | default: 'middle' }}">
+                    <text x="{{ tick.label_x }}" y="{{ tick.label_y }}" text-anchor="{{ tick.anchor | default: 'middle' }}" data-fit-value="true" textLength="30" lengthAdjust="spacingAndGlyphs">
                       {{- tick.label | default: '—' -}}
                     </text>
                   {% endif %}

@@ -81,6 +81,9 @@ function run(input) {
     total_count = input.total_count || candidates.length;
   }
 
+  // Filter out candidates with invalid or missing epoch/timestamp
+  candidates = candidates.filter(c => c && c.epoch && !isNaN(Number(c.epoch)));
+
   // Fallback if no asteroids found
   if (candidates.length === 0) {
     return {
@@ -192,7 +195,10 @@ function run(input) {
   // Helper to compute asteroids
   function computeAsteroids(layout) {
     const radar_candidates = candidates
-      .filter(c => c.miss_distance_ld <= layout.D_max && c.name && c.name.trim() !== '')
+      .filter(c => {
+        if (!c.epoch || isNaN(Number(c.epoch))) return false;
+        return c.miss_distance_ld <= layout.D_max && c.name && c.name.trim() !== '';
+      })
       .sort((a, b) => {
         if (a.is_hazardous && !b.is_hazardous) return -1;
         if (!a.is_hazardous && b.is_hazardous) return 1;

@@ -5,7 +5,7 @@
     <!-- Left Column: Compact Radar (220x160px) -->
     <div class="flex flex--col layout--center-x">
       {% if radar_ticks_half_horizontal and radar_ticks_half_horizontal.size > 0 %}
-        <svg width="220" height="160" style="width: 220px; height: 160px;" viewBox="0 0 220 160" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg" class="text--black radar-svg">
+        <svg width="220" height="160" viewBox="0 0 220 160" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" class="text--black radar-svg radar-svg--half-horizontal">
               <!-- Radar Grid boundaries -->
               <g class="radar-grid-group">
                 <circle cx="110" cy="80" r="70" class="grid-outer-boundary grid-outer-boundary--small" />
@@ -42,7 +42,7 @@
                 <g fill="currentColor">
                   {% for tick in radar_ticks_half_horizontal %}
                     {% if tick and tick.label_x and tick.label_y %}
-                      <text x="{{ tick.label_x }}" y="{{ tick.label_y }}" text-anchor="{{ tick.anchor | default: 'middle' }}">
+                      <text x="{{ tick.label_x }}" y="{{ tick.label_y }}" text-anchor="{{ tick.anchor | default: 'middle' }}" data-fit-value="true" textLength="30" lengthAdjust="spacingAndGlyphs">
                         {{- tick.label | default: '—' -}}
                       </text>
                     {% endif %}
@@ -107,11 +107,11 @@
               {% if list_count < 1 %}
                 <div class="flex flex--row layout--center-y gap--small p--2 rounded 1bit:bg--white 4bit:bg--gray-75 text--black grow" style="max-height: 48px; overflow: hidden;">
                   <div class="grow">
-                    <div class="text--bold text--medium" data-overflow="true" data-clamp="2">{{ item.name | default: '—' }}</div>
-                    <div class="label text--small" data-overflow="true" data-clamp="2">{{ item.time_str | default: '—' }} &bull; Size: {{ item.size_m | default: '—' }}</div>
+                    <div class="text--bold text--medium" data-overflow="true" data-clamp="1">{{ item.name | default: '—' }}</div>
+                    <div class="label text--small" data-overflow="true" data-clamp="1">{{ item.time_str | default: '—' }} &bull; Size: {{ item.size_m | default: '—' }}</div>
                   </div>
                   <div class="text--right flex flex--col layout--right">
-                    <div class="text--bold text--medium" data-overflow="true" data-clamp="2">{{ item.dist_ld | default: '—' }} LD</div>
+                    <div class="text--bold text--medium" data-overflow="true" data-clamp="1">{{ item.dist_ld | default: '—' }} LD</div>
                     {% if item.is_hazardous != "" and item.is_hazardous != nil %}
                       <span class="bg--black text--white px--2 rounded text--bold text--small">HAZARD</span>
                     {% endif %}
