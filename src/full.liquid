@@ -5,9 +5,9 @@
     <!-- Left Column: Radar (450px wide) -->
     <div class="col--span-6 portrait:col--span-12 flex flex--col layout--center-x">
       {% if radar_ticks_full and radar_ticks_full.size > 0 %}
-        <svg width="350" height="330" viewBox="0 0 350 330" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg" class="text--black">
+        <svg width="100%" viewBox="0 0 350 330" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg" class="text--black w--full">
               <!-- Radar Grid Boundaries and Rings -->
-              <g stroke="#000" fill="none">
+              <g stroke="currentColor" fill="none">
                 <!-- Outer tick border and radar boundary -->
                 <circle cx="175" cy="165" r="159" stroke-width="1" stroke-dasharray="1 5" />
                 <circle cx="175" cy="165" r="155" stroke-width="2" />
@@ -25,10 +25,10 @@
               </g>
               
               <!-- Center marker representing Earth -->
-              <circle cx="175" cy="165" r="4" fill="#000" />
+              <circle cx="175" cy="165" r="4" fill="currentColor" />
               
               <!-- Distance, Center, and Time Labels -->
-              <g fill="#000" class="text--bold">
+              <g fill="currentColor" class="text--bold">
                 <text x="215" y="160" text-anchor="middle">10 LD</text>
                 <text x="255" y="160" text-anchor="middle">20 LD</text>
                 <text x="294" y="160" text-anchor="middle">30 LD</text>
@@ -39,7 +39,7 @@
               
               <!-- Day Ticks (calculated by backend) -->
               {% if radar_ticks_full %}
-                <g stroke="#000" stroke-width="1.5">
+                <g stroke="currentColor" stroke-width="1.5">
                   {% for tick in radar_ticks_full %}
                     {% if tick and tick.x1 and tick.y1 and tick.x2 and tick.y2 %}
                       <line x1="{{ tick.x1 }}" y1="{{ tick.y1 }}" x2="{{ tick.x2 }}" y2="{{ tick.y2 }}" />
@@ -50,7 +50,7 @@
               
               <!-- Day Ticks Labels -->
               {% if radar_ticks_full %}
-                <g fill="#000">
+                <g fill="currentColor">
                   {% for tick in radar_ticks_full %}
                     {% if tick and tick.label_x and tick.label_y %}
                       <text x="{{ tick.label_x }}" y="{{ tick.label_y }}" text-anchor="{{ tick.anchor | default: 'middle' }}">
@@ -63,14 +63,14 @@
               
               <!-- Asteroids (calculated by backend) -->
               {% if radar_asteroids_full and radar_asteroids_full.size > 0 %}
-                <g stroke="#000" stroke-width="1.5" fill="none">
+                <g stroke="currentColor" stroke-width="1.5" fill="none">
                   {% for ast in radar_asteroids_full %}
                     {% if ast and ast.x and ast.y %}
-                      <circle cx="{{ ast.x }}" cy="{{ ast.y }}" r="{{ ast.r | default: 3 }}" {% if ast.is_hazardous %}fill="#000"{% endif %} />
+                      <circle cx="{{ ast.x }}" cy="{{ ast.y }}" r="{{ ast.r | default: 3 }}" {% if ast.is_hazardous %}fill="currentColor"{% endif %} />
                     {% endif %}
                   {% endfor %}
                 </g>
-                <g fill="#000">
+                <g fill="currentColor">
                   {% for ast in radar_asteroids_full %}
                     {% if ast and ast.label_x1 and ast.label_y1 %}
                       {% if ast.name_part_2 %}

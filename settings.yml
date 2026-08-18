@@ -2,7 +2,7 @@
 strategy: polling
 no_screen_padding: 'no'
 dark_mode: 'no'
-static_data: ''
+static_data: '{"candidates":[{"id":"1","name":"(2026 NY1)","miss_distance_ld":4.2,"velocity_kph":32100,"avg_diameter":150,"is_hazardous":true,"epoch":0},{"id":"2","name":"(Apophis)","miss_distance_ld":8.5,"velocity_kph":110000,"avg_diameter":370,"is_hazardous":true,"epoch":0},{"id":"3","name":"(2026 AB3)","miss_distance_ld":18.5,"velocity_kph":45000,"avg_diameter":85,"is_hazardous":false,"epoch":0},{"id":"4","name":"(2026 CD4)","miss_distance_ld":28.2,"velocity_kph":60000,"avg_diameter":210,"is_hazardous":false,"epoch":0}],"total_count":4}'
 polling_verb: get
 framework_version: 3.2.0
 serverless_language: node

@@ -7,7 +7,7 @@
       {% if radar_ticks_quadrant and radar_ticks_quadrant.size > 0 %}
         <svg width="120" height="120" viewBox="0 0 150 150" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg" class="text--black">
               <!-- Radar Grid boundaries -->
-              <g stroke="#000" fill="none">
+              <g stroke="currentColor" fill="none">
                 <circle cx="75" cy="75" r="70" stroke-width="1" stroke-dasharray="1 4" />
                 <circle cx="75" cy="75" r="67" stroke-width="1.5" />
                 
@@ -24,10 +24,10 @@
               </g>
               
               <!-- Center Earth marker -->
-              <circle cx="75" cy="75" r="2.5" fill="#000" />
+              <circle cx="75" cy="75" r="2.5" fill="currentColor" />
               
               <!-- Day Ticks (Scaled 70/190, no labels to prevent overlap) -->
-              <g stroke="#000" stroke-width="1.0">
+              <g stroke="currentColor" stroke-width="1.0">
                 {% for tick in radar_ticks_quadrant %}
                   <line x1="{{ tick.x1 | default: 0 }}" y1="{{ tick.y1 | default: 0 }}" x2="{{ tick.x2 | default: 0 }}" y2="{{ tick.y2 | default: 0 }}" />
                 {% endfor %}
@@ -35,9 +35,9 @@
               
               <!-- Asteroids (Scaled 70/190, no labels) -->
               {% if radar_asteroids_quadrant and radar_asteroids_quadrant.size > 0 %}
-                <g stroke="#000" stroke-width="1.5" fill="none">
+                <g stroke="currentColor" stroke-width="1.5" fill="none">
                   {% for ast in radar_asteroids_quadrant %}
-                    <circle cx="{{ ast.x | default: 0 }}" cy="{{ ast.y | default: 0 }}" r="{{ ast.r | default: 3 }}" {% if ast.is_hazardous %}fill="#000"{% endif %} />
+                    <circle cx="{{ ast.x | default: 0 }}" cy="{{ ast.y | default: 0 }}" r="{{ ast.r | default: 3 }}" {% if ast.is_hazardous %}fill="currentColor"{% endif %} />
                   {% endfor %}
                 </g>
               {% endif %}
