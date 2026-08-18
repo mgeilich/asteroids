@@ -7,7 +7,7 @@
       {% if radar_ticks_full and radar_ticks_full.size > 0 %}
         <svg width="350" height="330" viewBox="0 0 350 330" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg" class="text--black">
               <!-- Radar Grid Boundaries and Rings -->
-              <g stroke="currentColor" fill="none">
+              <g stroke="#000" fill="none">
                 <!-- Outer tick border and radar boundary -->
                 <circle cx="175" cy="165" r="159" stroke-width="1" stroke-dasharray="1 5" />
                 <circle cx="175" cy="165" r="155" stroke-width="2" />
@@ -25,21 +25,21 @@
               </g>
               
               <!-- Center marker representing Earth -->
-              <circle cx="175" cy="165" r="4" fill="currentColor" />
+              <circle cx="175" cy="165" r="4" fill="#000" />
               
               <!-- Distance, Center, and Time Labels -->
-              <g fill="currentColor" class="text--bold">
-                <text x="215" y="160" text-anchor="middle" textLength="35" lengthAdjust="spacingAndGlyphs">10 LD</text>
-                <text x="255" y="160" text-anchor="middle" textLength="35" lengthAdjust="spacingAndGlyphs">20 LD</text>
-                <text x="294" y="160" text-anchor="middle" textLength="35" lengthAdjust="spacingAndGlyphs">30 LD</text>
-                <text x="330" y="160" text-anchor="end" textLength="35" lengthAdjust="spacingAndGlyphs">40 LD</text>
-                <text x="175" y="179" text-anchor="middle" textLength="40" lengthAdjust="spacingAndGlyphs">EARTH</text>
-                <text x="175" y="10" text-anchor="middle" textLength="60" lengthAdjust="spacingAndGlyphs">NOW (T-0)</text>
+              <g fill="#000" class="text--bold">
+                <text x="215" y="160" text-anchor="middle">10 LD</text>
+                <text x="255" y="160" text-anchor="middle">20 LD</text>
+                <text x="294" y="160" text-anchor="middle">30 LD</text>
+                <text x="330" y="160" text-anchor="end">40 LD</text>
+                <text x="175" y="179" text-anchor="middle">EARTH</text>
+                <text x="175" y="10" text-anchor="middle">NOW (T-0)</text>
               </g>
               
               <!-- Day Ticks (calculated by backend) -->
               {% if radar_ticks_full %}
-                <g stroke="currentColor" stroke-width="1.5">
+                <g stroke="#000" stroke-width="1.5">
                   {% for tick in radar_ticks_full %}
                     {% if tick and tick.x1 and tick.y1 and tick.x2 and tick.y2 %}
                       <line x1="{{ tick.x1 }}" y1="{{ tick.y1 }}" x2="{{ tick.x2 }}" y2="{{ tick.y2 }}" />
@@ -50,10 +50,10 @@
               
               <!-- Day Ticks Labels -->
               {% if radar_ticks_full %}
-                <g fill="currentColor">
+                <g fill="#000">
                   {% for tick in radar_ticks_full %}
                     {% if tick and tick.label_x and tick.label_y %}
-                      <text x="{{ tick.label_x }}" y="{{ tick.label_y }}" text-anchor="{{ tick.anchor | default: 'middle' }}" textLength="30" lengthAdjust="spacingAndGlyphs">
+                      <text x="{{ tick.label_x }}" y="{{ tick.label_y }}" text-anchor="{{ tick.anchor | default: 'middle' }}">
                         {{- tick.label | default: '—' -}}
                       </text>
                     {% endif %}
@@ -63,21 +63,21 @@
               
               <!-- Asteroids (calculated by backend) -->
               {% if radar_asteroids_full and radar_asteroids_full.size > 0 %}
-                <g stroke="currentColor" stroke-width="1.5" fill="none">
+                <g stroke="#000" stroke-width="1.5" fill="none">
                   {% for ast in radar_asteroids_full %}
                     {% if ast and ast.x and ast.y %}
-                      <circle cx="{{ ast.x }}" cy="{{ ast.y }}" r="{{ ast.r | default: 3 }}" {% if ast.is_hazardous %}fill="currentColor"{% endif %} />
+                      <circle cx="{{ ast.x }}" cy="{{ ast.y }}" r="{{ ast.r | default: 3 }}" {% if ast.is_hazardous %}fill="#000"{% endif %} />
                     {% endif %}
                   {% endfor %}
                 </g>
-                <g fill="currentColor">
+                <g fill="#000">
                   {% for ast in radar_asteroids_full %}
                     {% if ast and ast.label_x1 and ast.label_y1 %}
                       {% if ast.name_part_2 %}
-                        <text x="{{ ast.label_x1 }}" y="{{ ast.label_y1 }}" text-anchor="{{ ast.anchor | default: 'start' }}" textLength="55" lengthAdjust="spacingAndGlyphs" class="text--bold">{{ ast.name_part_1 }}</text>
-                        <text x="{{ ast.label_x2 }}" y="{{ ast.label_y2 }}" text-anchor="{{ ast.anchor | default: 'start' }}" textLength="55" lengthAdjust="spacingAndGlyphs" class="text--bold">{{ ast.name_part_2 }}</text>
+                        <text x="{{ ast.label_x1 }}" y="{{ ast.label_y1 }}" text-anchor="{{ ast.anchor | default: 'start' }}" class="text--bold">{{ ast.name_part_1 }}</text>
+                        <text x="{{ ast.label_x2 }}" y="{{ ast.label_y2 }}" text-anchor="{{ ast.anchor | default: 'start' }}" class="text--bold">{{ ast.name_part_2 }}</text>
                       {% else %}
-                        <text x="{{ ast.label_x1 }}" y="{{ ast.label_y1 }}" text-anchor="{{ ast.anchor | default: 'start' }}" textLength="55" lengthAdjust="spacingAndGlyphs" class="text--bold">{{ ast.name_part_1 }}</text>
+                        <text x="{{ ast.label_x1 }}" y="{{ ast.label_y1 }}" text-anchor="{{ ast.anchor | default: 'start' }}" class="text--bold">{{ ast.name_part_1 }}</text>
                       {% endif %}
                     {% endif %}
                   {% endfor %}
@@ -131,7 +131,7 @@
             {% assign list_count = 0 %}
             {% for item in closest_list %}
               {% if list_count < 2 %}
-                <div class="flex flex--row layout--center-y gap--small p--2 rounded 1bit:bg--white 4bit:bg--gray-75 text--black">
+                <div class="flex flex--row layout--center-y gap--small p--2 rounded bg--gray-75 text--black">
                   <div class="grow">
                     <div class="text--bold text--medium" data-overflow="true" data-clamp="1">{{ item.name | default: '—' }}</div>
                     <div class="label text--small" data-overflow="true" data-clamp="1">{{ item.time_str | default: '—' }} &bull; Size: {{ item.size_m | default: '—' }}</div>

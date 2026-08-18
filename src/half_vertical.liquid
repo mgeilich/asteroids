@@ -7,7 +7,7 @@
     {% if radar_ticks_half_vertical and radar_ticks_half_vertical.size > 0 %}
       <svg width="380" height="350" viewBox="0 0 380 350" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg" class="text--black">
             <!-- Radar Grid boundaries -->
-            <g stroke="currentColor" fill="none">
+            <g stroke="#000" fill="none">
               <circle cx="190" cy="175" r="155" stroke-width="1" stroke-dasharray="1 5" />
               <circle cx="190" cy="175" r="150" stroke-width="2" />
               
@@ -24,11 +24,11 @@
             </g>
             
             <!-- Center marker -->
-            <circle cx="190" cy="175" r="4" fill="currentColor" />
+            <circle cx="190" cy="175" r="4" fill="#000" />
             
             <!-- Day Ticks (Scaled 150/190) -->
             {% if radar_ticks_half_vertical %}
-              <g stroke="currentColor" stroke-width="1.5">
+              <g stroke="#000" stroke-width="1.5">
                 {% for tick in radar_ticks_half_vertical %}
                   {% if tick and tick.x1 and tick.y1 and tick.x2 and tick.y2 %}
                     <line x1="{{ tick.x1 }}" y1="{{ tick.y1 }}" x2="{{ tick.x2 }}" y2="{{ tick.y2 }}" />
@@ -39,10 +39,10 @@
             
             <!-- Day Ticks Labels -->
             {% if radar_ticks_half_vertical %}
-              <g fill="currentColor">
+              <g fill="#000">
                 {% for tick in radar_ticks_half_vertical %}
                   {% if tick and tick.label_x and tick.label_y %}
-                    <text x="{{ tick.label_x }}" y="{{ tick.label_y }}" text-anchor="{{ tick.anchor | default: 'middle' }}" textLength="30" lengthAdjust="spacingAndGlyphs">
+                    <text x="{{ tick.label_x }}" y="{{ tick.label_y }}" text-anchor="{{ tick.anchor | default: 'middle' }}">
                       {{- tick.label | default: '—' -}}
                     </text>
                   {% endif %}
@@ -52,21 +52,21 @@
             
             <!-- Asteroids (Scaled 150/190) -->
             {% if radar_asteroids_half_vertical and radar_asteroids_half_vertical.size > 0 %}
-              <g stroke="currentColor" stroke-width="1.5" fill="none">
+              <g stroke="#000" stroke-width="1.5" fill="none">
                 {% for ast in radar_asteroids_half_vertical %}
                   {% if ast and ast.x and ast.y %}
-                    <circle cx="{{ ast.x }}" cy="{{ ast.y }}" r="{{ ast.r | default: 3 }}" {% if ast.is_hazardous %}fill="currentColor"{% endif %} />
+                    <circle cx="{{ ast.x }}" cy="{{ ast.y }}" r="{{ ast.r | default: 3 }}" {% if ast.is_hazardous %}fill="#000"{% endif %} />
                   {% endif %}
                 {% endfor %}
               </g>
-              <g fill="currentColor">
+              <g fill="#000">
                 {% for ast in radar_asteroids_half_vertical %}
                   {% if ast and ast.label_x1 and ast.label_y1 %}
                     {% if ast.name_part_2 %}
-                      <text x="{{ ast.label_x1 }}" y="{{ ast.label_y1 }}" text-anchor="{{ ast.anchor | default: 'start' }}" textLength="55" lengthAdjust="spacingAndGlyphs" class="text--bold">{{ ast.name_part_1 }}</text>
-                      <text x="{{ ast.label_x2 }}" y="{{ ast.label_y2 }}" text-anchor="{{ ast.anchor | default: 'start' }}" textLength="55" lengthAdjust="spacingAndGlyphs" class="text--bold">{{ ast.name_part_2 }}</text>
+                      <text x="{{ ast.label_x1 }}" y="{{ ast.label_y1 }}" text-anchor="{{ ast.anchor | default: 'start' }}" class="text--bold">{{ ast.name_part_1 }}</text>
+                      <text x="{{ ast.label_x2 }}" y="{{ ast.label_y2 }}" text-anchor="{{ ast.anchor | default: 'start' }}" class="text--bold">{{ ast.name_part_2 }}</text>
                     {% else %}
-                      <text x="{{ ast.label_x1 }}" y="{{ ast.label_y1 }}" text-anchor="{{ ast.anchor | default: 'start' }}" textLength="55" lengthAdjust="spacingAndGlyphs" class="text--bold">{{ ast.name_part_1 }}</text>
+                      <text x="{{ ast.label_x1 }}" y="{{ ast.label_y1 }}" text-anchor="{{ ast.anchor | default: 'start' }}" class="text--bold">{{ ast.name_part_1 }}</text>
                     {% endif %}
                   {% endif %}
                 {% endfor %}

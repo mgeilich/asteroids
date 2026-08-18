@@ -38,5 +38,5 @@ custom_fields:
   email_address: michaelbgeilich@gmail.com
   category: discovery,education
 name: Asteroids
-description: Asteroids and Near-Earth Objects
+description: Track incoming asteroids on radar
 refresh_interval: 60
