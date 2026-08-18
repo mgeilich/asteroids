@@ -81,7 +81,7 @@
           <!-- Closest Name Box -->
           <div class="flex flex--row layout--center-y gap--space-between bg--gray-75 text--black rounded p--1 w--full">
             <span class="label text--xxsmall">CLOSEST NAME</span>
-            <span class="value text--bold text--xsmall">{{ closest_name | default: '—' }}</span>
+            <span class="value text--bold text--xsmall" data-overflow="true" data-clamp="1">{{ closest_name | default: '—' }}</span>
           </div>
         </div>
       {% else %}

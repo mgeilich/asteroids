@@ -102,6 +102,7 @@
         <!-- Closest list schedule (only 1 closest object to fit in horizontal e-ink view height) -->
         <div class="flex flex--col gap--small">
           {% if closest_list and closest_list.size > 0 %}
+            <div class="label text--xxsmall text--bold">CLOSEST FLYBY (1 of {{ closest_list.size | default: 1 }})</div>
             {% assign list_count = 0 %}
             {% for item in closest_list %}
               {% if list_count < 1 %}
