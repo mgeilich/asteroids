@@ -1,34 +1,34 @@
+<div class="layout layout--col">
   {% render 'title_bar' %}
-  <div class="layout layout--col">
     <div class="flex flex--col portrait:flex--col landscape:flex--row lg:flex--row gap--space-between p--1 grow w--full">
   
   <!-- Radar Face (380x350 px) -->
   <div class="flex flex--col layout--center-x">
     {% if radar_ticks_half_vertical and radar_ticks_half_vertical.size > 0 %}
-      <svg width="380" height="350" viewBox="0 0 380 350" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" class="text--black radar-svg radar-svg--half-vertical">
+      <svg width="380" height="350" viewBox="0 0 380 350" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg" class="text--black">
             <!-- Radar Grid boundaries -->
-            <g class="radar-grid-group">
-              <circle cx="190" cy="175" r="155" class="grid-outer-boundary grid-outer-boundary--large" />
-              <circle cx="190" cy="175" r="150" class="grid-inner-boundary--large" />
+            <g stroke="currentColor" fill="none">
+              <circle cx="190" cy="175" r="155" stroke-width="1" stroke-dasharray="1 5" />
+              <circle cx="190" cy="175" r="150" stroke-width="2" />
               
               <!-- Concentric rings -->
-              <g class="grid-range-rings grid-range-rings--large">
+              <g stroke-width="1" stroke-dasharray="3 6">
                 <circle cx="190" cy="175" r="113" />
                 <circle cx="190" cy="175" r="75" />
                 <circle cx="190" cy="175" r="38" />
               </g>
               
               <!-- Crosshairs -->
-              <line x1="190" y1="20" x2="190" y2="330" class="grid-crosshairs" />
-              <line x1="35" y1="175" x2="345" y2="175" class="grid-crosshairs" />
+              <line x1="190" y1="20" x2="190" y2="330" stroke-width="1" stroke-dasharray="2 4" />
+              <line x1="35" y1="175" x2="345" y2="175" stroke-width="1" stroke-dasharray="2 4" />
             </g>
             
             <!-- Center marker -->
-            <circle cx="190" cy="175" r="4" class="radar-center-marker" />
+            <circle cx="190" cy="175" r="4" fill="currentColor" />
             
             <!-- Day Ticks (Scaled 150/190) -->
             {% if radar_ticks_half_vertical %}
-              <g class="radar-ticks-group">
+              <g stroke="currentColor" stroke-width="1.5">
                 {% for tick in radar_ticks_half_vertical %}
                   {% if tick and tick.x1 and tick.y1 and tick.x2 and tick.y2 %}
                     <line x1="{{ tick.x1 }}" y1="{{ tick.y1 }}" x2="{{ tick.x2 }}" y2="{{ tick.y2 }}" />
@@ -52,7 +52,7 @@
             
             <!-- Asteroids (Scaled 150/190) -->
             {% if radar_asteroids_half_vertical and radar_asteroids_half_vertical.size > 0 %}
-              <g class="radar-asteroids-group">
+              <g stroke="currentColor" stroke-width="1.5" fill="none">
                 {% for ast in radar_asteroids_half_vertical %}
                   {% if ast and ast.x and ast.y %}
                     <circle cx="{{ ast.x }}" cy="{{ ast.y }}" r="{{ ast.r | default: 3 }}" {% if ast.is_hazardous %}fill="currentColor"{% endif %} />

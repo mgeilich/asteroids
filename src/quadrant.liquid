@@ -1,33 +1,33 @@
+<div class="layout layout--col">
   {% render 'title_bar' %}
-  <div class="layout layout--col">
     <div class="flex flex--col lg:flex--row portrait:flex--col landscape:flex--row gap--small w--full grow p--1">
     
     <!-- Left Column: Tiny Radar (120x120px screen size) -->
     <div class="flex flex--col layout--center-x">
       {% if radar_ticks_quadrant and radar_ticks_quadrant.size > 0 %}
-        <svg width="150" height="150" viewBox="0 0 150 150" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" class="text--black radar-svg radar-svg--quadrant">
+        <svg width="120" height="120" viewBox="0 0 150 150" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg" class="text--black">
               <!-- Radar Grid boundaries -->
-              <g class="radar-grid-group">
-                <circle cx="75" cy="75" r="70" class="grid-outer-boundary grid-outer-boundary--small" />
-                <circle cx="75" cy="75" r="67" class="grid-inner-boundary--small" />
+              <g stroke="currentColor" fill="none">
+                <circle cx="75" cy="75" r="70" stroke-width="1" stroke-dasharray="1 4" />
+                <circle cx="75" cy="75" r="67" stroke-width="1.5" />
                 
                 <!-- Concentric rings -->
-                <g class="grid-range-rings grid-range-rings--small">
+                <g stroke-width="1" stroke-dasharray="2 5">
                   <circle cx="75" cy="75" r="50" />
                   <circle cx="75" cy="75" r="33" />
                   <circle cx="75" cy="75" r="16" />
                 </g>
                 
                 <!-- Crosshairs -->
-                <line x1="75" y1="5" x2="75" y2="145" class="grid-crosshairs" />
-                <line x1="5" y1="75" x2="145" y2="75" class="grid-crosshairs" />
+                <line x1="75" y1="5" x2="75" y2="145" stroke-width="1" stroke-dasharray="2 4" />
+                <line x1="5" y1="75" x2="145" y2="75" stroke-width="1" stroke-dasharray="2 4" />
               </g>
               
               <!-- Center Earth marker -->
-              <circle cx="75" cy="75" r="2.5" class="radar-center-marker" />
+              <circle cx="75" cy="75" r="2.5" fill="currentColor" />
               
               <!-- Day Ticks (Scaled 70/190, no labels to prevent overlap) -->
-              <g class="radar-ticks-quadrant-group">
+              <g stroke="currentColor" stroke-width="1.0">
                 {% for tick in radar_ticks_quadrant %}
                   <line x1="{{ tick.x1 | default: 0 }}" y1="{{ tick.y1 | default: 0 }}" x2="{{ tick.x2 | default: 0 }}" y2="{{ tick.y2 | default: 0 }}" />
                 {% endfor %}
@@ -35,7 +35,7 @@
               
               <!-- Asteroids (Scaled 70/190, no labels) -->
               {% if radar_asteroids_quadrant and radar_asteroids_quadrant.size > 0 %}
-                <g class="radar-asteroids-group">
+                <g stroke="currentColor" stroke-width="1.5" fill="none">
                   {% for ast in radar_asteroids_quadrant %}
                     <circle cx="{{ ast.x | default: 0 }}" cy="{{ ast.y | default: 0 }}" r="{{ ast.r | default: 3 }}" {% if ast.is_hazardous %}fill="currentColor"{% endif %} />
                   {% endfor %}
