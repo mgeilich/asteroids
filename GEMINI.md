@@ -32,4 +32,6 @@ Always follow these guidelines when editing or deploying files in this repositor
 *   **Synchronize Dual Files**: Keep files in `src/` (e.g. `src/transform.js`, `src/settings.yml`) and their root counterparts (`transform.js`, `settings.yml`) identical. The TRMNL CLI deploys files from the root.
 *   **Metadata Limits**: Keep the root `description` field in `settings.yml` under TRMNL's maximum limit of 35 characters.
 *   **Sanitize Coordinate Computations**: Always validate math results inside transform scripts using `isFinite()` before passing coordinates to Liquid SVG templates, avoiding rendering breaks from `NaN` or `Infinity`.
+*   **Layout Vertical Breathing Room**: Use explicit spacing classes (e.g., `gap--large` or `gap--space-between`) on root layout wrappers and grid rows to prevent stacked telemetry items from sitting too tight under SVGs during portrait column wrapping.
+*   **Responsive SVG Quadrants**: Define portrait-specific width utilities (e.g., `portrait:w--1-2`) on quadrant views to prevent square SVGs from taking up excessive vertical screen space when columns stack vertically.
 
