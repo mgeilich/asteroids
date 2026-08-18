@@ -16,7 +16,7 @@ function cleanAsteroidName(rawName) {
 function run(input) {
   // Radar layouts configuration
   const LAYOUTS = {
-    full: { cx: 220, cy: 220, R_max: 195, D_max: 40, tick_inner: 196, tick_outer: 204, tick_label: 214 },
+    full: { cx: 175, cy: 165, R_max: 155, D_max: 40, tick_inner: 156, tick_outer: 162, tick_label: 170 },
     half_horizontal: { cx: 110, cy: 80, R_max: 65, D_max: 40, tick_inner: 62, tick_outer: 68, tick_label: 75 },
     half_vertical: { cx: 190, cy: 175, R_max: 150, D_max: 40, tick_inner: 143, tick_outer: 155, tick_label: 165 },
     quadrant: { cx: 75, cy: 75, R_max: 67, D_max: 40, tick_inner: 64, tick_outer: 70, tick_label: 0 }
@@ -56,10 +56,10 @@ function run(input) {
     // If we only have precalculated full-layout asteroids, we extract their properties to reconstruct candidates
     candidates = input.radar_asteroids.map(a => {
       // Map back to relative values
-      const x_diff = a.x - 220;
-      const y_diff = 220 - a.y; // cy is 220
+      const x_diff = a.x - 175;
+      const y_diff = 165 - a.y; // cy is 165
       const R = Math.sqrt(x_diff * x_diff + y_diff * y_diff);
-      const miss_dist = (R / 195.0) * 40.0;
+      const miss_dist = (R / 155.0) * 40.0;
       
       let angle_rad = Math.atan2(x_diff, y_diff);
       if (angle_rad < 0) angle_rad += 2 * Math.PI;
@@ -80,6 +80,9 @@ function run(input) {
     });
     total_count = input.total_count || candidates.length;
   }
+
+  // Filter out candidates with invalid or missing epoch/timestamp
+  candidates = candidates.filter(c => c && c.epoch && !isNaN(Number(c.epoch)));
 
   // Fallback if no asteroids found
   if (candidates.length === 0) {
@@ -108,7 +111,7 @@ function run(input) {
   const closest_name = closest_candidate.name;
   
   let warning_active = false;
-  const closest_list_payload = [];
+  const closest_list = [];
   const closest_3 = sorted_by_distance.slice(0, 3);
   
   for (const item of closest_3) {
@@ -121,7 +124,7 @@ function run(input) {
     const rem_hours = hours_to % 24;
     const time_str = days_to > 0 ? `T+${days_to}d ${rem_hours}h` : `T+${rem_hours}h`;
     
-    closest_list_payload.push({
+    closest_list.push({
       name: item.name,
       dist_ld: item.miss_distance_ld.toFixed(1),
       size_m: Math.round(item.avg_diameter) + "m",
@@ -192,7 +195,10 @@ function run(input) {
   // Helper to compute asteroids
   function computeAsteroids(layout) {
     const radar_candidates = candidates
-      .filter(c => c.miss_distance_ld <= layout.D_max && c.name && c.name.trim() !== '')
+      .filter(c => {
+        if (!c.epoch || isNaN(Number(c.epoch))) return false;
+        return c.miss_distance_ld <= layout.D_max && c.name && c.name.trim() !== '';
+      })
       .sort((a, b) => {
         if (a.is_hazardous && !b.is_hazardous) return -1;
         if (!a.is_hazardous && b.is_hazardous) return 1;
@@ -292,6 +298,6 @@ function run(input) {
     radar_asteroids_half_vertical: computeAsteroids(LAYOUTS.half_vertical) || [],
     radar_ticks_quadrant: computeTicks(LAYOUTS.quadrant) || [],
     radar_asteroids_quadrant: computeAsteroids(LAYOUTS.quadrant) || [],
-    closest_list: closest_list_payload || []
+    closest_list: closest_list || []
   };
 }
