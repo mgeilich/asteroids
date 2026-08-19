@@ -1,5 +1,4 @@
 <div class="layout layout--col">
-  {% render 'title_bar' %}
     <div class="flex flex--col lg:flex--row portrait:flex--col landscape:flex--row gap--medium w--full grow p--1">
     
     <!-- Left Column: Compact Radar (220x160px) -->
@@ -124,7 +123,7 @@
           {% endif %}
           
           {% unless closest_list and closest_list.size > 0 %}
-            <div class="p--2 bg--gray-75 text--gray-40 rounded text--center label">
+            <div class="p--2 bg--gray-75 text--gray-30 rounded text--center label">
               No NEO activity detected.
             </div>
           {% endunless %}
@@ -139,3 +138,5 @@
   
     </div>
   </div>
+</div>
+{% render 'title_bar' %}

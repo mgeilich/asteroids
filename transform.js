@@ -41,21 +41,13 @@ function cleanAsteroidName(rawName) {
         radar_asteroids_half_vertical: [],
         radar_ticks_quadrant: [],
         radar_asteroids_quadrant: [],
-        closest_list: [
-          {
-            name: "OFFLINE: NO DATA",
-            dist_ld: "—",
-            size_m: "—",
-            is_hazardous: "",
-            time_str: "NO TELEMETRY"
-          }
-        ]
+        closest_list: []
       };
     }
     
     let candidates = [];
     let total_count = 0;
-    
+
     if (input.candidates) {
       candidates = input.candidates.map((c, idx) => {
         let epoch = Number(c.epoch);
@@ -335,15 +327,7 @@ function cleanAsteroidName(rawName) {
       radar_asteroids_half_vertical: [],
       radar_ticks_quadrant: [],
       radar_asteroids_quadrant: [],
-      closest_list: [
-        {
-          name: "ERROR: OFFLINE",
-          dist_ld: "—",
-          size_m: "—",
-          is_hazardous: "",
-          time_str: "MALFORMED DATA"
-        }
-      ]
+      closest_list: []
     };
   }
 }
