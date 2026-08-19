@@ -34,7 +34,7 @@ function cleanAsteroidName(rawName) {
   try {
     // Radar layouts configuration
     const LAYOUTS = {
-      full: { cx: 140, cy: 130, R_max: 120, D_max: 40, tick_inner: 121, tick_outer: 126, tick_label: 132 },
+      full: { cx: 175, cy: 165, R_max: 155, D_max: 40, tick_inner: 156, tick_outer: 162, tick_label: 170 },
       half_horizontal: { cx: 110, cy: 80, R_max: 65, D_max: 40, tick_inner: 62, tick_outer: 68, tick_label: 75 },
       half_vertical: { cx: 190, cy: 175, R_max: 150, D_max: 40, tick_inner: 143, tick_outer: 155, tick_label: 165 },
       quadrant: { cx: 75, cy: 75, R_max: 67, D_max: 40, tick_inner: 64, tick_outer: 70, tick_label: 0 }
@@ -61,6 +61,27 @@ function cleanAsteroidName(rawName) {
         radar_ticks_quadrant: [],
         radar_asteroids_quadrant: [],
         closest_list: []
+      };
+    }
+
+    // If the input is already a fully computed radar payload, pass it through directly
+    // and guarantee all expected keys exist (defaulting to empty arrays/strings)
+    if (input.radar_ticks_full !== undefined || input.radar_asteroids_full !== undefined || input.radar_ticks_half_horizontal !== undefined) {
+      return {
+        system_status: input.system_status || "SYSTEM NOMINAL",
+        total_count: input.total_count !== undefined ? input.total_count : "—",
+        closest_dist_ld: input.closest_dist_ld || "—",
+        closest_name: input.closest_name || "—",
+        last_updated: input.last_updated || now.toUTCString(),
+        radar_ticks_full: input.radar_ticks_full || [],
+        radar_asteroids_full: input.radar_asteroids_full || [],
+        radar_ticks_half_horizontal: input.radar_ticks_half_horizontal || [],
+        radar_asteroids_half_horizontal: input.radar_asteroids_half_horizontal || [],
+        radar_ticks_half_vertical: input.radar_ticks_half_vertical || [],
+        radar_asteroids_half_vertical: input.radar_asteroids_half_vertical || [],
+        radar_ticks_quadrant: input.radar_ticks_quadrant || [],
+        radar_asteroids_quadrant: input.radar_asteroids_quadrant || [],
+        closest_list: input.closest_list || []
       };
     }
     
