@@ -1,10 +1,10 @@
 <div class="layout layout--col gap--space-between">
-    <div class="grid grid--cols-12 gap--large gap--space-between p--1 w--full">
+    <div class="grid grid--cols-2 portrait:grid--cols-1 gap--large w--full grow p--1">
     
-    <!-- Left Column: Radar (450px wide) -->
-    <div class="col--span-6 portrait:col--span-12 flex flex--col layout--center-x grow">
+    <!-- Left Column: Radar -->
+    <div class="flex flex--col layout--center-x grow">
       {% if radar_ticks_full and radar_ticks_full.size > 0 %}
-        <svg width="100%" viewBox="0 0 350 330" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg" class="text--black w--full">
+        <svg width="350" height="330" viewBox="0 0 350 330" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg" class="text--black w--full max-w--full">
               <!-- Radar Grid Boundaries and Rings -->
               <g stroke="currentColor" fill="none">
                 <!-- Outer tick border and radar boundary -->
@@ -84,14 +84,14 @@
               {% endif %}
             </svg>
       {% else %}
-        <div class="p--4 bg--gray-75 text--black rounded text--center label grow flex layout--center-x layout--center-y">
+        <div class="p--4 text--black rounded text--center label grow flex layout--center-x layout--center-y">
           Scan in progress... No telemetry data available.
         </div>
       {% endif %}
     </div>
     
     <!-- Right Column: Status & Schedule Details -->
-    <div class="col--span-6 portrait:col--span-12 flex flex--col gap--medium">
+    <div class="flex flex--col gap--medium grow">
       {% if radar_ticks_full and radar_ticks_full.size > 0 %}
         <!-- Header -->
         <div class="title text--bold text--xsmall lg:text--large portrait:text--xsmall">PLANETARY DEFENSE</div>
@@ -148,13 +148,13 @@
           {% endif %}
           
           {% unless closest_list and closest_list.size > 0 %}
-            <div class="p--3 bg--gray-75 text--gray-30 rounded text--center label">
+            <div class="p--3 text--black rounded text--center label">
               No NEO activity detected.
             </div>
           {% endunless %}
         </div>
       {% else %}
-        <div class="p--4 bg--gray-75 text--black rounded text--center label grow flex layout--center-x layout--center-y">
+        <div class="p--4 text--black rounded text--center label grow flex layout--center-x layout--center-y">
           Radar scan offline. System checking for telemetry updates...
         </div>
       {% endif %}

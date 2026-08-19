@@ -61,7 +61,7 @@
               {% endif %}
             </svg>
       {% else %}
-        <div class="p--3 bg--gray-75 text--black rounded text--center label grow flex layout--center-x layout--center-y">
+        <div class="p--3 text--black rounded text--center label grow flex layout--center-x layout--center-y">
           Scan in progress... No telemetry data available.
         </div>
       {% endif %}
@@ -123,13 +123,13 @@
           {% endif %}
           
           {% unless closest_list and closest_list.size > 0 %}
-            <div class="p--2 bg--gray-75 text--gray-30 rounded text--center label">
+            <div class="p--2 text--black rounded text--center label">
               No NEO activity detected.
             </div>
           {% endunless %}
         </div>
       {% else %}
-        <div class="p--3 bg--gray-75 text--black rounded text--center label grow flex layout--center-x layout--center-y">
+        <div class="p--3 text--black rounded text--center label grow flex layout--center-x layout--center-y">
           Telemetry offline. System checking for updates...
         </div>
       {% endif %}
