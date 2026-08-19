@@ -2,8 +2,9 @@
     <div class="grid grid--cols-6 portrait:grid--cols-1 gap--large w--full grow p--1">
     
     <!-- Left Column: Radar -->
-    <div class="col--span-4 flex flex--col flex--center-x grow">
-      {% if radar_ticks_full and radar_ticks_full.size > 0 %}
+    <div class="col--span-4">
+      <div class="flex flex--col flex--center-x grow">
+        {% if radar_ticks_full and radar_ticks_full.size > 0 %}
         <svg width="350" height="330" viewBox="0 0 350 330" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg" class="text--black max-w--full">
           <defs>
             <clipPath id="label-clip">
@@ -96,10 +97,12 @@
           Scan in progress... No telemetry data available.
         </div>
       {% endif %}
+      </div>
     </div>
     
     <!-- Right Column: Status & Schedule Details -->
-    <div class="col--span-2 flex flex--col gap--medium portrait:gap--small grow">
+    <div class="col--span-2">
+      <div class="flex flex--col gap--medium portrait:gap--small grow">
       {% if radar_ticks_full and radar_ticks_full.size > 0 %}
         <!-- Header -->
         <div class="title text--bold text--xsmall lg:text--large portrait:text--xsmall">PLANETARY DEFENSE</div>
@@ -138,11 +141,11 @@
             {% for item in closest_list limit: 1 %}
               <div class="flex flex--row flex--center-y gap--small p--1 rounded bg--gray-75 text--black">
                 <div class="grow">
-                  <div class="text--bold text--medium" data-overflow="true" data-clamp="1">{{ item.name | default: '—' }}</div>
-                  <div class="label text--small" data-overflow="true" data-clamp="1">{{ item.time_str | default: '—' }} &bull; Size: {{ item.size_m | default: '—' }}</div>
+                  <div class="text--bold text--medium" data-clamp="1">{{ item.name | default: '—' }}</div>
+                  <div class="label text--small" data-clamp="1">{{ item.time_str | default: '—' }} &bull; Size: {{ item.size_m | default: '—' }}</div>
                 </div>
                 <div class="text--right flex flex--col layout--right">
-                  <div class="text--bold text--medium" data-overflow="true" data-clamp="1">{{ item.dist_ld | default: '—' }} LD</div>
+                  <div class="text--bold text--medium" data-clamp="1">{{ item.dist_ld | default: '—' }} LD</div>
                   {% if item.is_hazardous != "" and item.is_hazardous != nil %}
                     <span class="bg--black text--white px--2 rounded text--bold text--small">HAZARD</span>
                   {% endif %}
@@ -160,6 +163,7 @@
           Radar scan offline. System checking for telemetry updates...
         </div>
       {% endif %}
+      </div>
     </div>
   </div>
 </div>

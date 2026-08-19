@@ -9,10 +9,6 @@
 {% assign closest_name = closest_name | default: '—' %}
 {% assign system_status = system_status | default: 'SYSTEM OFFLINE: SCAN IN PROGRESS' %}
 {% assign last_updated = last_updated | default: '—' %}
-{% assign closest_list = closest_list | default: trmnl.data.closest_list %}
-{% if closest_list == nil or closest_list == "" %}
-  {% assign closest_list = "" | split: "," %}
-{% endif %}
 
 
 {% template title_bar %}
@@ -24,4 +20,5 @@
     {% endif %}
   </div>
 {% endtemplate %}
+<!-- class="layout" -->
 
