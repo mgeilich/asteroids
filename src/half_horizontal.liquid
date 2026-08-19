@@ -74,8 +74,8 @@
     <!-- Right Column: Status Banner & Summary Ticker (540px wide) -->
     <div class="flex flex--col gap--small grow">
       {% if radar_ticks_half_horizontal and radar_ticks_half_horizontal.size > 0 %}
-        <!-- Top header + warning status -->
-        <div class="flex flex--row layout--bottom gap--space-between mb--1">
+        <!-- System status and refresh banner -->
+        <div class="flex flex--row layout--bottom gap--large mb--1">
           <div>
             <div class="title text--bold text--small lg:text--medium">ASTEROIDS</div>
             <div class="label text--xsmall lg:text--small">Planetary Defense Telemetry</div>
@@ -104,7 +104,7 @@
         
         <!-- Closest list schedule (only 1 closest object to fit in horizontal e-ink view height) -->
         <div class="flex flex--col gap--small">
-          {% if closest_list.size > 0 %}
+          {% if closest_list and closest_list.size > 0 %}
             <div class="label text--xxsmall text--bold">CLOSEST FLYBY (1 of {{ total_count | default: 1 }})</div>
             {% for item in closest_list limit: 1 %}
               <div class="flex flex--row flex--center-y gap--small p--1 rounded bg--gray-75 text--black grow">

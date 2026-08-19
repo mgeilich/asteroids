@@ -1,10 +1,10 @@
-<div class="layout layout--col gap--space-between">
+<div class="layout layout--col gap--large">
     <div class="grid grid--cols-2 portrait:grid--cols-1 gap--large w--full grow p--1">
     
     <!-- Left Column: Radar -->
     <div class="flex flex--col flex--center-x grow">
       {% if radar_ticks_full and radar_ticks_full.size > 0 %}
-        <svg width="350" height="330" viewBox="0 0 350 330" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg" class="text--black max-w--full">
+        <svg width="320" height="302" viewBox="0 0 350 330" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg" class="text--black max-w--full">
           <defs>
             <clipPath id="label-clip">
               <rect x="5" y="5" width="340" height="320" />
@@ -33,12 +33,12 @@
               
               <!-- Distance, Center, and Time Labels -->
               <g fill="currentColor" class="text--bold">
-                <text x="215" y="160" text-anchor="middle">10 LD</text>
-                <text x="255" y="160" text-anchor="middle">20 LD</text>
-                <text x="294" y="160" text-anchor="middle">30 LD</text>
-                <text x="330" y="160" text-anchor="end">40 LD</text>
-                <text x="175" y="179" text-anchor="middle">EARTH</text>
-                <text x="175" y="10" text-anchor="middle">NOW (T-0)</text>
+                <text x="215" y="160" text-anchor="middle" class="text--small">10 LD</text>
+                <text x="255" y="160" text-anchor="middle" class="text--small">20 LD</text>
+                <text x="294" y="160" text-anchor="middle" class="text--small">30 LD</text>
+                <text x="330" y="160" text-anchor="end" class="text--small">40 LD</text>
+                <text x="175" y="179" text-anchor="middle" class="text--small">EARTH</text>
+                <text x="175" y="10" text-anchor="middle" class="text--small">NOW (T-0)</text>
               </g>
               
               <!-- Day Ticks (calculated by backend) -->
@@ -57,7 +57,7 @@
                 <g fill="currentColor">
                   {% for tick in radar_ticks_full %}
                     {% if tick and tick.label_x and tick.label_y %}
-                      <text x="{{ tick.label_x }}" y="{{ tick.label_y }}" text-anchor="{{ tick.anchor | default: 'middle' }}">
+                      <text x="{{ tick.label_x }}" y="{{ tick.label_y }}" text-anchor="{{ tick.anchor | default: 'middle' }}" class="text--small">
                         {{- tick.label | default: '—' -}}
                       </text>
                     {% endif %}
@@ -81,10 +81,10 @@
                   {% for ast in radar_asteroids_full %}
                     {% if ast and ast.label_x1 and ast.label_y1 %}
                       {% if ast.name_part_2 %}
-                        <text x="{{ ast.label_x1 }}" y="{{ ast.label_y1 }}" text-anchor="{{ ast.anchor | default: 'start' }}" class="text--bold">{{ ast.name_part_1 }}</text>
-                        <text x="{{ ast.label_x2 }}" y="{{ ast.label_y2 }}" text-anchor="{{ ast.anchor | default: 'start' }}" class="text--bold">{{ ast.name_part_2 }}</text>
+                        <text x="{{ ast.label_x1 }}" y="{{ ast.label_y1 }}" text-anchor="{{ ast.anchor | default: 'start' }}" class="text--bold" data-clamp="1">{{ ast.name_part_1 }}</text>
+                        <text x="{{ ast.label_x2 }}" y="{{ ast.label_y2 }}" text-anchor="{{ ast.anchor | default: 'start' }}" class="text--bold" data-clamp="1">{{ ast.name_part_2 }}</text>
                       {% else %}
-                        <text x="{{ ast.label_x1 }}" y="{{ ast.label_y1 }}" text-anchor="{{ ast.anchor | default: 'start' }}" class="text--bold">{{ ast.name_part_1 }}</text>
+                        <text x="{{ ast.label_x1 }}" y="{{ ast.label_y1 }}" text-anchor="{{ ast.anchor | default: 'start' }}" class="text--bold" data-clamp="1">{{ ast.name_part_1 }}</text>
                       {% endif %}
                     {% endif %}
                   {% endfor %}
@@ -134,7 +134,7 @@
         <div class="flex flex--col gap--small">
           <div class="label text--bold">CLOSEST SCHEDULED FLYBY</div>
           
-          {% if closest_list.size > 0 %}
+          {% if closest_list and closest_list.size > 0 %}
             {% for item in closest_list limit: 1 %}
               <div class="flex flex--row flex--center-y gap--small p--2 rounded bg--gray-75 text--black">
                 <div class="grow">

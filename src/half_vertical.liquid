@@ -1,5 +1,5 @@
 <div class="layout layout--col">
-    <div class="flex flex--col portrait:flex--col landscape:flex--row lg:flex--row gap--space-between p--1 grow w--full">
+    <div class="flex flex--col portrait:flex--col landscape:flex--row lg:flex--row gap--large p--1 grow w--full">
   
   <!-- Radar Face (380x350 px) -->
   <div class="flex flex--col flex--center-x">
@@ -42,11 +42,11 @@
             {% endif %}
             
             <!-- Day Ticks Labels -->
-            {% if radar_ticks_half_vertical %}
+             {% if radar_ticks_half_vertical %}
               <g fill="currentColor">
                 {% for tick in radar_ticks_half_vertical %}
                   {% if tick and tick.label_x and tick.label_y %}
-                    <text x="{{ tick.label_x }}" y="{{ tick.label_y }}" text-anchor="{{ tick.anchor | default: 'middle' }}">
+                    <text x="{{ tick.label_x }}" y="{{ tick.label_y }}" text-anchor="{{ tick.anchor | default: 'middle' }}" class="text--small">
                       {{- tick.label | default: '—' -}}
                     </text>
                   {% endif %}
@@ -70,10 +70,10 @@
                 {% for ast in radar_asteroids_half_vertical %}
                   {% if ast and ast.label_x1 and ast.label_y1 %}
                     {% if ast.name_part_2 %}
-                      <text x="{{ ast.label_x1 }}" y="{{ ast.label_y1 }}" text-anchor="{{ ast.anchor | default: 'start' }}" class="text--bold">{{ ast.name_part_1 }}</text>
-                      <text x="{{ ast.label_x2 }}" y="{{ ast.label_y2 }}" text-anchor="{{ ast.anchor | default: 'start' }}" class="text--bold">{{ ast.name_part_2 }}</text>
+                      <text x="{{ ast.label_x1 }}" y="{{ ast.label_y1 }}" text-anchor="{{ ast.anchor | default: 'start' }}" class="text--bold" data-clamp="1">{{ ast.name_part_1 }}</text>
+                      <text x="{{ ast.label_x2 }}" y="{{ ast.label_y2 }}" text-anchor="{{ ast.anchor | default: 'start' }}" class="text--bold" data-clamp="1">{{ ast.name_part_2 }}</text>
                     {% else %}
-                      <text x="{{ ast.label_x1 }}" y="{{ ast.label_y1 }}" text-anchor="{{ ast.anchor | default: 'start' }}" class="text--bold">{{ ast.name_part_1 }}</text>
+                      <text x="{{ ast.label_x1 }}" y="{{ ast.label_y1 }}" text-anchor="{{ ast.anchor | default: 'start' }}" class="text--bold" data-clamp="1">{{ ast.name_part_1 }}</text>
                     {% endif %}
                   {% endif %}
                 {% endfor %}
@@ -88,7 +88,7 @@
   </div>
   
   <!-- Bottom Telemetry Banner -->
-  <div class="flex flex--row flex--center-y gap--space-between p--2 mb--1 w--full landscape:w--auto lg:w--auto">
+  <div class="flex flex--row flex--center-y gap--large p--2 mb--1 w--full landscape:w--auto lg:w--auto">
     {% if radar_ticks_half_vertical and radar_ticks_half_vertical.size > 0 %}
       <div class="flex flex--col">
         <div class="title text--bold text--small lg:text--medium">ASTEROIDS</div>
