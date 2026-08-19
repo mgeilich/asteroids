@@ -57,6 +57,7 @@ function cleanAsteroidName(rawName) {
         }
         return {
           ...c,
+          name: cleanAsteroidName(c.name),
           epoch: epoch
         };
       });
@@ -80,7 +81,7 @@ function cleanAsteroidName(rawName) {
         else if (a.r === 9) avg_diam = 400;
         
         return {
-          name: a.name,
+          name: cleanAsteroidName(a.name),
           miss_distance_ld: miss_dist,
           avg_diameter: avg_diam,
           is_hazardous: a.is_hazardous,

@@ -2,7 +2,7 @@
     <div class="flex flex--col lg:flex--row portrait:flex--col landscape:flex--row gap--medium w--full grow p--1">
     
     <!-- Left Column: Compact Radar (220x160px) -->
-    <div class="flex flex--col layout--center-x">
+    <div class="flex flex--col flex--center-x">
       {% if radar_ticks_half_horizontal and radar_ticks_half_horizontal.size > 0 %}
         <svg width="220" height="160" viewBox="0 0 220 160" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg" class="text--black">
               <!-- Radar Grid boundaries -->
@@ -61,7 +61,7 @@
               {% endif %}
             </svg>
       {% else %}
-        <div class="p--3 text--black rounded text--center label grow flex layout--center-x layout--center-y">
+        <div class="p--3 text--black rounded text--center label grow flex flex--center-x flex--center-y">
           Scan in progress... No telemetry data available.
         </div>
       {% endif %}
@@ -88,11 +88,11 @@
         
         <!-- Metrics row -->
         <div class="flex flex--row gap--small mb--1">
-          <div class="grow text--center bg--gray-75 text--black rounded p--1 flex flex--row gap--small layout--center-x layout--center-y">
+          <div class="grow text--center bg--gray-75 text--black rounded p--1 flex flex--row gap--small flex--center-x flex--center-y">
             <span class="label text--xsmall">COUNT:</span>
             <span class="value text--bold text--xsmall">{{ total_count | default: '—' }}</span>
           </div>
-          <div class="grow text--center bg--gray-75 text--black rounded p--1 flex flex--row gap--small layout--center-x layout--center-y">
+          <div class="grow text--center bg--gray-75 text--black rounded p--1 flex flex--row gap--small flex--center-x flex--center-y">
             <span class="label text--xsmall">CLOSEST:</span>
             <span class="value text--bold text--xsmall">{{ closest_dist_ld | default: '—' }}</span>
           </div>
@@ -101,11 +101,11 @@
         <!-- Closest list schedule (only 1 closest object to fit in horizontal e-ink view height) -->
         <div class="flex flex--col gap--small">
           {% if closest_list and closest_list.size > 0 %}
-            <div class="label text--xxsmall text--bold">CLOSEST FLYBY (1 of {{ closest_list.size | default: 1 }})</div>
+            <div class="label text--xxsmall text--bold">CLOSEST FLYBY (1 of {{ total_count | default: 1 }})</div>
             {% assign list_count = 0 %}
             {% for item in closest_list %}
               {% if list_count < 1 %}
-                <div class="flex flex--row layout--center-y gap--small p--2 rounded bg--gray-75 text--black grow">
+                <div class="flex flex--row flex--center-y gap--small p--2 rounded bg--gray-75 text--black grow">
                   <div class="grow">
                     <div class="text--bold text--medium" data-overflow="true" data-clamp="1">{{ item.name | default: '—' }}</div>
                     <div class="label text--small" data-overflow="true" data-clamp="1">{{ item.time_str | default: '—' }} &bull; Size: {{ item.size_m | default: '—' }}</div>
@@ -120,16 +120,14 @@
                 {% assign list_count = list_count | plus: 1 %}
               {% endif %}
             {% endfor %}
-          {% endif %}
-          
-          {% unless closest_list and closest_list.size > 0 %}
+          {% else %}
             <div class="p--2 text--black rounded text--center label">
               No NEO activity detected.
             </div>
-          {% endunless %}
+          {% endif %}
         </div>
       {% else %}
-        <div class="p--3 text--black rounded text--center label grow flex layout--center-x layout--center-y">
+        <div class="p--3 text--black rounded text--center label grow flex flex--center-x flex--center-y">
           Telemetry offline. System checking for updates...
         </div>
       {% endif %}

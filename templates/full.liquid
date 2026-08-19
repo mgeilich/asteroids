@@ -2,9 +2,14 @@
     <div class="grid grid--cols-2 portrait:grid--cols-1 gap--large w--full grow p--1">
     
     <!-- Left Column: Radar -->
-    <div class="flex flex--col layout--center-x grow">
+    <div class="flex flex--col flex--center-x grow">
       {% if radar_ticks_full and radar_ticks_full.size > 0 %}
         <svg width="350" height="330" viewBox="0 0 350 330" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg" class="text--black w--full max-w--full">
+          <defs>
+            <clipPath id="label-clip">
+              <rect x="5" y="5" width="340" height="320" />
+            </clipPath>
+          </defs>
               <!-- Radar Grid Boundaries and Rings -->
               <g stroke="currentColor" fill="none">
                 <!-- Outer tick border and radar boundary -->
@@ -69,7 +74,7 @@
                     {% endif %}
                   {% endfor %}
                 </g>
-                <g fill="currentColor">
+                <g fill="currentColor" clip-path="url(#label-clip)">
                   {% for ast in radar_asteroids_full %}
                     {% if ast and ast.label_x1 and ast.label_y1 %}
                       {% if ast.name_part_2 %}
@@ -84,7 +89,7 @@
               {% endif %}
             </svg>
       {% else %}
-        <div class="p--4 text--black rounded text--center label grow flex layout--center-x layout--center-y">
+        <div class="p--4 text--black rounded text--center label grow flex flex--center-x flex--center-y">
           Scan in progress... No telemetry data available.
         </div>
       {% endif %}
@@ -130,7 +135,7 @@
             {% assign list_count = 0 %}
             {% for item in closest_list %}
               {% if list_count < 2 %}
-                <div class="flex flex--row layout--center-y gap--small p--2 rounded bg--gray-75 text--black">
+                <div class="flex flex--row flex--center-y gap--small p--2 rounded bg--gray-75 text--black">
                   <div class="grow">
                     <div class="text--bold text--medium" data-overflow="true" data-clamp="1">{{ item.name | default: '—' }}</div>
                     <div class="label text--small" data-overflow="true" data-clamp="1">{{ item.time_str | default: '—' }} &bull; Size: {{ item.size_m | default: '—' }}</div>
@@ -145,16 +150,14 @@
                 {% assign list_count = list_count | plus: 1 %}
               {% endif %}
             {% endfor %}
-          {% endif %}
-          
-          {% unless closest_list and closest_list.size > 0 %}
+          {% else %}
             <div class="p--3 text--black rounded text--center label">
               No NEO activity detected.
             </div>
-          {% endunless %}
+          {% endif %}
         </div>
       {% else %}
-        <div class="p--4 text--black rounded text--center label grow flex layout--center-x layout--center-y">
+        <div class="p--4 text--black rounded text--center label grow flex flex--center-x flex--center-y">
           Radar scan offline. System checking for telemetry updates...
         </div>
       {% endif %}

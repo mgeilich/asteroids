@@ -2,9 +2,14 @@
     <div class="flex flex--col portrait:flex--col landscape:flex--row lg:flex--row gap--space-between p--1 grow w--full">
   
   <!-- Radar Face (380x350 px) -->
-  <div class="flex flex--col layout--center-x">
+  <div class="flex flex--col flex--center-x">
     {% if radar_ticks_half_vertical and radar_ticks_half_vertical.size > 0 %}
       <svg width="380" height="350" viewBox="0 0 380 350" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg" class="text--black">
+        <defs>
+          <clipPath id="label-clip">
+            <rect x="5" y="5" width="370" height="340" />
+          </clipPath>
+        </defs>
             <!-- Radar Grid boundaries -->
             <g stroke="currentColor" fill="none">
               <circle cx="190" cy="175" r="155" stroke-width="1" stroke-dasharray="1 5" />
@@ -58,7 +63,7 @@
                   {% endif %}
                 {% endfor %}
               </g>
-              <g fill="currentColor">
+              <g fill="currentColor" clip-path="url(#label-clip)">
                 {% for ast in radar_asteroids_half_vertical %}
                   {% if ast and ast.label_x1 and ast.label_y1 %}
                     {% if ast.name_part_2 %}
