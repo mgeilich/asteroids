@@ -24,7 +24,10 @@ function cleanAsteroidName(rawName) {
   let name = rawName.replace(/\(/g, "").replace(/\)/g, "").trim();
   let parts = name.split(/\s+/);
   if (parts.length > 1 && /^\d+$/.test(parts[0])) {
-    return parts.slice(1).join(" ");
+    name = parts.slice(1).join(" ");
+  }
+  if (name.length > 16) {
+    name = name.substring(0, 14) + "..";
   }
   return name;
 }function run(input) {

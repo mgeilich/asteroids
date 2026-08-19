@@ -88,11 +88,11 @@
         
         <!-- Metrics row -->
         <div class="flex flex--row gap--small mb--1">
-          <div class="grow text--center bg--gray-75 text--black rounded p--1 flex flex--row gap--small flex--center-x flex--center-y">
+          <div class="grow text--center bg--gray-75 text--black rounded p--0.5 flex flex--row gap--small flex--center-x flex--center-y">
             <span class="label text--xsmall">COUNT:</span>
             <span class="value text--bold text--xsmall">{{ total_count | default: '—' }}</span>
           </div>
-          <div class="grow text--center bg--gray-75 text--black rounded p--1 flex flex--row gap--small flex--center-x flex--center-y">
+          <div class="grow text--center bg--gray-75 text--black rounded p--0.5 flex flex--row gap--small flex--center-x flex--center-y">
             <span class="label text--xsmall">CLOSEST:</span>
             <span class="value text--bold text--xsmall">{{ closest_dist_ld | default: '—' }}</span>
           </div>
@@ -100,7 +100,7 @@
         
         <!-- Closest list schedule (only 1 closest object to fit in horizontal e-ink view height) -->
         <div class="flex flex--col gap--small">
-          {% if closest_list and closest_list.size > 0 %}
+          {% if closest_list.size > 0 %}
             <div class="label text--xxsmall text--bold">CLOSEST FLYBY (1 of {{ total_count | default: 1 }})</div>
             {% for item in closest_list limit: 1 %}
               <div class="flex flex--row flex--center-y gap--small p--1 rounded bg--gray-75 text--black grow">

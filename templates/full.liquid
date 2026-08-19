@@ -129,10 +129,10 @@
         
         <!-- Closest Scheduled Flybys -->
         <div class="flex flex--col gap--small">
-          <div class="label text--bold">CLOSEST SCHEDULED FLYBYS</div>
+          <div class="label text--bold">CLOSEST SCHEDULED FLYBY</div>
           
-          {% if closest_list and closest_list.size > 0 %}
-            {% for item in closest_list limit: 2 %}
+          {% if closest_list.size > 0 %}
+            {% for item in closest_list limit: 1 %}
               <div class="flex flex--row flex--center-y gap--small p--2 rounded bg--gray-75 text--black">
                 <div class="grow">
                   <div class="text--bold text--medium" data-overflow="true" data-clamp="1">{{ item.name | default: '—' }}</div>

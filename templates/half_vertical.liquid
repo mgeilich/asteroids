@@ -78,18 +78,18 @@
             {% endif %}
           </svg>
     {% else %}
-      <div class="p--4 bg--gray-75 text--black rounded text--center label grow flex layout--center-x layout--center-y">
+      <div class="p--4 text--black rounded text--center label grow flex flex--center-x flex--center-y">
         Scan in progress... No telemetry data available.
       </div>
     {% endif %}
   </div>
   
   <!-- Bottom Telemetry Banner -->
-  <div class="flex flex--row layout--center-y gap--space-between p--2 mb--1 w--full landscape:w--auto lg:w--auto">
+  <div class="flex flex--row flex--center-y gap--space-between p--2 mb--1 w--full landscape:w--auto lg:w--auto">
     {% if radar_ticks_half_vertical and radar_ticks_half_vertical.size > 0 %}
       <div class="flex flex--col">
         <div class="title text--bold text--small lg:text--medium">ASTEROIDS</div>
-        <div class="label text--xsmall lg:text--small">SCAN: {{ total_count | default: '—' }} NEOs</div>
+        <div class="label text--xxsmall lg:text--xsmall">SCAN: {{ total_count | default: '—' }} NEOs</div>
       </div>
       
       <!-- Mini status -->
@@ -106,7 +106,7 @@
         <span class="value text--bold text--small">{{ closest_dist_ld | default: '—' }}</span>
       </div>
     {% else %}
-      <div class="p--2 text--black rounded text--center label grow flex layout--center-x layout--center-y w--full">
+      <div class="p--2 text--black rounded text--center label grow flex flex--center-x flex--center-y w--full">
         Telemetry offline. Checking for orbital tracking updates...
       </div>
     {% endif %}
