@@ -36,6 +36,8 @@ custom_fields:
   name: Support & Creator Info
   description: Real-time tracking of near-Earth objects powered by the NASA NeoWS API.
   email_address: michaelbgeilich@gmail.com
+  github_url: https://github.com/mgeilich/asteroids
+  learn_more_url: https://api.nasa.gov
   category: discovery,education
 name: Asteroids
 description: Track incoming asteroids on radar
