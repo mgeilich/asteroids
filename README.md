@@ -32,6 +32,36 @@ A serverless, low-maintenance TRMNL e-ink plugin that displays upcoming Near-Ear
 
 ---
 
+## Data Payload Schema
+
+The TRMNL Serverless transform script expects the following JSON data payload format from the polling endpoint:
+
+```json
+{
+  "candidates": [
+    {
+      "id": "1234567",
+      "name": "(2026 NY1)",
+      "miss_distance_ld": 4.2,
+      "velocity_kph": 32100,
+      "avg_diameter": 150.0,
+      "is_hazardous": true,
+      "epoch": 1787140800000
+    }
+  ],
+  "total_count": 1
+}
+```
+
+*   `candidates`: List of nearby asteroid encounters within the upcoming 7 days.
+*   `epoch`: Milliseconds UTC timestamp of closest approach.
+*   `miss_distance_ld`: Distance of closest approach in Lunar Distances (LD).
+*   `avg_diameter`: Estimated diameter of the asteroid in meters (m).
+*   `is_hazardous`: Boolean flag indicating if the asteroid is classified as potentially hazardous.
+*   `total_count`: Total number of detected encounters.
+
+---
+
 ## Setup & Deployment
 
 You can deploy the Firebase functions and update the TRMNL markup manually, or configure GitHub Actions for fully automated deployments.

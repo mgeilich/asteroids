@@ -37,6 +37,11 @@ custom_fields:
   description: Real-time tracking of near-Earth objects.
   email_address: michaelbgeilich@gmail.com
   category: discovery,education
+- keyname: nasa_api_key
+  field_type: text
+  name: NASA API Key (Optional)
+  description: Optional NASA API key from api.nasa.gov to avoid demo limits.
 name: Asteroids
 description: Track incoming asteroids on radar
 refresh_interval: 60
+

@@ -1,6 +1,22 @@
 /**
  * TRMNL Serverless Transform Script for "Asteroids" (NEO Radar Monitor)
  * Can process raw NASA NeoWS API response directly, OR act as a pass-through/enricher.
+ * 
+ * Expected Input Schema:
+ * {
+ *   "candidates": [
+ *     {
+ *       "id": "string",
+ *       "name": "string",
+ *       "miss_distance_ld": number,
+ *       "velocity_kph": number,
+ *       "avg_diameter": number,
+ *       "is_hazardous": boolean,
+ *       "epoch": number
+ *     }
+ *   ],
+ *   "total_count": number
+ * }
  */
 
 function cleanAsteroidName(rawName) {
