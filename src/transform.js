@@ -34,7 +34,7 @@ function cleanAsteroidName(rawName) {
   try {
     // Radar layouts configuration
     const LAYOUTS = {
-      full: { cx: 175, cy: 165, R_max: 155, D_max: 40, tick_inner: 156, tick_outer: 162, tick_label: 170 },
+      full: { cx: 140, cy: 130, R_max: 120, D_max: 40, tick_inner: 121, tick_outer: 126, tick_label: 132 },
       half_horizontal: { cx: 110, cy: 80, R_max: 65, D_max: 40, tick_inner: 62, tick_outer: 68, tick_label: 75 },
       half_vertical: { cx: 190, cy: 175, R_max: 150, D_max: 40, tick_inner: 143, tick_outer: 155, tick_label: 165 },
       quadrant: { cx: 75, cy: 75, R_max: 67, D_max: 40, tick_inner: 64, tick_outer: 70, tick_label: 0 }
@@ -66,13 +66,16 @@ function cleanAsteroidName(rawName) {
     
     let candidates = [];
     let total_count = 0;
-    
+    let has_synthetic_epochs = false;
+
     if (input.candidates) {
       candidates = input.candidates.map((c, idx) => {
         let epoch = Number(c.epoch);
         // Normalize past epochs (e.g. 0 in mock/static data) to future offsets
         if (!epoch || epoch < now_ms) {
           epoch = now_ms + ((idx + 1) * 1.5 * 24 * 3600 * 1000);
+          has_synthetic_epochs = true;
+          console.warn("[transform.js] Synthetic future epoch assigned to candidate: " + c.name);
         }
         return {
           ...c,
@@ -303,9 +306,12 @@ function cleanAsteroidName(rawName) {
       }).filter(a => a !== null);
     }
 
-    const system_status = warning_active
+    let system_status = warning_active
       ? "WARNING: POTENTIALLY HAZARDOUS OBJECT IN SECTOR"
       : "SYSTEM STATUS: NOMINAL // ALL ENCOUNTERS SAFE";
+    if (has_synthetic_epochs) {
+      system_status = "WARNING: SYNTHETIC DATA DEPLOYED";
+    }
 
     const last_updated = now.toLocaleString("en-US", {
       month: "short",
