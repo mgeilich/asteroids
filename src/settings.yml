@@ -34,7 +34,7 @@ custom_fields:
 - keyname: author_bio
   field_type: author_bio
   name: Support & Creator Info
-  description: Real-time tracking of near-Earth objects.
+  description: Real-time tracking of near-Earth objects powered by the NASA NeoWS API.
   email_address: michaelbgeilich@gmail.com
   category: discovery,education
 - keyname: nasa_api_key

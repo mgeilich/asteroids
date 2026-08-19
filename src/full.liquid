@@ -75,6 +75,9 @@
                   {% endfor %}
                 </g>
                 <g fill="currentColor" clip-path="url(#label-clip)">
+                  {% if radar_asteroids_full.size == 0 %}
+                    <text x="175" y="140" text-anchor="middle" class="text--bold">CLEAR SECTOR</text>
+                  {% endif %}
                   {% for ast in radar_asteroids_full %}
                     {% if ast and ast.label_x1 and ast.label_y1 %}
                       {% if ast.name_part_2 %}
@@ -96,7 +99,7 @@
     </div>
     
     <!-- Right Column: Status & Schedule Details -->
-    <div class="flex flex--col gap--medium grow">
+    <div class="flex flex--col gap--medium portrait:gap--small grow">
       {% if radar_ticks_full and radar_ticks_full.size > 0 %}
         <!-- Header -->
         <div class="title text--bold text--xsmall lg:text--large portrait:text--xsmall">PLANETARY DEFENSE</div>

@@ -64,6 +64,9 @@
                 {% endfor %}
               </g>
               <g fill="currentColor" clip-path="url(#label-clip)">
+                {% if radar_asteroids_half_vertical.size == 0 %}
+                  <text x="190" y="150" text-anchor="middle" class="text--bold">CLEAR SECTOR</text>
+                {% endif %}
                 {% for ast in radar_asteroids_half_vertical %}
                   {% if ast and ast.label_x1 and ast.label_y1 %}
                     {% if ast.name_part_2 %}
