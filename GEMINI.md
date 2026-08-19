@@ -40,3 +40,7 @@ Always follow these guidelines when editing or deploying files in this repositor
 *   **Layout Vertical Breathing Room**: Use explicit spacing classes (e.g., `gap--large` or `gap--space-between`) on root layout wrappers and grid rows to prevent stacked telemetry items from sitting too tight under SVGs during portrait column wrapping.
 *   **Responsive SVG Quadrants**: Define portrait-specific width utilities (e.g., `portrait:w--1-2`) on quadrant views to prevent square SVGs from taking up excessive vertical screen space when columns stack vertically.
 
+## 7. Direct Local Firebase Deployment
+* **Rule**: Whenever deploying updates to Firebase (functions, rules, indexes), perform direct deployment from the local machine using the command: `firebase deploy --project neo-radar-trmnl-2026`.
+* **Reasoning**: Your local authenticated session (`mgeilich9@gmail.com`) has full owner rights, which bypasses GitHub Actions setup complexity, service account credential configurations, and IAM propagation delays.
+
