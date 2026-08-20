@@ -1,9 +1,9 @@
-<div class="layout layout--col gap--large">
-    <div class="grid grid--cols-6 portrait:grid--cols-1 gap--large w--full grow p--1">
+<div class="layout layout--col gap--medium portrait:gap--xsmall">
+    <div class="grid grid--cols-6 portrait:grid--cols-1 gap--large portrait:gap--small w--full grow p--1">
     
     <!-- Left Column: Radar -->
     <div class="col--span-3">
-      <div class="flex flex--col flex--center-x grow">
+      <div class="flex flex--col flex--center-x portrait:w--1-2 portrait:mx--auto">
         {% if radar_ticks_full and radar_ticks_full.size > 0 %}
         <svg width="350" height="330" viewBox="0 0 350 330" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg" class="text--black max-w--full">
           <defs>
@@ -135,7 +135,7 @@
         
         <!-- Closest Scheduled Flybys -->
         <div class="flex flex--col gap--small">
-          <div class="label text--bold">CLOSEST SCHEDULED FLYBY</div>
+          <div class="label text--bold">CLOSEST SCHEDULED FLYBY (TOP 1)</div>
           
           {% if closest_list and closest_list.size > 0 %}
             {% for item in closest_list limit: 1 %}

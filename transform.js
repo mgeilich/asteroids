@@ -106,6 +106,7 @@ function cleanAsteroidName(rawName) {
       });
       total_count = input.total_count || candidates.length;
     } else if (input.radar_asteroids) {
+      has_synthetic_epochs = true;
       // If we only have precalculated full-layout asteroids, we extract their properties to reconstruct candidates
       candidates = input.radar_asteroids.map(a => {
         // Map back to relative values

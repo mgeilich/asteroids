@@ -2,7 +2,7 @@
     <div class="flex flex--col lg:flex--row gap--large p--1 grow w--full">
     
     <!-- Left Column: Compact Radar (220x160px) -->
-    <div class="flex flex--col flex--center-x">
+    <div class="flex flex--col flex--center-x w--[220px] max-w--full">
       {% if radar_ticks_half_horizontal and radar_ticks_half_horizontal.size > 0 %}
         <svg width="220" height="160" viewBox="0 0 220 160" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg" class="text--black">
               <!-- Radar Grid boundaries -->
@@ -105,7 +105,7 @@
         <!-- Closest list schedule (only 1 closest object to fit in horizontal e-ink view height) -->
         <div class="flex flex--col gap--xsmall">
           {% if closest_list and closest_list.size > 0 %}
-            <div class="label text--xxsmall text--bold">CLOSEST FLYBY (1 of {{ total_count | default: 1 }})</div>
+            <div class="label text--xxsmall text--bold">CLOSEST FLYBY (TOP 1)</div>
             {% for item in closest_list limit: 1 %}
               <div class="flex flex--row flex--center-y gap--small p--1 rounded bg--gray-75 text--black grow">
                 <div class="grow">
