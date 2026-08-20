@@ -16,6 +16,7 @@ Always follow these guidelines when editing or deploying files in this repositor
 ## 4. Automatically Commit and Push to Git
 * **Rule**: Whenever you modify, create, or delete files in this repository (e.g. templates, rules, backend functions), automatically stage them (`git add`), commit them with a descriptive commit message (`git commit`), and push them to the remote repository (`git push`).
 * **Reasoning**: This keeps the codebase in sync immediately without requiring explicit user prompts to commit/push.
+
 ## 5. Test Publishing and Chef Verification Process
 * **Rule**: After making edits to the templates, follow the test publishing process to verify Chef checks:
   1. Validate templates locally if needed using the command: `export LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 && /usr/local/lib/ruby/gems/4.0.0/bin/trmnlp lint`.
@@ -31,7 +32,13 @@ Always follow these guidelines when editing or deploying files in this repositor
 *   **Title Bar Linter Wrapper**: Avoid wrapping the template definition inside shared.liquid in layout divs. Instead, add a dummy layout comment (e.g. `<!-- class="layout" -->`) below the template definition to satisfy file-based compiler layout checks without polluting the outer namespace.
 *   **Grid Nesting Separation**: Grid cells (`col--span-*` or auto-grid children) should be layout-agnostic and should not directly contain flex/container layout classes (e.g. `flex`, `flex--col`, `grow`, `p--*`). Nest a separate flex container `div` inside the grid cell.
 *   **SVG Sizing & Aspect Ratio Consistency**: Match the SVG width/height display dimensions exactly to the viewBox coordinate aspect ratio (e.g., `width="280" height="260" viewBox="0 0 280 260"`) to prevent rendering engine distortions on e-ink.
-*   **SVG Text Styles & Attributes**: Explicitly define SVG text elements using native attributes (e.g. `font-size="..."` and `fill="..."`) alongside standard framework classes to ensure rendering engine compatibility.
+*   **SVG Text Styles & Attributes**: Explicitly define SVG text elements using native attributes (e.g. `fill="..."`) alongside standard framework classes to ensure rendering engine compatibility. Do not use explicit `font-size="..."` attributes on SVG `<text>` tags as the parser flags them as inline style violations; rely on framework text helper classes instead.
+*   **Inline SVG Title Bar Icons**: Do not use `base64_encode` filters or base64 data URIs inside `<img>` tags for title bar icons. Inline the `<svg>` element directly in the title bar markup using Liquid captures or raw HTML, applying the standard `image image-stroke image-stroke--medium` classes on the `<svg>` tag.
+*   **Transform Array Key Safety**: Every return path inside `transform.js` (including input fallbacks, errors, or pass-through blocks) must return all layout variant arrays (e.g., `radar_ticks_full`, `radar_asteroids_full`, etc.) initialized to empty arrays `[]` rather than leaving them `undefined`. If input data is precalculated, detect and pass it through directly while defaulting missing arrays to `[]`.
+*   **SVG Radar Height Budget**: The maximum safe display dimensions for SVG radars in `full` (landscape split) and `half_vertical` (stacked) templates is `280x260` (viewBox `0 0 280 260`) centered at `cx="140" cy="130"`. Do not exceed 260px height to prevent vertical page clipping and overflow on e-ink.
+*   **No data-clamp on SVG text**: Do not use `data-clamp` on SVG `<text>` elements. Perform name truncation directly in the data engine (Python or JS) before rendering, enforcing an 8-character maximum limit (`name.substring(0, 6) + ".."`) for all radar asteroid labels.
+*   **Pass-through Validation**: If `transform.js` supports precalculated payloads, validate that tick and asteroid arrays for all four layout sizes (`full`, `half_horizontal`, `half_vertical`, `quadrant`) are present and non-empty. If any key is missing or empty, fall back to calculating them dynamically from raw candidates.
+*   **High Contrast Badges**: Avoid solid gray fills (like `bg--gray-70`) for nominal badges. Switch nominal statuses to outline badges using the framework `label--outline` class.
 *   **Data Truncation Attributes**: Avoid `data-overflow="true"` on text elements; instead use `data-clamp="1"` for explicit line-clamping and text truncation.
 *   **SVG Text Overflow Clipping**: Apply a `<clipPath>` containing the safe drawable bounds to all text elements in SVG charts to prevent text rendering overflow.
 *   **Quadrant Hero Emphasis**: Do not render charts or complex details inside quadrant layouts. Focus on a single hero statistic (e.g. total counts) paired with minimal secondary indicators.
@@ -47,4 +54,4 @@ Always follow these guidelines when editing or deploying files in this repositor
 ## 7. Direct Local Firebase Deployment
 * **Rule**: Whenever deploying updates to Firebase (functions, rules, indexes), perform direct deployment from the local machine using the command: `firebase deploy --project neo-radar-trmnl-2026`.
 * **Reasoning**: Your local authenticated session (`mgeilich9@gmail.com`) has full owner rights, which bypasses GitHub Actions setup complexity, service account credential configurations, and IAM propagation delays.
-
+* **No automated GitHub Actions CI/CD**: Do not configure or maintain automated deployment workflows (such as `.github/workflows/deploy.yml`) that attempt to push assets or code to TRMNL or Firebase on Git commit. Perform all deployments locally via the CLI.
