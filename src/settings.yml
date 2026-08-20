@@ -39,6 +39,12 @@ custom_fields:
   github_url: https://github.com/mgeilich/asteroids
   learn_more_url: https://api.nasa.gov
   category: discovery,education
+- keyname: nasa_api_key
+  field_type: password
+  name: NASA API Key
+  description: Get your API key from <a href="https://api.nasa.gov">NASA API Portal</a>.
+  optional: true
+  placeholder: DEMO_KEY
 name: Asteroids
 description: Track incoming asteroids on radar
 refresh_interval: 60

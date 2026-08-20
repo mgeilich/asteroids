@@ -98,6 +98,10 @@
             {% endif %}
           {% endfor %}
         </g>
+      {% else %}
+        <g fill="currentColor" font="bold 10px sans-serif">
+          <text x="140" y="130" text-anchor="middle" fill="currentColor">NO ASTEROIDS IN RANGE</text>
+        </g>
       {% endif %}
     </svg>
   {% else %}
@@ -149,8 +153,8 @@
           {% endfor %}
         </g>
       {% else %}
-        <g fill="currentColor" font="bold 9px sans-serif">
-          <text x="110" y="70" text-anchor="middle">CLEAR SECTOR</text>
+        <g fill="currentColor" font="bold 10px sans-serif">
+          <text x="110" y="80" text-anchor="middle">NO ASTEROIDS IN RANGE</text>
         </g>
       {% endif %}
     </svg>
