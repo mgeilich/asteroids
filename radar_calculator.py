@@ -7,12 +7,14 @@ logger = logging.getLogger(__name__)
 
 def clean_asteroid_name(raw_name: str) -> str:
     """Strips leading/trailing parentheses, spaces, and extraneous numbers from names."""
-    # E.g. "(2009 JR5)" -> "2009 JR5" or "465633 (2009 JR5)" -> "2009 JR5"
+    if not raw_name:
+        return "—"
     name = raw_name.replace("(", "").replace(")", "").strip()
-    # If the name starts with numbers followed by spaces (like a catalog number), try to isolate the designation
     parts = name.split()
     if len(parts) > 1 and parts[0].isdigit():
-        return " ".join(parts[1:])
+        name = " ".join(parts[1:])
+    if len(name) > 8:
+        name = name[:6] + ".."
     return name
 
 def calculate_telemetry(raw_data: Optional[Dict[str, Any]]) -> Dict[str, Any]:
@@ -144,9 +146,9 @@ def calculate_telemetry(raw_data: Optional[Dict[str, Any]]) -> Dict[str, Any]:
         
     # Layout dimensions configurations
     layouts = {
-        "full": {"cx": 175, "cy": 165, "R_max": 155, "D_max": 40.0, "tick_inner": 156, "tick_outer": 162, "tick_label": 170},
+        "full": {"cx": 140, "cy": 130, "R_max": 120, "D_max": 40.0, "tick_inner": 121, "tick_outer": 126, "tick_label": 132},
         "half_horizontal": {"cx": 110, "cy": 80, "R_max": 65, "D_max": 40.0, "tick_inner": 62, "tick_outer": 68, "tick_label": 75},
-        "half_vertical": {"cx": 190, "cy": 175, "R_max": 150, "D_max": 40.0, "tick_inner": 143, "tick_outer": 155, "tick_label": 165},
+        "half_vertical": {"cx": 140, "cy": 130, "R_max": 120, "D_max": 40.0, "tick_inner": 121, "tick_outer": 126, "tick_label": 132},
         "quadrant": {"cx": 75, "cy": 75, "R_max": 67, "D_max": 40.0, "tick_inner": 64, "tick_outer": 70, "tick_label": 0}
     }
     

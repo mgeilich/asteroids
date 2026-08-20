@@ -4,31 +4,31 @@
   <!-- Radar Face (380x350 px) -->
   <div class="flex flex--col flex--center-x">
     {% if radar_ticks_half_vertical and radar_ticks_half_vertical.size > 0 %}
-      <svg width="380" height="350" viewBox="0 0 380 350" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg" class="text--black">
+       <svg width="280" height="260" viewBox="0 0 280 260" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg" class="text--black max-w--full">
         <defs>
           <clipPath id="label-clip">
-            <rect x="5" y="5" width="370" height="340" />
+            <rect x="5" y="5" width="270" height="250" />
           </clipPath>
         </defs>
             <!-- Radar Grid boundaries -->
             <g stroke="currentColor" fill="none">
-              <circle cx="190" cy="175" r="155" stroke-width="1" stroke-dasharray="1 5" />
-              <circle cx="190" cy="175" r="150" stroke-width="2" />
+              <circle cx="140" cy="130" r="124" stroke-width="1" stroke-dasharray="1 5" />
+              <circle cx="140" cy="130" r="120" stroke-width="2" />
               
               <!-- Concentric rings -->
               <g stroke-width="1" stroke-dasharray="3 6">
-                <circle cx="190" cy="175" r="113" />
-                <circle cx="190" cy="175" r="75" />
-                <circle cx="190" cy="175" r="38" />
+                <circle cx="140" cy="130" r="90" />
+                <circle cx="140" cy="130" r="60" />
+                <circle cx="140" cy="130" r="30" />
               </g>
               
               <!-- Crosshairs -->
-              <line x1="190" y1="20" x2="190" y2="330" stroke-width="1" stroke-dasharray="2 4" />
-              <line x1="35" y1="175" x2="345" y2="175" stroke-width="1" stroke-dasharray="2 4" />
+              <line x1="140" y1="6" x2="140" y2="254" stroke-width="1" stroke-dasharray="2 4" />
+              <line x1="16" y1="130" x2="264" y2="130" stroke-width="1" stroke-dasharray="2 4" />
             </g>
             
             <!-- Center marker -->
-            <circle cx="190" cy="175" r="4" fill="currentColor" />
+            <circle cx="140" cy="130" r="4" fill="currentColor" />
             
             <!-- Day Ticks (Scaled 150/190) -->
             {% if radar_ticks_half_vertical %}
@@ -65,15 +65,15 @@
               </g>
               <g fill="currentColor" clip-path="url(#label-clip)">
                 {% if radar_asteroids_half_vertical.size == 0 %}
-                  <text x="190" y="150" text-anchor="middle" class="text--bold" fill="currentColor">CLEAR SECTOR</text>
+                  <text x="140" y="110" text-anchor="middle" class="text--bold" fill="currentColor">CLEAR SECTOR</text>
                 {% endif %}
                 {% for ast in radar_asteroids_half_vertical %}
                   {% if ast and ast.label_x1 and ast.label_y1 %}
                     {% if ast.name_part_2 %}
-                      <text x="{{ ast.label_x1 }}" y="{{ ast.label_y1 }}" text-anchor="{{ ast.anchor | default: 'start' }}" class="text--bold" data-clamp="1" fill="currentColor">{{ ast.name_part_1 }}</text>
-                      <text x="{{ ast.label_x2 }}" y="{{ ast.label_y2 }}" text-anchor="{{ ast.anchor | default: 'start' }}" class="text--bold" data-clamp="1" fill="currentColor">{{ ast.name_part_2 }}</text>
+                      <text x="{{ ast.label_x1 }}" y="{{ ast.label_y1 }}" text-anchor="{{ ast.anchor | default: 'start' }}" class="text--bold" fill="currentColor">{{ ast.name_part_1 }}</text>
+                      <text x="{{ ast.label_x2 }}" y="{{ ast.label_y2 }}" text-anchor="{{ ast.anchor | default: 'start' }}" class="text--bold" fill="currentColor">{{ ast.name_part_2 }}</text>
                     {% else %}
-                      <text x="{{ ast.label_x1 }}" y="{{ ast.label_y1 }}" text-anchor="{{ ast.anchor | default: 'start' }}" class="text--bold" data-clamp="1" fill="currentColor">{{ ast.name_part_1 }}</text>
+                      <text x="{{ ast.label_x1 }}" y="{{ ast.label_y1 }}" text-anchor="{{ ast.anchor | default: 'start' }}" class="text--bold" fill="currentColor">{{ ast.name_part_1 }}</text>
                     {% endif %}
                   {% endif %}
                 {% endfor %}
@@ -100,7 +100,7 @@
         {% if system_status contains "WARNING" %}
           <span class="bg--black text--white p--1 rounded text--bold text--xsmall">ALERT</span>
         {% else %}
-          <span class="p--1 rounded bg--gray-70 text--black text--bold text--xsmall">NOMINAL</span>
+          <span class="p--1 rounded label--outline text--black text--bold text--xsmall">NOMINAL</span>
         {% endif %}
       {% endif %}
       

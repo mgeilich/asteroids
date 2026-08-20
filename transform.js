@@ -26,17 +26,17 @@ function cleanAsteroidName(rawName) {
   if (parts.length > 1 && /^\d+$/.test(parts[0])) {
     name = parts.slice(1).join(" ");
   }
-  if (name.length > 10) {
-    name = name.substring(0, 8) + "..";
+  if (name.length > 8) {
+    name = name.substring(0, 6) + "..";
   }
   return name;
 }function run(input) {
   try {
     // Radar layouts configuration
     const LAYOUTS = {
-      full: { cx: 175, cy: 165, R_max: 155, D_max: 40, tick_inner: 156, tick_outer: 162, tick_label: 170 },
+      full: { cx: 140, cy: 130, R_max: 120, D_max: 40, tick_inner: 121, tick_outer: 126, tick_label: 132 },
       half_horizontal: { cx: 110, cy: 80, R_max: 65, D_max: 40, tick_inner: 62, tick_outer: 68, tick_label: 75 },
-      half_vertical: { cx: 190, cy: 175, R_max: 150, D_max: 40, tick_inner: 143, tick_outer: 155, tick_label: 165 },
+      half_vertical: { cx: 140, cy: 130, R_max: 120, D_max: 40, tick_inner: 121, tick_outer: 126, tick_label: 132 },
       quadrant: { cx: 75, cy: 75, R_max: 67, D_max: 40, tick_inner: 64, tick_outer: 70, tick_label: 0 }
     };
 
@@ -64,9 +64,18 @@ function cleanAsteroidName(rawName) {
       };
     }
 
-    // If the input is already a fully computed radar payload, pass it through directly
-    // and guarantee all expected keys exist (defaulting to empty arrays/strings)
-    if (input.radar_ticks_full !== undefined || input.radar_asteroids_full !== undefined || input.radar_ticks_half_horizontal !== undefined) {
+    // Verify if all required precalculated layout fields are present and non-empty
+    const has_all_precomputed = input &&
+      Array.isArray(input.radar_ticks_full) && input.radar_ticks_full.length > 0 &&
+      Array.isArray(input.radar_asteroids_full) &&
+      Array.isArray(input.radar_ticks_half_horizontal) && input.radar_ticks_half_horizontal.length > 0 &&
+      Array.isArray(input.radar_asteroids_half_horizontal) &&
+      Array.isArray(input.radar_ticks_half_vertical) && input.radar_ticks_half_vertical.length > 0 &&
+      Array.isArray(input.radar_asteroids_half_vertical) &&
+      Array.isArray(input.radar_ticks_quadrant) && input.radar_ticks_quadrant.length > 0 &&
+      Array.isArray(input.radar_asteroids_quadrant);
+
+    if (has_all_precomputed) {
       return {
         system_status: input.system_status || "SYSTEM NOMINAL",
         total_count: input.total_count !== undefined ? input.total_count : "—",
@@ -110,10 +119,10 @@ function cleanAsteroidName(rawName) {
       // If we only have precalculated full-layout asteroids, we extract their properties to reconstruct candidates
       candidates = input.radar_asteroids.map(a => {
         // Map back to relative values
-        const x_diff = a.x - 175;
-        const y_diff = 165 - a.y; // cy is 165
+        const x_diff = a.x - 140;
+        const y_diff = 130 - a.y; // cy is 130
         const R = Math.sqrt(x_diff * x_diff + y_diff * y_diff);
-        const miss_dist = (R / 155.0) * 40.0;
+        const miss_dist = (R / 120.0) * 40.0;
         
         let angle_rad = Math.atan2(x_diff, y_diff);
         if (angle_rad < 0) angle_rad += 2 * Math.PI;
