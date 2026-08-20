@@ -148,7 +148,7 @@ def calculate_telemetry(raw_data: Optional[Dict[str, Any]]) -> Dict[str, Any]:
     layouts = {
         "full": {"cx": 140, "cy": 130, "R_max": 120, "D_max": 40.0, "tick_inner": 121, "tick_outer": 126, "tick_label": 132},
         "half_horizontal": {"cx": 110, "cy": 80, "R_max": 65, "D_max": 40.0, "tick_inner": 62, "tick_outer": 68, "tick_label": 75},
-        "half_vertical": {"cx": 140, "cy": 130, "R_max": 120, "D_max": 40.0, "tick_inner": 121, "tick_outer": 126, "tick_label": 132},
+        "half_vertical": {"cx": 110, "cy": 80, "R_max": 65, "D_max": 40.0, "tick_inner": 62, "tick_outer": 68, "tick_label": 75},
         "quadrant": {"cx": 75, "cy": 75, "R_max": 67, "D_max": 40.0, "tick_inner": 64, "tick_outer": 70, "tick_label": 0}
     }
     

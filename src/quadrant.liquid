@@ -1,3 +1,4 @@
+{% if total_count and total_count != "—" %}
 <div class="layout layout--col">
   <div class="flex flex--col flex--center-x flex--center-y grow p--1 text--center w--full">
     <div class="label text--xxsmall text--bold mb--1">NEO RADAR MONITOR</div>
@@ -17,4 +18,10 @@
     </div>
   </div>
 </div>
-{% render 'title_bar' %}
+{% else %}
+<div class="layout layout--col">
+  <div class="p--3 text--black rounded text--center label grow flex flex--center-x flex--center-y">
+    Sensor scan in progress...
+  </div>
+</div>
+{% endif %}
