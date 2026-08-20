@@ -287,14 +287,14 @@ function cleanAsteroidName(rawName) {
         
         if (!isFinite(x) || !isFinite(y)) return null;
         
-        let r = 3;
-        if (item.avg_diameter < 30) r = 3;
-        else if (item.avg_diameter < 100) r = 5;
-        else if (item.avg_diameter < 300) r = 7;
-        else r = 9;
+        let r = 4;
+        if (item.avg_diameter < 30) r = 4;
+        else if (item.avg_diameter < 100) r = 6;
+        else if (item.avg_diameter < 300) r = 8;
+        else r = 10;
         
         if (layout.cx === 75) {
-          r = Math.max(2, Math.round(r * 0.6));
+          r = Math.max(3, Math.round(r * 0.6));
         }
         
         let label_x = 0;
@@ -376,6 +376,7 @@ function cleanAsteroidName(rawName) {
       closest_list: closest_list || []
     };
   } catch (e) {
+    console.error("[transform.js] Error parsing response: ", e);
     return {
       system_status: "SYSTEM OFFLINE: MALFORMED DATA",
       total_count: "—",

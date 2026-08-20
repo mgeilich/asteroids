@@ -3,119 +3,60 @@
   <div class="flex flex--col lg:flex--row gap--small p--1 grow w--full">
     
     <!-- Left Column: Compact Radar (220x160px) -->
-    <div class="flex flex--col flex--center-x">
-      <svg width="220" height="160" viewBox="0 0 220 160" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg" class="text--black">
-        <!-- Radar Grid boundaries -->
-        <g stroke="currentColor" fill="none">
-          <circle cx="110" cy="80" r="70" stroke-width="1" stroke-dasharray="1 4" />
-          <circle cx="110" cy="80" r="65" stroke-width="1.5" />
-          
-          <!-- Concentric rings -->
-          <g stroke-width="1" stroke-dasharray="2 5">
-            <circle cx="110" cy="80" r="49" />
-            <circle cx="110" cy="80" r="33" />
-            <circle cx="110" cy="80" r="16" />
-          </g>
-          
-          <!-- Crosshairs -->
-          <line x1="110" y1="10" x2="110" y2="150" stroke-width="1" stroke-dasharray="2 4" />
-          <line x1="40" y1="80" x2="180" y2="80" stroke-width="1" stroke-dasharray="2 4" />
-        </g>
-        
-        <!-- Center Earth marker -->
-        <circle cx="110" cy="80" r="2.5" fill="currentColor" />
-        
-        <!-- Day Ticks (calculated by backend) -->
-        {% if radar_ticks_half_horizontal %}
-          <g stroke="currentColor" stroke-width="1.5">
-            {% for tick in radar_ticks_half_horizontal %}
-              {% if tick and tick.x1 and tick.y1 and tick.x2 and tick.y2 %}
-                <line x1="{{ tick.x1 }}" y1="{{ tick.y1 }}" x2="{{ tick.x2 }}" y2="{{ tick.y2 }}" />
-              {% endif %}
-            {% endfor %}
-          </g>
-        {% endif %}
-        
-        <!-- Day Tick Labels -->
-        {% if radar_ticks_half_horizontal %}
-          <g fill="currentColor" font="bold 8px sans-serif">
-            {% for tick in radar_ticks_half_horizontal %}
-              {% if tick and tick.label_x and tick.label_y %}
-                <text x="{{ tick.label_x }}" y="{{ tick.label_y }}" text-anchor="{{ tick.anchor | default: 'middle' }}">
-                  {{- tick.label | default: '—' -}}
-                </text>
-              {% endif %}
-            {% endfor %}
-          </g>
-        {% endif %}
-        
-        <!-- Asteroids (Scaled 65/190, no text labels to prevent overlap in compact mode) -->
-        {% if radar_asteroids_half_horizontal and radar_asteroids_half_horizontal.size > 0 %}
-          <g stroke="currentColor" stroke-width="1.5" fill="none">
-            {% for ast in radar_asteroids_half_horizontal %}
-              {% if ast and ast.x and ast.y %}
-                <circle cx="{{ ast.x }}" cy="{{ ast.y }}" r="{{ ast.r | default: 3 }}" {% if ast.is_hazardous %}fill="currentColor"{% endif %} />
-              {% endif %}
-            {% endfor %}
-          </g>
-        {% else %}
-          <g fill="currentColor" font="bold 9px sans-serif">
-            <text x="110" y="70" text-anchor="middle">CLEAR SECTOR</text>
-          </g>
-        {% endif %}
-      </svg>
+    <div class="flex flex--col layout--center-x" style="width: 100%; max-width: 220px; height: auto;">
+      {% render 'radar_svg', layout: 'half_horizontal', ticks: radar_ticks_half_horizontal, asteroids: radar_asteroids_half_horizontal %}
     </div>
     
     <!-- Right Column: Status Banner & Summary Ticker (540px wide) -->
     <div class="flex flex--col gap--xsmall grow">
       <!-- System status and refresh banner -->
-      <div class="flex flex--row items--end gap--large mb--1">
+      <div class="flex flex--row flex--center-y gap--small mb--1">
         <div>
-          <div class="title text--bold text--small">ASTEROIDS</div>
-          <div class="label text--xsmall">Planetary Defense Telemetry</div>
+          <div class="title title--small">ASTEROIDS</div>
+          <div class="label label--small">Planetary Defense Telemetry</div>
         </div>
         
-        {% if system_status %}
-          {% if system_status contains "WARNING" %}
-            <span class="bg--black text--white p--1 rounded text--bold text--xsmall">ALERT</span>
+        <div class="flex flex--row items--center gap--small ml--auto">
+          {% if system_status contains "WARNING" or system_status contains "DEMO" %}
+            <span class="bg--black text--inverse p--1 rounded label label--small"><strong>ALERT</strong></span>
           {% else %}
-            <span class="border rounded bg--white text--black p--1 text--bold text--xsmall">NOMINAL</span>
+            <span class="border rounded bg--white p--1 label label--small"><strong>NOMINAL</strong></span>
           {% endif %}
-        {% endif %}
+        </div>
       </div>
       
       <!-- Metrics row -->
-      <div class="flex flex--row gap--small mb--1">
-        <div class="grow text--center bg--gray-75 text--black rounded p--0.5 flex flex--row gap--small flex--center-x flex--center-y">
-          <span class="label text--xsmall">COUNT:</span>
-          <span class="value text--bold text--xsmall">{{ total_count | default: '—' }}</span>
+      <div class="grid grid--cols-2 gap--small mb--1">
+        <div class="bg--gray-75 rounded p--0.5 flex flex--row gap--small layout--center-x layout--center-y">
+          <span class="label">COUNT:</span>
+          <span class="value value--small">{{ total_count | default: '—' }}</span>
         </div>
-        <div class="grow text--center bg--gray-75 text--black rounded p--0.5 flex flex--row gap--small flex--center-x flex--center-y">
-          <span class="label text--xsmall">CLOSEST:</span>
-          <span class="value text--bold text--xsmall">{{ closest_dist_ld | default: '—' }}</span>
+        <div class="bg--gray-75 rounded p--0.5 flex flex--row gap--small layout--center-x layout--center-y">
+          <span class="label">CLOSEST:</span>
+          <span class="value value--small">{{ closest_dist_ld | default: '—' }}</span>
         </div>
       </div>
       
-      <!-- Closest list schedule (only 1 closest object to fit in horizontal e-ink view height) -->
+      <!-- Closest list schedule -->
       <div class="flex flex--col gap--xsmall">
         {% if closest_list and closest_list.size > 0 %}
-          <div class="label text--xxsmall text--bold">CLOSEST FLYBY (TOP 1)</div>
-          {% for item in closest_list limit: 1 %}
-            <div class="flex flex--row flex--center-y gap--small p--1 rounded bg--gray-75 text--black grow">
+          <div class="label"><strong>CLOSEST FLYBYS (TOP 2)</strong></div>
+          {% for item in closest_list limit: 2 %}
+            <div class="flex flex--row flex--center-y gap--small p--1 rounded bg--gray-75 grow">
               <div class="grow">
-                <div class="text--bold text--small" data-clamp="1">{{ item.name | default: '—' }}</div>
-                <div class="label text--xxsmall" data-clamp="1">{{ item.time_str | default: '—' }} &bull; Size: {{ item.size_m | default: '—' }}</div>
+                <div class="title title--small" data-clamp="1">{{ item.name | default: '—' }}</div>
+                <div class="label label--small" data-clamp="1">{{ item.time_str | default: '—' }} &bull; Size: {{ item.size_m | default: '—' }}</div>
               </div>
               <div class="text--right flex flex--col layout--right">
-                <div class="text--bold text--small" data-clamp="1">{{ item.dist_ld | default: '—' }} LD</div>
+                <div class="value value--small" data-clamp="1">{{ item.dist_ld | default: '—' }} LD</div>
                 {% if item.is_hazardous != "" and item.is_hazardous != nil %}
-                  <span class="bg--black text--white px--1 rounded text--bold text--xxsmall">HAZARD</span>
+                  <span class="bg--black text--inverse px--1 rounded label label--small"><strong>HAZARD</strong></span>
                 {% endif %}
               </div>
             </div>
           {% endfor %}
         {% else %}
-          <div class="p--2 text--black rounded text--center label">
+          <div class="p--2 rounded layout--center-x label">
             No NEO activity detected.
           </div>
         {% endif %}
@@ -124,8 +65,8 @@
   </div>
 </div>
 {% else %}
-<div class="layout layout--col">
-  <div class="p--4 text--black rounded text--center label grow flex flex--center-x flex--center-y">
+<div class="layout layout--col layout--center">
+  <div class="p--4 label">
     Radar scan offline. System checking for telemetry updates...
   </div>
 </div>

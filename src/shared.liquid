@@ -21,3 +21,139 @@
   </div>
 {% endtemplate %}
 <!-- class="layout" -->
+
+{% template radar_svg %}
+  {% if layout == 'full' %}
+    <svg width="280" height="260" viewBox="0 0 280 260" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <clipPath id="label-clip">
+          <rect x="5" y="5" width="270" height="250" />
+        </clipPath>
+      </defs>
+      <!-- Radar Grid Boundaries and Rings -->
+      <g stroke="currentColor" fill="none">
+        <circle cx="140" cy="130" r="124" stroke-width="1.5" stroke-dasharray="1 5" />
+        <circle cx="140" cy="130" r="120" stroke-width="2.5" />
+        
+        <g stroke-width="1.5" stroke-dasharray="3 6">
+          <circle cx="140" cy="130" r="90" />
+          <circle cx="140" cy="130" r="60" />
+          <circle cx="140" cy="130" r="30" />
+        </g>
+        
+        <line x1="140" y1="6" x2="140" y2="254" stroke-width="1.5" stroke-dasharray="2 4" />
+        <line x1="16" y1="130" x2="264" y2="130" stroke-width="1.5" stroke-dasharray="2 4" />
+      </g>
+      
+      <circle cx="140" cy="130" r="5" fill="currentColor" />
+      
+      <g fill="currentColor" font="bold 10px sans-serif">
+        <text x="170" y="125" text-anchor="middle" fill="currentColor">10 LD</text>
+        <text x="200" y="125" text-anchor="middle" fill="currentColor">20 LD</text>
+        <text x="230" y="125" text-anchor="middle" fill="currentColor">30 LD</text>
+        <text x="260" y="125" text-anchor="end" fill="currentColor">40 LD</text>
+        <text x="140" y="145" text-anchor="middle" fill="currentColor">EARTH</text>
+        <text x="140" y="15" text-anchor="middle" fill="currentColor">NOW (T-0)</text>
+      </g>
+      
+      {% if ticks %}
+        <g stroke="currentColor" stroke-width="2.5">
+          {% for tick in ticks %}
+            {% if tick and tick.x1 and tick.y1 and tick.x2 and tick.y2 %}
+              <line x1="{{ tick.x1 }}" y1="{{ tick.y1 }}" x2="{{ tick.x2 }}" y2="{{ tick.y2 }}" />
+            {% endif %}
+          {% endfor %}
+        </g>
+      {% endif %}
+      
+      {% if ticks %}
+        <g fill="currentColor" font="bold 8px sans-serif">
+          {% for tick in ticks %}
+            {% if tick and tick.label_x and tick.label_y %}
+              <text x="{{ tick.label_x }}" y="{{ tick.label_y }}" text-anchor="{{ tick.anchor | default: 'middle' }}" fill="currentColor">
+                {{- tick.label | default: '—' -}}
+              </text>
+            {% endif %}
+          {% endfor %}
+        </g>
+      {% endif %}
+      
+      {% if asteroids and asteroids.size > 0 %}
+        <g stroke="currentColor" stroke-width="2" fill="none">
+          {% for ast in asteroids %}
+            {% if ast and ast.x and ast.y %}
+              <circle cx="{{ ast.x }}" cy="{{ ast.y }}" r="{{ ast.r | default: 4 }}" {% if ast.is_hazardous %}fill="currentColor"{% endif %} />
+            {% endif %}
+          {% endfor %}
+        </g>
+        <g fill="currentColor" clip-path="url(#label-clip)" font="bold 10px sans-serif">
+          {% for ast in asteroids %}
+            {% if ast and ast.label_x1 and ast.label_y1 %}
+              {% if ast.name_part_2 %}
+                <text x="{{ ast.label_x1 }}" y="{{ ast.label_y1 }}" text-anchor="{{ ast.anchor | default: 'start' }}" fill="currentColor">{{ ast.name_part_1 }}</text>
+                <text x="{{ ast.label_x2 }}" y="{{ ast.label_y2 }}" text-anchor="{{ ast.anchor | default: 'start' }}" fill="currentColor">{{ ast.name_part_2 }}</text>
+              {% else %}
+                <text x="{{ ast.label_x1 }}" y="{{ ast.label_y1 }}" text-anchor="{{ ast.anchor | default: 'start' }}" fill="currentColor">{{ ast.name_part_1 }}</text>
+              {% endif %}
+            {% endif %}
+          {% endfor %}
+        </g>
+      {% endif %}
+    </svg>
+  {% else %}
+    <svg width="220" height="160" viewBox="0 0 220 160" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <g stroke="currentColor" fill="none">
+        <circle cx="110" cy="80" r="70" stroke-width="1.5" stroke-dasharray="1 4" />
+        <circle cx="110" cy="80" r="65" stroke-width="2.5" />
+        
+        <g stroke-width="1.5" stroke-dasharray="2 5">
+          <circle cx="110" cy="80" r="49" />
+          <circle cx="110" cy="80" r="33" />
+          <circle cx="110" cy="80" r="16" />
+        </g>
+        
+        <line x1="110" y1="10" x2="110" y2="150" stroke-width="1.5" stroke-dasharray="2 4" />
+        <line x1="40" y1="80" x2="180" y2="80" stroke-width="1.5" stroke-dasharray="2 4" />
+      </g>
+      
+      <circle cx="110" cy="80" r="4" fill="currentColor" />
+      
+      {% if ticks %}
+        <g stroke="currentColor" stroke-width="2.5">
+          {% for tick in ticks %}
+            {% if tick and tick.x1 and tick.y1 and tick.x2 and tick.y2 %}
+              <line x1="{{ tick.x1 }}" y1="{{ tick.y1 }}" x2="{{ tick.x2 }}" y2="{{ tick.y2 }}" />
+            {% endif %}
+          {% endfor %}
+        </g>
+      {% endif %}
+      
+      {% if ticks %}
+        <g fill="currentColor" font="bold 8px sans-serif">
+          {% for tick in ticks %}
+            {% if tick and tick.label_x and tick.label_y %}
+              <text x="{{ tick.label_x }}" y="{{ tick.label_y }}" text-anchor="{{ tick.anchor | default: 'middle' }}">
+                {{- tick.label | default: '—' -}}
+              </text>
+            {% endif %}
+          {% endfor %}
+        </g>
+      {% endif %}
+      
+      {% if asteroids and asteroids.size > 0 %}
+        <g stroke="currentColor" stroke-width="2" fill="none">
+          {% for ast in asteroids %}
+            {% if ast and ast.x and ast.y %}
+              <circle cx="{{ ast.x }}" cy="{{ ast.y }}" r="{{ ast.r | default: 4 }}" {% if ast.is_hazardous %}fill="currentColor"{% endif %} />
+            {% endif %}
+          {% endfor %}
+        </g>
+      {% else %}
+        <g fill="currentColor" font="bold 9px sans-serif">
+          <text x="110" y="70" text-anchor="middle">CLEAR SECTOR</text>
+        </g>
+      {% endif %}
+    </svg>
+  {% endif %}
+{% endtemplate %}
+

@@ -1,26 +1,22 @@
 {% if total_count and total_count != "—" %}
-<div class="layout layout--col">
-  <div class="flex flex--col flex--center-x flex--center-y grow p--1 text--center w--full">
-    <div class="label text--xxsmall text--bold mb--1">NEO RADAR MONITOR</div>
-    
-    <!-- Hero Metric -->
-    <div class="value value--large text--bold mb--1">
-      {{ total_count | default: '0' }}
-    </div>
-    <div class="label text--xxsmall mb--2">NEOS DETECTED</div>
-    
-    <!-- Secondary glance metric -->
-    <div class="flex flex--row gap--small w--full flex--center-x">
-      <div class="border rounded bg--white text--black p--1 flex flex--row gap--small flex--center-y">
-        <span class="label text--xxxsmall">CLOSEST:</span>
-        <span class="value text--bold text--xxxsmall">{{ closest_dist_ld | default: '—' }}</span>
-      </div>
-    </div>
+<div class="layout layout--col layout--center">
+  <div class="label mb--1"><strong>NEO RADAR MONITOR</strong></div>
+  
+  <!-- Hero Metric -->
+  <div class="value value--large mb--1">
+    {{ total_count | default: '0' }}
+  </div>
+  <div class="label mb--2">NEOS DETECTED</div>
+  
+  <!-- Secondary glance metric -->
+  <div class="border rounded bg--white p--1 flex flex--row gap--small layout--center-y">
+    <span class="label">CLOSEST:</span>
+    <span class="value value--small">{{ closest_dist_ld | default: '—' }}</span>
   </div>
 </div>
 {% else %}
-<div class="layout layout--col">
-  <div class="p--3 text--black rounded text--center label grow flex flex--center-x flex--center-y">
+<div class="layout layout--col layout--center">
+  <div class="p--3 label">
     Sensor scan in progress...
   </div>
 </div>
