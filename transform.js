@@ -268,9 +268,15 @@ function cleanAsteroidName(rawName) {
           if (!a.is_hazardous && b.is_hazardous) return 1;
           return a.miss_distance_ld - b.miss_distance_ld;
         })
-        .slice(0, 10);
-        
-      return radar_candidates.map(item => {
+      let limit = 10;
+      if (layout.cx === 75) {
+        limit = 4;
+      } else if (layout.cx === 110) {
+        limit = 6;
+      } else if (layout.cx === 140) {
+        limit = 10;
+      }
+      return radar_candidates.slice(0, limit).map(item => {
         const t_norm = (item.epoch - now_ms) / (end_ms - now_ms);
         const angle = t_norm * 360.0;
         const alpha = (angle * Math.PI) / 180.0;

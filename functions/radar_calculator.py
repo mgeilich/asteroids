@@ -158,7 +158,14 @@ def calculate_telemetry(raw_data: Optional[Dict[str, Any]]) -> Dict[str, Any]:
     for name, layout in layouts.items():
         # Select and calculate asteroids
         radar_candidates = [c for c in candidates if c["miss_distance_ld"] <= layout["D_max"]]
-        radar_candidates = sorted(radar_candidates, key=lambda c: c["miss_distance_ld"])[:10]
+        limit = 10
+        if name == "quadrant":
+            limit = 4
+        elif name == "half_horizontal":
+            limit = 6
+        elif name == "half_vertical":
+            limit = 10
+        radar_candidates = sorted(radar_candidates, key=lambda c: c["miss_distance_ld"])[:limit]
         
         asteroids_payload = []
         for item in radar_candidates:

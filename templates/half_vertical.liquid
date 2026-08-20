@@ -1,5 +1,5 @@
 <div class="layout layout--col">
-    <div class="layout layout--row portrait:layout--col gap--large p--1 grow w--full">
+    <div class="layout layout--row portrait:layout--col gap--small p--1 grow w--full">
   
   <!-- Radar Face (380x350 px) -->
   <div class="flex flex--col flex--center-x">
@@ -43,10 +43,10 @@
             
             <!-- Day Ticks Labels -->
              {% if radar_ticks_half_vertical %}
-              <g fill="currentColor">
+              <g fill="currentColor" font-family="sans-serif" font-size="8" font-weight="bold">
                 {% for tick in radar_ticks_half_vertical %}
                   {% if tick and tick.label_x and tick.label_y %}
-                    <text x="{{ tick.label_x }}" y="{{ tick.label_y }}" text-anchor="{{ tick.anchor | default: 'middle' }}" class="text--small" fill="currentColor">
+                    <text x="{{ tick.label_x }}" y="{{ tick.label_y }}" text-anchor="{{ tick.anchor | default: 'middle' }}" fill="currentColor">
                       {{- tick.label | default: '—' -}}
                     </text>
                   {% endif %}
@@ -63,17 +63,17 @@
                   {% endif %}
                 {% endfor %}
               </g>
-              <g fill="currentColor" clip-path="url(#label-clip)">
+              <g fill="currentColor" clip-path="url(#label-clip)" font-family="sans-serif" font-size="9" font-weight="bold">
                 {% if radar_asteroids_half_vertical.size == 0 %}
-                  <text x="140" y="110" text-anchor="middle" class="text--bold" fill="currentColor">CLEAR SECTOR</text>
+                  <text x="140" y="110" text-anchor="middle" fill="currentColor">CLEAR SECTOR</text>
                 {% endif %}
                 {% for ast in radar_asteroids_half_vertical %}
                   {% if ast and ast.label_x1 and ast.label_y1 %}
                     {% if ast.name_part_2 %}
-                      <text x="{{ ast.label_x1 }}" y="{{ ast.label_y1 }}" text-anchor="{{ ast.anchor | default: 'start' }}" class="text--bold" fill="currentColor">{{ ast.name_part_1 }}</text>
-                      <text x="{{ ast.label_x2 }}" y="{{ ast.label_y2 }}" text-anchor="{{ ast.anchor | default: 'start' }}" class="text--bold" fill="currentColor">{{ ast.name_part_2 }}</text>
+                      <text x="{{ ast.label_x1 }}" y="{{ ast.label_y1 }}" text-anchor="{{ ast.anchor | default: 'start' }}" fill="currentColor">{{ ast.name_part_1 }}</text>
+                      <text x="{{ ast.label_x2 }}" y="{{ ast.label_y2 }}" text-anchor="{{ ast.anchor | default: 'start' }}" fill="currentColor">{{ ast.name_part_2 }}</text>
                     {% else %}
-                      <text x="{{ ast.label_x1 }}" y="{{ ast.label_y1 }}" text-anchor="{{ ast.anchor | default: 'start' }}" class="text--bold" fill="currentColor">{{ ast.name_part_1 }}</text>
+                      <text x="{{ ast.label_x1 }}" y="{{ ast.label_y1 }}" text-anchor="{{ ast.anchor | default: 'start' }}" fill="currentColor">{{ ast.name_part_1 }}</text>
                     {% endif %}
                   {% endif %}
                 {% endfor %}
@@ -88,21 +88,20 @@
   </div>
   
   <!-- Bottom Telemetry Banner -->
-  <div class="flex flex--row flex--center-y gap--large p--2 mb--1 w--full landscape:w--auto lg:w--auto">
+  <div class="flex flex--row flex--center-y gap--small p--2 mb--1 w--full landscape:w--auto lg:w--auto">
     {% if radar_ticks_half_vertical and radar_ticks_half_vertical.size > 0 %}
       <div class="flex flex--col">
         <div class="title text--bold text--small lg:text--medium">ASTEROIDS</div>
         <div class="label text--xxsmall lg:text--xsmall">SCAN: {{ total_count | default: '—' }} NEOs</div>
       </div>
       
-      <!-- Mini status -->
-      {% if system_status %}
+      <div class="flex flex--row items--center gap--small ml--auto">
         {% if system_status contains "WARNING" %}
           <span class="bg--black text--white p--1 rounded text--bold text--xsmall">ALERT</span>
         {% else %}
-          <span class="p--1 rounded label--outline text--black text--bold text--xsmall">NOMINAL</span>
+          <span class="border rounded bg--white text--black p--1 text--bold text--xsmall">NOMINAL</span>
         {% endif %}
-      {% endif %}
+      </div>
       
       <div class="flex flex--col items--end">
         <span class="label text--xsmall">CLOSEST</span>

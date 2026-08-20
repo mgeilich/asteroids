@@ -1,11 +1,11 @@
-<div class="layout layout--col gap--medium portrait:gap--xsmall">
-    <div class="grid grid--cols-6 portrait:grid--cols-1 gap--large portrait:gap--small w--full grow p--1">
+<div class="layout layout--col gap--small">
+    <div class="grid grid--cols-6 portrait:grid--cols-1 gap--small w--full grow p--1">
     
     <!-- Left Column: Radar -->
-    <div class="col--span-3">
+    <div class="col--span-3 portrait:col--span-1">
       <div class="flex flex--col flex--center-x portrait:w--1-2 portrait:mx--auto">
         {% if radar_ticks_full and radar_ticks_full.size > 0 %}
-        <svg width="280" height="260" viewBox="0 0 280 260" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg" class="text--black max-w--full">
+        <svg width="280" height="260" viewBox="0 0 280 260" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg" class="w--full max-w--full text--black">
           <defs>
             <clipPath id="label-clip">
               <rect x="5" y="5" width="270" height="250" />
@@ -33,13 +33,13 @@
               <circle cx="140" cy="130" r="4" fill="currentColor" />
               
               <!-- Distance, Center, and Time Labels -->
-              <g fill="currentColor" class="text--bold">
-                <text x="170" y="125" text-anchor="middle" class="text--small" fill="currentColor">10 LD</text>
-                <text x="200" y="125" text-anchor="middle" class="text--small" fill="currentColor">20 LD</text>
-                <text x="230" y="125" text-anchor="middle" class="text--small" fill="currentColor">30 LD</text>
-                <text x="260" y="125" text-anchor="end" class="text--small" fill="currentColor">40 LD</text>
-                <text x="140" y="144" text-anchor="middle" class="text--small" fill="currentColor">EARTH</text>
-                <text x="140" y="10" text-anchor="middle" class="text--small" fill="currentColor">NOW (T-0)</text>
+              <g fill="currentColor" font-family="sans-serif" font-size="9" font-weight="bold">
+                <text x="170" y="125" text-anchor="middle" fill="currentColor">10 LD</text>
+                <text x="200" y="125" text-anchor="middle" fill="currentColor">20 LD</text>
+                <text x="230" y="125" text-anchor="middle" fill="currentColor">30 LD</text>
+                <text x="260" y="125" text-anchor="end" fill="currentColor">40 LD</text>
+                <text x="140" y="144" text-anchor="middle" fill="currentColor">EARTH</text>
+                <text x="140" y="10" text-anchor="middle" fill="currentColor">NOW (T-0)</text>
               </g>
               
               <!-- Day Ticks (calculated by backend) -->
@@ -55,10 +55,10 @@
               
               <!-- Day Ticks Labels -->
               {% if radar_ticks_full %}
-                <g fill="currentColor">
+                <g fill="currentColor" font-family="sans-serif" font-size="8" font-weight="bold">
                   {% for tick in radar_ticks_full %}
                     {% if tick and tick.label_x and tick.label_y %}
-                      <text x="{{ tick.label_x }}" y="{{ tick.label_y }}" text-anchor="{{ tick.anchor | default: 'middle' }}" class="text--small" fill="currentColor">
+                      <text x="{{ tick.label_x }}" y="{{ tick.label_y }}" text-anchor="{{ tick.anchor | default: 'middle' }}" fill="currentColor">
                         {{- tick.label | default: '—' -}}
                       </text>
                     {% endif %}
@@ -75,17 +75,17 @@
                     {% endif %}
                   {% endfor %}
                 </g>
-                <g fill="currentColor" clip-path="url(#label-clip)">
+                <g fill="currentColor" clip-path="url(#label-clip)" font-family="sans-serif" font-size="9" font-weight="bold">
                   {% if radar_asteroids_full.size == 0 %}
-                    <text x="140" y="110" text-anchor="middle" class="text--bold" fill="currentColor">CLEAR SECTOR</text>
+                    <text x="140" y="110" text-anchor="middle" fill="currentColor">CLEAR SECTOR</text>
                   {% endif %}
                   {% for ast in radar_asteroids_full %}
                     {% if ast and ast.label_x1 and ast.label_y1 %}
                       {% if ast.name_part_2 %}
-                        <text x="{{ ast.label_x1 }}" y="{{ ast.label_y1 }}" text-anchor="{{ ast.anchor | default: 'start' }}" class="text--bold" fill="currentColor">{{ ast.name_part_1 }}</text>
-                        <text x="{{ ast.label_x2 }}" y="{{ ast.label_y2 }}" text-anchor="{{ ast.anchor | default: 'start' }}" class="text--bold" fill="currentColor">{{ ast.name_part_2 }}</text>
+                        <text x="{{ ast.label_x1 }}" y="{{ ast.label_y1 }}" text-anchor="{{ ast.anchor | default: 'start' }}" fill="currentColor">{{ ast.name_part_1 }}</text>
+                        <text x="{{ ast.label_x2 }}" y="{{ ast.label_y2 }}" text-anchor="{{ ast.anchor | default: 'start' }}" fill="currentColor">{{ ast.name_part_2 }}</text>
                       {% else %}
-                        <text x="{{ ast.label_x1 }}" y="{{ ast.label_y1 }}" text-anchor="{{ ast.anchor | default: 'start' }}" class="text--bold" fill="currentColor">{{ ast.name_part_1 }}</text>
+                        <text x="{{ ast.label_x1 }}" y="{{ ast.label_y1 }}" text-anchor="{{ ast.anchor | default: 'start' }}" fill="currentColor">{{ ast.name_part_1 }}</text>
                       {% endif %}
                     {% endif %}
                   {% endfor %}
@@ -101,25 +101,25 @@
     </div>
     
     <!-- Right Column: Status & Schedule Details -->
-    <div class="col--span-3">
-      <div class="flex flex--col gap--medium portrait:gap--small grow">
+    <div class="col--span-3 portrait:col--span-1">
+      <div class="flex flex--col gap--small grow">
       {% if radar_ticks_full and radar_ticks_full.size > 0 %}
         <!-- Header -->
         <div class="title text--bold text--small lg:text--base portrait:text--small">PLANETARY DEFENSE</div>
         <div class="label mb--1">NEO RADAR MONITOR</div>
         
-        <!-- System Status Banner -->
-        {% if system_status %}
+        <!-- System Warning / Status Ticker -->
+        <div class="flex flex--row gap--small w--full">
           {% if system_status contains "WARNING" %}
-            <div class="bg--black text--white p--1 rounded text--center text--bold mb--1">
+            <div class="p--1 rounded bg--black text--white text--center text--bold mb--1 grow">
               {{ system_status }}
             </div>
           {% else %}
-            <div class="p--1 rounded label--outline text--black text--center text--bold mb--1">
+            <div class="border rounded bg--white text--black p--1 text--center text--bold mb--1 grow">
               {{ system_status }}
             </div>
           {% endif %}
-        {% endif %}
+        </div>
         
         <!-- Key Statistics Summary -->
         <div class="flex flex--row gap--small mb--1">
