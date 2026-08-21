@@ -52,7 +52,7 @@ Always follow these guidelines when editing or deploying files in this repositor
 *   **Responsive SVG Quadrants**: Define portrait-specific width utilities (e.g., `portrait:w--1-2`) on quadrant views to prevent square SVGs from taking up excessive vertical screen space when columns stack vertically.
 *   **No Inline Style Attributes**: Never use inline style attributes (like `style="..."`) on any layout or wrapper container. Use TRMNL framework layout classes instead, or let SVGs constrain themselves via native attributes.
 *   **Valid Framework Typography**: Never use custom or invalid text utility classes (e.g. `text--black`, `text--white`, `text--bold`, `text--small`, `text--center`). Replace them with framework elements and sizes (`title`, `label`, `value`, `description` with modifiers like `title--small` or `value--small`) and container positioning (`layout--center-x`).
-*   **Semantic Badge Classes**: Use `label--outline` for nominal state chips and `label--error` for ALERT/HAZARD badges.
+*   **Semantic Badge Classes**: Use `label--outline` for nominal state chips and `label--warning` for ALERT/HAZARD badges.
 *   **No User-Configurable API Keys**: Do not expose user configuration fields for third-party API keys (e.g. NASA) in `settings.yml`. Manage all API key secret configurations directly in the Firebase backend.
 *   **Required Support Custom Field**: Always include a field with `field_type: author_bio` under `custom_fields` in `settings.yml` as it is strictly required by the TRMNL plugin validation engine for support details.
 *   **Standardized Empty State**: Standardize empty state text inside the SVG radar face to `"NO ASTEROIDS IN RANGE"` centered at the exact radar coordinates.

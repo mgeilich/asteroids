@@ -66,7 +66,7 @@
       
       <div class="flex flex--row items--center gap--small ml--auto">
         {% if system_status contains "WARNING" or system_status contains "DEMO" %}
-          <span class="label label--error p--1"><strong>ALERT</strong></span>
+          <span class="label label--warning p--1"><strong>ALERT</strong></span>
         {% else %}
           <span class="label label--outline p--1"><strong>NOMINAL</strong></span>
         {% endif %}
@@ -92,7 +92,7 @@
             <div class="text--right flex flex--col layout--right">
               <div class="value value--small" data-clamp="1">{{ item.dist_ld | default: '—' }} LD</div>
               {% if item.is_hazardous == true %}
-                <span class="label label--error px--1"><strong>HAZARD</strong></span>
+                <span class="label label--warning px--1"><strong>HAZARD</strong></span>
               {% endif %}
             </div>
           </div>
