@@ -12,29 +12,29 @@
       </div>
       
       <!-- Right Column: Status & Schedule Details -->
-      <div class="col--span-1 lg:col--span-3">
-        <div class="grid grid--cols-1 gap--small">
+      <div class="col--span-1 lg:col--span-3 flex flex--col grow">
+        <div class="grid grid--cols-1 gap--space-between grow w--full">
           <!-- Header -->
           <div>
             <div class="title title--small lg:title--base">PLANETARY DEFENSE</div>
-            <div class="label mb--1">NEO RADAR MONITOR</div>
+            <div class="label">NEO RADAR MONITOR</div>
           </div>
           
           <!-- System Warning / Status Ticker -->
           <div class="grid grid--cols-1 w--full">
             {% if system_status contains "WARNING" or system_status contains "DEMO" %}
-              <div class="label label--error p--1 layout--center-x mb--1">
+              <div class="label label--error p--1 layout--center-x">
                 <strong>{{ system_status }}</strong>
               </div>
             {% else %}
-              <div class="label label--outline p--1 layout--center-x mb--1">
+              <div class="label label--outline p--1 layout--center-x">
                 <strong>{{ system_status }}</strong>
               </div>
             {% endif %}
           </div>
           
           <!-- Key Statistics Summary -->
-          <div class="grid grid--cols-2 gap--small mb--1">
+          <div class="grid grid--cols-2 gap--small">
             <div class="bg--gray-75 rounded">
               <div class="p--1 layout--center-x">
                 <div class="label">NEOS DETECTED</div>
