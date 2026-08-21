@@ -1,7 +1,7 @@
 <div class="layout layout--col gap--small">
   {% if scan_completed %}
     <!-- Radar Face (220x160 px) -->
-    <div class="flex flex--col layout--center-x w--full">
+    <div class="flex flex--col flex--center-x w--full">
       {% render 'radar_svg', layout: 'half_vertical', ticks: radar_ticks_half_vertical, asteroids: radar_asteroids_half_vertical %}
     </div>
     
@@ -46,7 +46,7 @@
           </div>
         {% endfor %}
       {% else %}
-        <div class="p--2 rounded layout--center-x label">
+        <div class="p--2 rounded flex flex--row flex--center-x label">
           No NEO activity detected.
         </div>
       {% endif %}

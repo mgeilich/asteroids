@@ -3,7 +3,7 @@
     <div class="flex flex--col lg:flex--row gap--small p--1 grow w--full">
       
       <!-- Left Column: Compact Radar (220x160px) -->
-      <div class="flex flex--col layout--center-x w--full">
+      <div class="flex flex--col flex--center-x w--full">
         {% render 'radar_svg', layout: 'half_horizontal', ticks: radar_ticks_half_horizontal, asteroids: radar_asteroids_half_horizontal %}
       </div>
       
@@ -27,11 +27,11 @@
         
         <!-- Metrics row -->
         <div class="grid grid--cols-2 gap--small mb--1">
-          <div class="bg--gray-75 rounded p--0.5 flex flex--row gap--small layout--center-x layout--center-y">
+          <div class="bg--gray-75 rounded p--0.5 flex flex--row gap--small flex--center-x flex--center-y">
             <span class="label">COUNT:</span>
             <span class="value value--small">{{ total_count | default: '—' }}</span>
           </div>
-          <div class="bg--gray-75 rounded p--0.5 flex flex--row gap--small layout--center-x layout--center-y">
+          <div class="bg--gray-75 rounded p--0.5 flex flex--row gap--small flex--center-x flex--center-y">
             <span class="label">CLOSEST:</span>
             <span class="value value--small">{{ closest_dist_ld | default: '—' }}</span>
           </div>
@@ -56,7 +56,7 @@
               </div>
             {% endfor %}
           {% else %}
-            <div class="p--2 rounded layout--center-x label">
+            <div class="p--2 rounded flex flex--row flex--center-x label">
               No NEO activity detected.
             </div>
           {% endif %}
