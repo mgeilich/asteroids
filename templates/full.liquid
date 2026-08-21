@@ -33,13 +33,17 @@
           
           <!-- Key Statistics Summary -->
           <div class="grid grid--cols-2 gap--small mb--1">
-            <div class="bg--gray-75 rounded p--1 layout--center-x">
-              <div class="label">NEOS DETECTED</div>
-              <div class="value value--base">{{ total_count | default: '—' }}</div>
+            <div class="bg--gray-75 rounded">
+              <div class="p--1 layout--center-x">
+                <div class="label">NEOS DETECTED</div>
+                <div class="value value--base">{{ total_count | default: '—' }}</div>
+              </div>
             </div>
-            <div class="bg--gray-75 rounded p--1 layout--center-x">
-              <div class="label">CLOSEST APPROACH</div>
-              <div class="value value--base">{{ closest_dist_ld | default: '—' }}</div>
+            <div class="bg--gray-75 rounded">
+              <div class="p--1 layout--center-x">
+                <div class="label">CLOSEST APPROACH</div>
+                <div class="value value--base">{{ closest_dist_ld | default: '—' }}</div>
+              </div>
             </div>
           </div>
           
@@ -49,16 +53,18 @@
             
             {% if closest_list and closest_list.size > 0 %}
               {% for item in closest_list limit: 3 %}
-                <div class="flex flex--row flex--center-y gap--small p--1 rounded bg--gray-75 grow">
-                  <div class="grow">
-                    <div class="title title--small" data-clamp="1">{{ item.name | default: '—' }}</div>
-                    <div class="label label--small" data-clamp="1">{{ item.time_str | default: '—' }} &bull; Size: {{ item.size_m | default: '—' }}</div>
-                  </div>
-                  <div class="text--right flex flex--col layout--right">
-                    <div class="value value--small" data-clamp="1">{{ item.dist_ld | default: '—' }} LD</div>
-                    {% if item.is_hazardous %}
-                      <span class="label label--error px--2"><strong>HAZARD</strong></span>
-                    {% endif %}
+                <div class="rounded bg--gray-75">
+                  <div class="flex flex--row flex--center-y gap--small p--1">
+                    <div class="grow">
+                      <div class="title title--small" data-clamp="1">{{ item.name | default: '—' }}</div>
+                      <div class="label label--small" data-clamp="1">{{ item.time_str | default: '—' }} &bull; Size: {{ item.size_m | default: '—' }}</div>
+                    </div>
+                    <div class="text--right flex flex--col layout--right">
+                      <div class="value value--small" data-clamp="1">{{ item.dist_ld | default: '—' }} LD</div>
+                      {% if item.is_hazardous %}
+                        <span class="label label--error px--2"><strong>HAZARD</strong></span>
+                      {% endif %}
+                    </div>
                   </div>
                 </div>
               {% endfor %}
