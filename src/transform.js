@@ -198,7 +198,7 @@ function cleanAsteroidName(rawName) {
         name: item.name,
         dist_ld: item.miss_distance_ld.toFixed(1),
         size_m: Math.round(item.avg_diameter) + "m",
-        is_hazardous: item.is_hazardous ? "HAZARD" : "",
+        is_hazardous: !!item.is_hazardous,
         time_str: time_str
       });
     }
