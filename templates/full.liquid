@@ -1,20 +1,20 @@
 <div class="layout layout--col gap--small">
   {% if scan_completed %}
-    <div class="grid grid--cols-6 portrait:grid--cols-1 gap--small w--full grow p--1">
+    <div class="grid grid--cols-6 gap--small w--full grow p--1">
       
       <!-- Left Column: Radar -->
-      <div class="col--span-3 portrait:col--span-1">
+      <div class="col--span-3">
         <div class="flex flex--col layout--center-x w--full">
           {% render 'radar_svg', layout: 'full', ticks: radar_ticks_full, asteroids: radar_asteroids_full %}
         </div>
       </div>
       
       <!-- Right Column: Status & Schedule Details -->
-      <div class="col--span-3 portrait:col--span-1">
+      <div class="col--span-3">
         <div class="grid grid--cols-1 gap--small">
           <!-- Header -->
           <div>
-            <div class="title title--small lg:title--base portrait:title--small">PLANETARY DEFENSE</div>
+            <div class="title title--small lg:title--base">PLANETARY DEFENSE</div>
             <div class="label mb--1">NEO RADAR MONITOR</div>
           </div>
           
