@@ -53,8 +53,12 @@ Always follow these guidelines when editing or deploying files in this repositor
 *   **No Inline Style Attributes**: Never use inline style attributes (like `style="..."`) on any layout or wrapper container. Use TRMNL framework layout classes instead, or let SVGs constrain themselves via native attributes.
 *   **Valid Framework Typography**: Never use custom or invalid text utility classes (e.g. `text--black`, `text--white`, `text--bold`, `text--small`, `text--center`). Replace them with framework elements and sizes (`title`, `label`, `value`, `description` with modifiers like `title--small` or `value--small`) and container positioning (`layout--center-x`).
 *   **Semantic Badge Classes**: Use `label--outline` for nominal state chips and `label--error` for ALERT/HAZARD badges.
-*   **Self-Service NASA API Key**: Include a `nasa_api_key` password custom field under `custom_fields` in `settings.yml` to allow users to securely register their own keys without changing code.
+*   **No User-Configurable API Keys**: Do not expose user configuration fields for third-party API keys (e.g. NASA) in `settings.yml`. Manage all API key secret configurations directly in the Firebase backend.
+*   **Required Support Custom Field**: Always include a field with `field_type: author_bio` under `custom_fields` in `settings.yml` as it is strictly required by the TRMNL plugin validation engine for support details.
 *   **Standardized Empty State**: Standardize empty state text inside the SVG radar face to `"NO ASTEROIDS IN RANGE"` centered at the exact radar coordinates.
+*   **Unified Title Bar Rendering**: Ensure `{% render 'title_bar' %}` is included at the end of every layout template file, including quadrant layouts, as a direct sibling of the root layout container.
+*   **Template Condition Nesting**: The root element of any layout template file must be the `div.layout` container. Wrap all conditional rendering blocks (`{% if scan_completed %}...{% endif %}`) *inside* the layout container to maintain correct AST sibling structure with the title bar.
+*   **Enforce scan_completed in JavaScript Transforms**: In `transform.js`, ensure `scan_completed: true` is returned for all successful paths (including the precalculated layout block path) and `scan_completed: false` for catch/offline paths.
 
 ## 7. Direct Local Firebase Deployment
 * **Rule**: Whenever deploying updates to Firebase (functions, rules, indexes), perform direct deployment from the local machine using the command: `firebase deploy --project neo-radar-trmnl-2026`.
