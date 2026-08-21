@@ -67,9 +67,11 @@ This rule outlines template styling, layout constraints, and deployment guidelin
 * **Issue**: The TRMNL online validator performs static code analysis on `transform.js`. If it detects references to a target API response format (e.g. NASA's `near_earth_objects`), it will assume a direct integration is intended and require corresponding credentials or a direct polling URL.
 * **Guideline**: When utilizing a custom proxy server (such as a Firebase Cloud Function) that handles authentication and caching automatically, completely remove all direct target API parsing paths and keywords (like `near_earth_objects`) from `transform.js`. Let `transform.js` only expect the proxy server's returned structure.
 
-## 10. Custom Fields Configuration
-* **Issue**: Adding author/creator metadata fields inside the `custom_fields` section in `settings.yml` causes the platform to render them as empty input form fields on the plugin's configuration settings page.
-* **Guideline**: Empty the `custom_fields` array (`custom_fields: []`) if no configuration parameters are required from the end-user. Do not place static metadata (like `author_bio` or documentation links) inside `custom_fields`.
+## 10. Custom Fields & Author Bio Schema Validation
+* **Issue**: Custom fields inside `settings.yml` are rendered as user inputs. Validation requires `author_bio` support details to only contain specific validated properties.
+* **Guideline**:
+  * Empty the `custom_fields` array if no user settings are needed, except for the mandatory `author_bio` block.
+  * Ensure the `author_bio` metadata block only includes recognized validation keys: `category`, `description`, `github_url`, and `learn_more_url`. Never use `email_address` inside it.
 
 ## 11. HTML Wrapper Divs in SVGs
 * **Issue**: Redundant wrapper divs (like `.radar-container` or `.text--black`) surrounding an `<svg>` element can introduce nesting bugs and cause platform template parsers to flag unclosed div errors during mock evaluation.
@@ -112,12 +114,16 @@ This rule outlines template styling, layout constraints, and deployment guidelin
 
 
 
-## 18. Render Tag for Custom Templates
-* **Issue**: In TRMNL's Liquid, reusable template blocks defined inside shared partials (e.g. `{% template title_bar %}`) must be rendered using `{% render 'title_bar' %}` in the main layout templates. The `include` tag is deprecated and will fail to resolve.
-* **Guideline**: Use `{% render 'template_name' %}` when referencing block templates defined via `{% template template_name %}`.
+## 18. Layout Isolation and SVG Inlining
+* **Issue**: Reusable custom SVG blocks compiled as template captures inside `shared.liquid` (e.g., `radar_svg`) can fail compiler and validator checks during mock evaluation when rendered using `{% render %}` tags.
+* **Guideline**: Avoid rendering custom SVGs as partials. Embed raw, layout-specific SVG elements directly inside their respective view templates (`full.liquid`, etc.) so that each view file is standalone and independent.
+
+## 19. Semantic Badge Colors
+* **Issue**: The styling engine does not support a `label--error` class in the standard epaper stylesheet.
+* **Guideline**: Use `label--warning` for ALERT/HAZARD indicators and `label--outline` for nominal statuses.
 
 
-## 19. Variable Fallback Initialization
+## 20. Variable Fallback Initialization
 * **Issue**: During template-only validation runs on empty mock contexts, variables referenced by child loop scopes (like `closest_list`) will cause compiler errors if they are not explicitly initialized.
 * **Guideline**: Always define and initialize array variables with fallback empty arrays in `shared.liquid` to prevent missing variable errors (e.g. `{% assign list = list | default: trmnl.data.list %}{% if list == nil %}{% assign list = "" | split: "," %}{% endif %}`).
 
