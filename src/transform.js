@@ -150,6 +150,7 @@ function cleanAsteroidName(rawName) {
     // Fallback if no asteroids found
     if (candidates.length === 0) {
       return {
+        scan_completed: true,
         system_status: "SYSTEM STATUS: NOMINAL // CLEAR SPACE",
         total_count: 0,
         closest_dist_ld: "—",
@@ -360,6 +361,7 @@ function cleanAsteroidName(rawName) {
     }) + " UTC";
 
     return {
+      scan_completed: true,
       system_status: system_status,
       total_count: total_count,
       closest_dist_ld: closest_dist_ld,
@@ -378,6 +380,7 @@ function cleanAsteroidName(rawName) {
   } catch (e) {
     console.error("[transform.js] Error parsing response: ", e);
     return {
+      scan_completed: false,
       system_status: "SYSTEM OFFLINE: MALFORMED DATA",
       total_count: "—",
       closest_dist_ld: "—",

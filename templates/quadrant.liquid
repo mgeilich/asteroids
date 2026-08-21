@@ -1,23 +1,21 @@
-{% if total_count and total_count != "—" %}
 <div class="layout layout--col layout--center">
-  <div class="label mb--1"><strong>NEO RADAR MONITOR</strong></div>
-  
-  <!-- Hero Metric -->
-  <div class="value value--large mb--1">
-    {{ total_count | default: '0' }}
-  </div>
-  <div class="label mb--2">NEOS DETECTED</div>
-  
-  <!-- Secondary glance metric -->
-  <div class="border rounded bg--white p--1 flex flex--row gap--small layout--center-y">
-    <span class="label">CLOSEST:</span>
-    <span class="value value--small">{{ closest_dist_ld | default: '—' }}</span>
-  </div>
+  {% if scan_completed %}
+    <div class="label mb--1"><strong>NEO RADAR MONITOR</strong></div>
+    
+    <!-- Hero Metric -->
+    <div class="value value--large mb--1">
+      {{ total_count | default: '0' }}
+    </div>
+    <div class="label mb--2">NEOS DETECTED</div>
+    
+    <!-- Secondary glance metric -->
+    <div class="border rounded bg--white p--1 flex flex--row gap--small layout--center-y">
+      <span class="label">CLOSEST:</span>
+      <span class="value value--small">{{ closest_dist_ld | default: '—' }}</span>
+    </div>
+  {% else %}
+    <div class="p--3 label">
+      Sensor scan in progress...
+    </div>
+  {% endif %}
 </div>
-{% else %}
-<div class="layout layout--col layout--center">
-  <div class="p--3 label">
-    Sensor scan in progress...
-  </div>
-</div>
-{% endif %}
