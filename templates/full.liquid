@@ -1,9 +1,9 @@
 <div class="layout layout--col gap--small">
   {% if scan_completed %}
-    <div class="grid grid--cols-6 gap--small w--full grow p--1">
+    <div class="grid grid--cols-1 lg:grid--cols-6 gap--small w--full grow p--1">
       
       <!-- Left Column: Radar -->
-      <div class="col--span-3">
+      <div class="col--span-1 lg:col--span-3">
         <div class="w--full h--[260px] overflow--hidden">
           <div class="flex flex--col layout--center-x w--full">
             {% render 'radar_svg', layout: 'full', ticks: radar_ticks_full, asteroids: radar_asteroids_full %}
@@ -12,7 +12,7 @@
       </div>
       
       <!-- Right Column: Status & Schedule Details -->
-      <div class="col--span-3">
+      <div class="col--span-1 lg:col--span-3">
         <div class="grid grid--cols-1 gap--small">
           <!-- Header -->
           <div>
