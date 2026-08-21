@@ -53,7 +53,7 @@ def neo_radar(req: https_fn.Request) -> https_fn.Response:
                 logger.error(f"Failed to parse cached_at timestamp: {ex}")
     
     # Cache is stale or missing; fetch fresh data from NASA
-    api_key = os.environ.get("NASA_API_KEY", "DEMO_KEY")
+    api_key = req.args.get("nasa_api_key") or os.environ.get("NASA_API_KEY", "DEMO_KEY")
     start_date = now.strftime("%Y-%m-%d")
     end_date = (now + datetime.timedelta(days=7)).strftime("%Y-%m-%d")
     

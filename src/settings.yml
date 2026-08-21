@@ -6,7 +6,7 @@ static_data: '{"candidates":[{"id":"1","name":"(2026 NY1)","miss_distance_ld":4.
 polling_verb: get
 framework_version: 3.2.0
 serverless_language: node
-polling_url: https://neo-radar-t4xw3htxya-uc.a.run.app
+polling_url: https://neo-radar-t4xw3htxya-uc.a.run.app?nasa_api_key=##{{ nasa_api_key }}
 polling_headers: ''
 polling_body: ''
 id: 411563
@@ -31,6 +31,14 @@ oauth_expiry_field_name: ''
 oauth_expiry_strategy: ''
 oauth_fixed_expiry_ms: ''
 custom_fields:
+- keyname: author_bio
+  field_type: author_bio
+  name: Support & Creator Info
+  description: Real-time tracking of near-Earth objects powered by the NASA NeoWS API.
+  email_address: michaelbgeilich@gmail.com
+  github_url: https://github.com/mgeilich/asteroids
+  learn_more_url: https://api.nasa.gov
+  category: discovery,education
 - keyname: nasa_api_key
   field_type: password
   name: NASA API Key
