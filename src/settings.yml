@@ -6,7 +6,7 @@ static_data: '{"candidates":[{"id":"1","name":"(2026 NY1)","miss_distance_ld":4.
 polling_verb: get
 framework_version: 3.2.0
 serverless_language: node
-polling_url: https://neo-radar-t4xw3htxya-uc.a.run.app?nasa_api_key=##{{ nasa_api_key }}
+polling_url: https://neo-radar-t4xw3htxya-uc.a.run.app
 polling_headers: ''
 polling_body: ''
 id: 411563
@@ -39,12 +39,6 @@ custom_fields:
   github_url: https://github.com/mgeilich/asteroids
   learn_more_url: https://api.nasa.gov
   category: discovery,education
-- keyname: nasa_api_key
-  field_type: password
-  name: NASA API Key
-  description: Get your API key from <a href="https://api.nasa.gov">NASA API Portal</a>.
-  optional: true
-  placeholder: DEMO_KEY
 name: Asteroids
 description: Track incoming asteroids on radar
 refresh_interval: 60
