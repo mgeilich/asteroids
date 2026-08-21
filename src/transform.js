@@ -77,6 +77,7 @@ function cleanAsteroidName(rawName) {
 
     if (has_all_precomputed) {
       return {
+        scan_completed: true,
         system_status: input.system_status || "SYSTEM NOMINAL",
         total_count: input.total_count !== undefined ? input.total_count : "—",
         closest_dist_ld: input.closest_dist_ld || "—",
