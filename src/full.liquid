@@ -1,153 +1,159 @@
 <div class="layout layout--col gap--small">
   {% if scan_completed %}
-    <!-- Radar Section (Centered, full-width) -->
-    <div class="flex flex--col flex--center-x w--full">
-      <div class="w--full h--auto overflow--hidden flex flex--col flex--center-x">
-        <svg width="280" height="260" viewBox="0 0 280 260" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg" class="w--full max-w--full">
-          <defs>
-            <clipPath id="label-clip">
-              <rect x="5" y="5" width="270" height="250" />
-            </clipPath>
-          </defs>
-          <!-- Radar Grid Boundaries and Rings -->
-          <g stroke="#000000" fill="none">
-            <circle cx="140" cy="130" r="124" stroke-width="1.5" stroke-dasharray="1 5" />
-            <circle cx="140" cy="130" r="120" stroke-width="2.5" />
-            
-            <g stroke-width="1.5" stroke-dasharray="3 6">
-              <circle cx="140" cy="130" r="90" />
-              <circle cx="140" cy="130" r="60" />
-              <circle cx="140" cy="130" r="30" />
+    <div class="grid grid--cols-1 lg:grid--cols-6 gap--small w--full grow p--1">
+      
+      <!-- Left Column: Radar -->
+      <div class="col--span-1 lg:col--span-3">
+        <div class="w--full h--auto overflow--hidden flex flex--col flex--center-x">
+          <svg width="280" height="260" viewBox="0 0 280 260" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg" class="w--full max-w--full">
+            <defs>
+              <clipPath id="label-clip">
+                <rect x="5" y="5" width="270" height="250" />
+              </clipPath>
+            </defs>
+            <!-- Radar Grid Boundaries and Rings -->
+            <g stroke="#000000" fill="none">
+              <circle cx="140" cy="130" r="124" stroke-width="1.5" stroke-dasharray="1 5" />
+              <circle cx="140" cy="130" r="120" stroke-width="2.5" />
+              
+              <g stroke-width="1.5" stroke-dasharray="3 6">
+                <circle cx="140" cy="130" r="90" />
+                <circle cx="140" cy="130" r="60" />
+                <circle cx="140" cy="130" r="30" />
+              </g>
+              
+              <line x1="140" y1="6" x2="140" y2="254" stroke-width="1.5" stroke-dasharray="2 4" />
+              <line x1="16" y1="130" x2="264" y2="130" stroke-width="1.5" stroke-dasharray="2 4" />
             </g>
             
-            <line x1="140" y1="6" x2="140" y2="254" stroke-width="1.5" stroke-dasharray="2 4" />
-            <line x1="16" y1="130" x2="264" y2="130" stroke-width="1.5" stroke-dasharray="2 4" />
-          </g>
-          
-          <circle cx="140" cy="130" r="5" fill="#000000" />
-          
-          <g fill="#000000" font="bold 10px sans-serif">
-            <text x="170" y="125" text-anchor="middle" fill="#000000">10 LD</text>
-            <text x="200" y="125" text-anchor="middle" fill="#000000">20 LD</text>
-            <text x="230" y="125" text-anchor="middle" fill="#000000">30 LD</text>
-            <text x="260" y="125" text-anchor="end" fill="#000000">40 LD</text>
-            <text x="140" y="145" text-anchor="middle" fill="#000000">EARTH</text>
-            <text x="140" y="15" text-anchor="middle" fill="#000000">NOW (T-0)</text>
-          </g>
-          
-          {% if radar_ticks_full %}
-            <g stroke="#000000" stroke-width="2.5">
-              {% for tick in radar_ticks_full %}
-                {% if tick and tick.x1 and tick.y1 and tick.x2 and tick.y2 %}
-                  <line x1="{{ tick.x1 }}" y1="{{ tick.y1 }}" x2="{{ tick.x2 }}" y2="{{ tick.y2 }}" />
-                {% endif %}
-              {% endfor %}
-            </g>
-          {% endif %}
-          
-          {% if radar_ticks_full %}
-            <g fill="#000000" font="bold 8px sans-serif">
-              {% for tick in radar_ticks_full %}
-                {% if tick and tick.label_x and tick.label_y %}
-                  <text x="{{ tick.label_x }}" y="{{ tick.label_y }}" text-anchor="{{ tick.anchor | default: 'middle' }}" fill="#000000">
-                    {{- tick.label | default: '—' -}}
-                  </text>
-                {% endif %}
-              {% endfor %}
-            </g>
-          {% endif %}
-          
-          {% if radar_asteroids_full and radar_asteroids_full.size > 0 %}
-            <g stroke="#000000" stroke-width="2" fill="none">
-              {% for ast in radar_asteroids_full %}
-                {% if ast and ast.x and ast.y %}
-                  <circle cx="{{ ast.x }}" cy="{{ ast.y }}" r="{{ ast.r | default: 4 }}" {% if ast.is_hazardous %}fill="#000000"{% endif %} />
-                {% endif %}
-              {% endfor %}
-            </g>
-            <g fill="#000000" clip-path="url(#label-clip)" font="bold 10px sans-serif">
-              {% for ast in radar_asteroids_full %}
-                {% if ast and ast.label_x1 and ast.label_y1 %}
-                  {% if ast.name_part_2 %}
-                    <text x="{{ ast.label_x1 }}" y="{{ ast.label_y1 }}" text-anchor="{{ ast.anchor | default: 'start' }}" fill="#000000">{{ ast.name_part_1 }}</text>
-                    <text x="{{ ast.label_x2 }}" y="{{ ast.label_y2 }}" text-anchor="{{ ast.anchor | default: 'start' }}" fill="#000000">{{ ast.name_part_2 }}</text>
-                  {% else %}
-                    <text x="{{ ast.label_x1 }}" y="{{ ast.label_y1 }}" text-anchor="{{ ast.anchor | default: 'start' }}" fill="#000000">{{ ast.name_part_1 }}</text>
-                  {% endif %}
-                {% endif %}
-              {% endfor %}
-            </g>
-          {% else %}
+            <circle cx="140" cy="130" r="5" fill="#000000" />
+            
             <g fill="#000000" font="bold 10px sans-serif">
-              <text x="140" y="130" text-anchor="middle" fill="#000000">NO ASTEROIDS IN RANGE</text>
+              <text x="170" y="125" text-anchor="middle" fill="#000000">10 LD</text>
+              <text x="200" y="125" text-anchor="middle" fill="#000000">20 LD</text>
+              <text x="230" y="125" text-anchor="middle" fill="#000000">30 LD</text>
+              <text x="260" y="125" text-anchor="end" fill="#000000">40 LD</text>
+              <text x="140" y="145" text-anchor="middle" fill="#000000">EARTH</text>
+              <text x="140" y="15" text-anchor="middle" fill="#000000">NOW (T-0)</text>
             </g>
-          {% endif %}
-        </svg>
-      </div>
-    </div>
-    
-    <!-- Status & Information Panel -->
-    <div class="flex flex--col gap--small w--full grow p--1">
-      <!-- Header / Title Row -->
-      <div class="flex flex--row flex--center-y gap--small w--full">
-        <div>
-          <div class="title title--base">PLANETARY DEFENSE</div>
-          <div class="label">NEO RADAR MONITOR</div>
-        </div>
-        
-        <div class="flex flex--row items--center gap--small ml--auto">
-          {% if system_status contains "WARNING" or system_status contains "DEMO" %}
-            <div class="label label--warning p--1 flex flex--row flex--center-x">
-              <strong>{{ system_status }}</strong>
-            </div>
-          {% else %}
-            <div class="label label--outline p--1 flex flex--row flex--center-x">
-              <strong>{{ system_status }}</strong>
-            </div>
-          {% endif %}
-        </div>
-      </div>
-      
-      <!-- Key Statistics row -->
-      <div class="grid grid--cols-2 gap--small w--full">
-        <div class="bg--gray-75 rounded p--1.5 flex flex--row gap--small flex--center-x flex--center-y">
-          <span class="label">NEOS DETECTED:</span>
-          <span class="value value--base">{{ total_count | default: '—' }}</span>
-        </div>
-        <div class="bg--gray-75 rounded p--1.5 flex flex--row gap--small flex--center-x flex--center-y">
-          <span class="label">CLOSEST APPROACH:</span>
-          <span class="value value--base">{{ closest_dist_ld | default: '—' }}</span>
-        </div>
-      </div>
-      
-      <!-- Closest Scheduled Flybys -->
-      <div class="flex flex--col gap--xsmall w--full">
-        <div class="label"><strong>CLOSEST SCHEDULED FLYBYS</strong></div>
-        
-        {% if closest_list and closest_list.size > 0 %}
-          <div class="grid grid--cols-3 gap--small w--full">
-            {% for item in closest_list limit: 3 %}
-              <div class="rounded bg--gray-75 p--1">
-                <div class="flex flex--col gap--xsmall">
-                  <div class="title title--small" data-clamp="1">{{ item.name | default: '—' }}</div>
-                  <div class="label label--small" data-clamp="1">{{ item.time_str | default: '—' }}</div>
-                  <div class="flex flex--row flex--center-y gap--small mt--1">
-                    <span class="value value--small">{{ item.dist_ld | default: '—' }} LD</span>
-                    {% if item.is_hazardous == true %}
-                      <span class="label label--warning px--1 ml--auto"><strong>HAZARD</strong></span>
+            
+            {% if radar_ticks_full %}
+              <g stroke="#000000" stroke-width="2.5">
+                {% for tick in radar_ticks_full %}
+                  {% if tick and tick.x1 and tick.y1 and tick.x2 and tick.y2 %}
+                    <line x1="{{ tick.x1 }}" y1="{{ tick.y1 }}" x2="{{ tick.x2 }}" y2="{{ tick.y2 }}" />
+                  {% endif %}
+                {% endfor %}
+              </g>
+            {% endif %}
+            
+            {% if radar_ticks_full %}
+              <g fill="#000000" font="bold 8px sans-serif">
+                {% for tick in radar_ticks_full %}
+                  {% if tick and tick.label_x and tick.label_y %}
+                    <text x="{{ tick.label_x }}" y="{{ tick.label_y }}" text-anchor="{{ tick.anchor | default: 'middle' }}" fill="#000000">
+                      {{- tick.label | default: '—' -}}
+                    </text>
+                  {% endif %}
+                {% endfor %}
+              </g>
+            {% endif %}
+            
+            {% if radar_asteroids_full and radar_asteroids_full.size > 0 %}
+              <g stroke="#000000" stroke-width="2" fill="none">
+                {% for ast in radar_asteroids_full %}
+                  {% if ast and ast.x and ast.y %}
+                    <circle cx="{{ ast.x }}" cy="{{ ast.y }}" r="{{ ast.r | default: 4 }}" {% if ast.is_hazardous %}fill="#000000"{% endif %} />
+                  {% endif %}
+                {% endfor %}
+              </g>
+              <g fill="#000000" clip-path="url(#label-clip)" font="bold 10px sans-serif">
+                {% for ast in radar_asteroids_full %}
+                  {% if ast and ast.label_x1 and ast.label_y1 %}
+                    {% if ast.name_part_2 %}
+                      <text x="{{ ast.label_x1 }}" y="{{ ast.label_y1 }}" text-anchor="{{ ast.anchor | default: 'start' }}" fill="#000000">{{ ast.name_part_1 }}</text>
+                      <text x="{{ ast.label_x2 }}" y="{{ ast.label_y2 }}" text-anchor="{{ ast.anchor | default: 'start' }}" fill="#000000">{{ ast.name_part_2 }}</text>
+                    {% else %}
+                      <text x="{{ ast.label_x1 }}" y="{{ ast.label_y1 }}" text-anchor="{{ ast.anchor | default: 'start' }}" fill="#000000">{{ ast.name_part_1 }}</text>
                     {% endif %}
-                  </div>
-                </div>
-              </div>
-            {% endfor %}
-          </div>
-        {% else %}
-          <div class="p--3 rounded flex flex--row flex--center-x label w--full bg--gray-75">
-            No NEO activity detected.
-          </div>
-        {% endif %}
+                  {% endif %}
+                {% endfor %}
+              </g>
+            {% else %}
+              <g fill="#000000" font="bold 10px sans-serif">
+                <text x="140" y="130" text-anchor="middle" fill="#000000">NO ASTEROIDS IN RANGE</text>
+              </g>
+            {% endif %}
+          </svg>
+        </div>
       </div>
-    </div>
+      
+      <!-- Right Column: Status & Information Panel -->
+      <div class="col--span-1 lg:col--span-3">
+        <div class="flex flex--col gap--small w--full grow p--1">
+          <!-- Header / Title Row -->
+          <div class="flex flex--row flex--center-y gap--small w--full">
+            <div>
+              <div class="title title--base">PLANETARY DEFENSE</div>
+              <div class="label">NEO RADAR MONITOR</div>
+            </div>
+            
+            <div class="flex flex--row items--center gap--small ml--auto">
+              {% if system_status contains "WARNING" or system_status contains "DEMO" %}
+                <div class="label label--warning p--1 flex flex--row flex--center-x">
+                  <strong>{{ system_status }}</strong>
+                </div>
+              {% else %}
+                <div class="label label--outline p--1 flex flex--row flex--center-x">
+                  <strong>{{ system_status }}</strong>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+          
+          <!-- Key Statistics row -->
+          <div class="grid grid--cols-2 gap--small w--full">
+            <div class="bg--gray-75 rounded p--1 flex flex--col flex--center-x">
+              <span class="label">NEOS DETECTED</span>
+              <span class="value value--base">{{ total_count | default: '—' }}</span>
+            </div>
+            <div class="bg--gray-75 rounded p--1 flex flex--col flex--center-x">
+              <span class="label">CLOSEST APPROACH</span>
+              <span class="value value--base">{{ closest_dist_ld | default: '—' }}</span>
+            </div>
+          </div>
+          
+          <!-- Closest Scheduled Flybys -->
+          <div class="flex flex--col gap--xsmall w--full">
+            <div class="label"><strong>CLOSEST SCHEDULED FLYBYS</strong></div>
+            
+            {% if closest_list and closest_list.size > 0 %}
+              <div class="grid grid--cols-1 gap--small w--full">
+                {% for item in closest_list limit: 3 %}
+                  <div class="rounded bg--gray-75 p--1">
+                    <div class="flex flex--row flex--center-y gap--small w--full">
+                      <div class="grow">
+                        <div class="title title--small" data-clamp="1">{{ item.name | default: '—' }}</div>
+                        <div class="label label--small" data-clamp="1">{{ item.time_str | default: '—' }} &bull; Size: {{ item.size_m | default: '—' }}</div>
+                      </div>
+                      <div class="text--right flex flex--col layout--right">
+                        <div class="value value--small" data-clamp="1">{{ item.dist_ld | default: '—' }} LD</div>
+                        {% if item.is_hazardous == true %}
+                          <span class="label label--warning px--1"><strong>HAZARD</strong></span>
+                        {% endif %}
+                      </div>
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+            {% else %}
+              <div class="p--3 rounded flex flex--row flex--center-x label w--full bg--gray-75">
+                No NEO activity detected.
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
   {% else %}
     <div class="flex flex--col layout--center grow">
       <div class="p--4 label">
