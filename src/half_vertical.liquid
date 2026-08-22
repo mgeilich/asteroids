@@ -1,8 +1,9 @@
 <div class="layout layout--col gap--small">
   {% if scan_completed %}
     <!-- Radar Face (220x160 px) -->
-    <div class="flex flex--col flex--center-x w--full">
-      <svg width="220" height="160" viewBox="0 0 220 160" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg" class="w--full max-w--full">
+    <div class="flex flex--col flex--center-x w--full overflow-hidden overflow--hidden max-w--full">
+      <div class="w--full max-w--full overflow-hidden overflow--hidden flex flex--col flex--center-x">
+        <svg width="220" height="160" viewBox="0 0 220 160" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg" class="w--full max-w--full">
         <g stroke="#000000" fill="none">
           <circle cx="110" cy="80" r="70" stroke-width="1.5" stroke-dasharray="1 4" />
           <circle cx="110" cy="80" r="65" stroke-width="2.5" />
@@ -56,6 +57,7 @@
         {% endif %}
       </svg>
     </div>
+  </div>
     
     <!-- Bottom Telemetry Banner -->
     <div class="flex flex--row flex--center-y gap--small p--2 w--full">
