@@ -1,10 +1,10 @@
 <div class="layout layout--col">
   {% if scan_completed %}
-    <div class="flex flex--row gap--small p--1 grow w--full">
+    <div class="flex flex--col md:flex--row portrait:flex--col gap--small p--1 grow w--full">
       
       <!-- Left Column: Compact Radar (220x160px) -->
-      <div class="flex flex--col flex--center-x w--full">
-        <svg width="220" height="160" viewBox="0 0 220 160" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg" class="w--full max-w--full">
+      <div class="flex flex--col flex--center-x w--full md:w--[220px] lg:w--[330px]">
+        <svg width="220" height="160" viewBox="0 0 220 160" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg" class="w--full md:w--[220px] lg:w--[330px] max-w--full">
           <g stroke="#000000" fill="none">
             <circle cx="110" cy="80" r="70" stroke-width="1.5" stroke-dasharray="1 4" />
             <circle cx="110" cy="80" r="65" stroke-width="2.5" />

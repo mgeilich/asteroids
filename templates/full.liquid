@@ -1,11 +1,11 @@
 <div class="layout layout--col gap--small">
   {% if scan_completed %}
-    <div class="grid grid--cols-2 gap--small w--full grow p--1">
+    <div class="grid grid--cols-1 md:grid--cols-2 portrait:grid--cols-1 gap--small w--full grow p--1">
       
       <!-- Left Column: Radar -->
-      <div class="col--span-1">
-        <div class="w--full h--auto overflow--hidden flex flex--col flex--center-x">
-          <svg width="280" height="260" viewBox="0 0 280 260" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg" class="w--full max-w--full">
+      <div class="col--span-1 flex flex--col flex--center-x">
+        <div class="w--full md:w--[280px] lg:w--[480px] h--auto overflow--hidden flex flex--col flex--center-x">
+          <svg width="280" height="260" viewBox="0 0 280 260" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg" class="w--full md:w--[280px] lg:w--[480px] max-w--full">
             <defs>
               <clipPath id="label-clip">
                 <rect x="5" y="5" width="270" height="250" />
