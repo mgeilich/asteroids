@@ -37,7 +37,7 @@
               <text x="140" y="15" text-anchor="middle" fill="#000000">NOW (T-0)</text>
             </g>
             
-            {% if radar_ticks_full %}
+            {% if radar_ticks_full and radar_ticks_full.size > 0 %}
               <g stroke="#000000" stroke-width="2.5">
                 {% for tick in radar_ticks_full %}
                   {% if tick and tick.x1 and tick.y1 and tick.x2 and tick.y2 %}
@@ -47,7 +47,7 @@
               </g>
             {% endif %}
             
-            {% if radar_ticks_full %}
+            {% if radar_ticks_full and radar_ticks_full.size > 0 %}
               <g fill="#000000" font="bold 8px sans-serif">
                 {% for tick in radar_ticks_full %}
                   {% if tick and tick.label_x and tick.label_y %}
