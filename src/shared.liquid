@@ -4,11 +4,22 @@
 </svg>
 {%- endcapture -%}
 
-{% assign total_count = total_count | default: '—' %}
-{% assign closest_dist_ld = closest_dist_ld | default: '—' %}
-{% assign closest_name = closest_name | default: '—' %}
-{% assign system_status = system_status | default: 'SYSTEM OFFLINE: SCAN IN PROGRESS' %}
-{% assign last_updated = last_updated | default: '—' %}
+{% assign scan_completed = data.scan_completed | default: scan_completed %}
+{% assign system_status = data.system_status | default: system_status | default: 'SYSTEM OFFLINE: SCAN IN PROGRESS' %}
+{% assign total_count = data.total_count | default: total_count | default: '—' %}
+{% assign closest_dist_ld = data.closest_dist_ld | default: closest_dist_ld | default: '—' %}
+{% assign closest_name = data.closest_name | default: closest_name | default: '—' %}
+{% assign last_updated = data.last_updated | default: last_updated | default: '—' %}
+{% assign closest_list = data.closest_list | default: closest_list %}
+
+{% assign radar_ticks_full = data.radar_ticks_full | default: radar_ticks_full %}
+{% assign radar_asteroids_full = data.radar_asteroids_full | default: radar_asteroids_full %}
+{% assign radar_ticks_half_horizontal = data.radar_ticks_half_horizontal | default: radar_ticks_half_horizontal %}
+{% assign radar_asteroids_half_horizontal = data.radar_asteroids_half_horizontal | default: radar_asteroids_half_horizontal %}
+{% assign radar_ticks_half_vertical = data.radar_ticks_half_vertical | default: radar_ticks_half_vertical %}
+{% assign radar_asteroids_half_vertical = data.radar_asteroids_half_vertical | default: radar_asteroids_half_vertical %}
+{% assign radar_ticks_quadrant = data.radar_ticks_quadrant | default: radar_ticks_quadrant %}
+{% assign radar_asteroids_quadrant = data.radar_asteroids_quadrant | default: radar_asteroids_quadrant %}
 
 
 {% template title_bar %}
