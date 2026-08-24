@@ -64,7 +64,7 @@
         <div class="label label--small">SCAN: {{ total_count | default: '—' }} NEOs</div>
       </div>
       
-      <div class="flex flex--row items--center gap--small ml--auto">
+      <div class="flex flex--row flex--center-y gap--small ml--auto">
         {% if system_status contains "WARNING" or system_status contains "DEMO" %}
           <span class="label label--warning p--1"><strong>ALERT</strong></span>
         {% else %}

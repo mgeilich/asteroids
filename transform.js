@@ -84,7 +84,7 @@ function cleanAsteroidName(rawName) {
       return {
         scan_completed: true,
         system_status: input.system_status || "SYSTEM NOMINAL",
-        total_count: input.total_count !== undefined ? input.total_count : "—",
+        total_count: (input.total_count !== undefined && input.total_count !== null) ? input.total_count : (input.radar_asteroids_full ? input.radar_asteroids_full.length : "—"),
         closest_dist_ld: input.closest_dist_ld || "—",
         closest_name: input.closest_name || "—",
         last_updated: input.last_updated || now.toUTCString(),
@@ -119,7 +119,7 @@ function cleanAsteroidName(rawName) {
           epoch: epoch
         };
       });
-      total_count = input.total_count || candidates.length;
+      total_count = (input.total_count !== undefined && input.total_count !== null) ? input.total_count : candidates.length;
     } else if (input.radar_asteroids) {
       has_synthetic_epochs = true;
       // If we only have precalculated full-layout asteroids, we extract their properties to reconstruct candidates
@@ -147,7 +147,7 @@ function cleanAsteroidName(rawName) {
           epoch: epoch
         };
       });
-      total_count = input.total_count || candidates.length;
+      total_count = (input.total_count !== undefined && input.total_count !== null) ? input.total_count : candidates.length;
     }
 
     // Filter out candidates with invalid or missing epoch/timestamp

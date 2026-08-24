@@ -1,6 +1,6 @@
 <div class="layout layout--col">
   {% if scan_completed %}
-    <div class="flex flex--col md:flex--row portrait:flex--col gap--small p--1 grow w--full">
+    <div class="flex flex--col md:flex--row portrait:flex--col gap--xsmall p--0.5 grow w--full">
       
       <!-- Left Column: Compact Radar (220x160px) -->
       <div class="w--full md:w--[220px] lg:w--[330px] flex flex--col flex--center-x">
@@ -60,15 +60,15 @@
       </div>
       
       <!-- Right Column: Status Banner & Summary Ticker (540px wide) -->
-      <div class="grid grid--cols-1 gap--small grow">
+      <div class="grid grid--cols-1 gap--xsmall grow">
         <!-- System status and refresh banner -->
-        <div class="flex flex--row flex--center-y gap--small mb--1">
+        <div class="flex flex--row flex--center-y gap--xsmall mb--0.5">
           <div>
             <div class="title title--small">ASTEROIDS</div>
             <div class="label label--small">Planetary Defense Telemetry</div>
           </div>
           
-          <div class="flex flex--row items--center gap--small ml--auto">
+          <div class="flex flex--row flex--center-y gap--xsmall ml--auto">
             {% if system_status contains "WARNING" or system_status contains "DEMO" %}
               <span class="label label--warning p--1"><strong>ALERT</strong></span>
             {% else %}
@@ -78,23 +78,23 @@
         </div>
         
         <!-- Metrics row -->
-        <div class="grid grid--cols-2 gap--small mb--1">
-          <div class="bg--gray-75 rounded p--0.5 flex flex--row gap--small flex--center-x flex--center-y">
+        <div class="grid grid--cols-2 gap--xsmall mb--0.5">
+          <div class="bg--gray-75 rounded p--0.5 flex flex--row gap--xsmall flex--center-x flex--center-y">
             <span class="label">COUNT:</span>
             <span class="value value--small">{{ total_count | default: '—' }}</span>
           </div>
-          <div class="bg--gray-75 rounded p--0.5 flex flex--row gap--small flex--center-x flex--center-y">
+          <div class="bg--gray-75 rounded p--0.5 flex flex--row gap--xsmall flex--center-x flex--center-y">
             <span class="label">CLOSEST:</span>
             <span class="value value--small">{{ closest_dist_ld | default: '—' }}</span>
           </div>
         </div>
         
         <!-- Closest list schedule -->
-        <div class="grid grid--cols-1 gap--small">
+        <div class="grid grid--cols-1 gap--xsmall">
           {% if closest_list and closest_list.size > 0 %}
             <div class="label"><strong>CLOSEST SCHEDULED FLYBYS</strong></div>
             {% for item in closest_list limit: 2 %}
-              <div class="flex flex--row flex--center-y gap--small p--1 rounded bg--gray-75 grow">
+              <div class="flex flex--row flex--center-y gap--xsmall p--0.5 rounded bg--gray-75 grow">
                 <div class="grow">
                   <div class="title title--small" data-clamp="1">{{ item.name | default: '—' }}</div>
                   <div class="label label--small" data-clamp="1">{{ item.time_str | default: '—' }} &bull; Size: {{ item.size_m | default: '—' }}</div>

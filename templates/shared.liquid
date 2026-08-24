@@ -1,15 +1,20 @@
 {%- capture svg_logo -%}
-<svg class="image image--adaptive" width="24" height="24" viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+<svg class="image" width="24" height="24" viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
   <path d="M12,2A10,10,0,1,0,22,12,10,10,0,0,0,12,2Zm1,17a1.5,1.5,0,1,1,1.5-1.5A1.5,1.5,0,0,1,13,19Zm5-5.5a1.5,1.5,0,1,1,1.5-1.5A1.5,1.5,0,0,1,18,13.5ZM12,12a2,2,0,1,1,2-2A2,2,0,0,1,12,12ZM7.5,9A1.5,1.5,0,1,1,9,7.5,1.5,1.5,0,0,1,7.5,9Zm1,7a1.5,1.5,0,1,1,1.5-1.5A1.5,1.5,0,0,1,8.5,16Z" fill="#000000"/>
 </svg>
 {%- endcapture -%}
 
 {% assign scan_completed = data.scan_completed | default: scan_completed %}
-{% assign system_status = data.system_status | default: system_status | default: 'SYSTEM OFFLINE: SCAN IN PROGRESS' %}
-{% assign total_count = data.total_count | default: total_count | default: '—' %}
-{% assign closest_dist_ld = data.closest_dist_ld | default: closest_dist_ld | default: '—' %}
-{% assign closest_name = data.closest_name | default: closest_name | default: '—' %}
-{% assign last_updated = data.last_updated | default: last_updated | default: '—' %}
+{% assign system_status = data.system_status | default: system_status %}
+{% assign system_status = system_status | default: 'SYSTEM OFFLINE: SCAN IN PROGRESS' %}
+{% assign total_count = data.total_count | default: total_count %}
+{% assign total_count = total_count | default: '—' %}
+{% assign closest_dist_ld = data.closest_dist_ld | default: closest_dist_ld %}
+{% assign closest_dist_ld = closest_dist_ld | default: '—' %}
+{% assign closest_name = data.closest_name | default: closest_name %}
+{% assign closest_name = closest_name | default: '—' %}
+{% assign last_updated = data.last_updated | default: last_updated %}
+{% assign last_updated = last_updated | default: '—' %}
 {% assign closest_list = data.closest_list | default: closest_list %}
 
 {% assign radar_ticks_full = data.radar_ticks_full | default: radar_ticks_full %}
