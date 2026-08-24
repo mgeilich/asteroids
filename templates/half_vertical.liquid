@@ -30,7 +30,7 @@
         {% endif %}
         
         {% if radar_ticks_half_vertical and radar_ticks_half_vertical.size > 0 %}
-          <g fill="#000000" font="bold 8px sans-serif">
+          <g fill="#000000" class="label label--small">
             {% for tick in radar_ticks_half_vertical %}
               {% if tick and tick.label_x and tick.label_y %}
                 <text x="{{ tick.label_x }}" y="{{ tick.label_y }}" text-anchor="{{ tick.anchor | default: 'middle' }}">
@@ -50,7 +50,7 @@
             {% endfor %}
           </g>
         {% else %}
-          <g fill="#000000" font="bold 10px sans-serif">
+          <g fill="#000000" class="label">
             <text x="110" y="80" text-anchor="middle">NO ASTEROIDS IN RANGE</text>
           </g>
         {% endif %}

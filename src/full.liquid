@@ -27,7 +27,7 @@
             
             <circle cx="140" cy="130" r="5" fill="#000000" />
             
-            <g fill="#000000" font="bold 10px sans-serif">
+            <g fill="#000000" class="label">
               <text x="170" y="125" text-anchor="middle" fill="#000000">10 LD</text>
               <text x="200" y="125" text-anchor="middle" fill="#000000">20 LD</text>
               <text x="230" y="125" text-anchor="middle" fill="#000000">30 LD</text>
@@ -47,7 +47,7 @@
             {% endif %}
             
             {% if radar_ticks_full and radar_ticks_full.size > 0 %}
-              <g fill="#000000" font="bold 8px sans-serif">
+              <g fill="#000000" class="label label--small">
                 {% for tick in radar_ticks_full %}
                   {% if tick and tick.label_x and tick.label_y %}
                     <text x="{{ tick.label_x }}" y="{{ tick.label_y }}" text-anchor="{{ tick.anchor | default: 'middle' }}" fill="#000000">
@@ -66,7 +66,7 @@
                   {% endif %}
                 {% endfor %}
               </g>
-              <g fill="#000000" clip-path="url(#label-clip)" font="bold 10px sans-serif">
+              <g fill="#000000" clip-path="url(#label-clip)" class="label">
                 {% for ast in radar_asteroids_full %}
                   {% if ast and ast.label_x1 and ast.label_y1 %}
                     {% if ast.name_part_2 %}
@@ -79,7 +79,7 @@
                 {% endfor %}
               </g>
             {% else %}
-              <g fill="#000000" font="bold 10px sans-serif">
+              <g fill="#000000" class="label">
                 <text x="140" y="130" text-anchor="middle" fill="#000000">NO ASTEROIDS IN RANGE</text>
               </g>
             {% endif %}
