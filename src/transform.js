@@ -1,22 +1,6 @@
 /**
- * TRMNL Serverless Transform Script for "Asteroids" (NEO Radar Monitor)
- * Can process raw NASA NeoWS API response directly, OR act as a pass-through/enricher.
- * 
- * Expected Input Schema:
- * {
- *   "candidates": [
- *     {
- *       "id": "string",
- *       "name": "string",
- *       "miss_distance_ld": number,
- *       "velocity_kph": number,
- *       "avg_diameter": number,
- *       "is_hazardous": boolean,
- *       "epoch": number
- *     }
- *   ],
- *   "total_count": number
- * }
+ * TRMNL Serverless Transform Script for "Asteroids" (NEO Timeline Monitor)
+ * Supports linear coordinate timeline calculation and precalculated payload pass-through.
  */
 
 function cleanAsteroidName(rawName) {
@@ -30,397 +14,293 @@ function cleanAsteroidName(rawName) {
     name = name.substring(0, 6) + "..";
   }
   return name;
-}function run(input) {
-  try {
-    // Radar layouts configuration
-    const LAYOUTS = {
-      full: { cx: 140, cy: 130, R_max: 120, D_max: 40, tick_inner: 121, tick_outer: 126, tick_label: 132, width: 280, height: 260 },
-      half_horizontal: { cx: 110, cy: 80, R_max: 65, D_max: 40, tick_inner: 62, tick_outer: 68, tick_label: 75, width: 220, height: 160 },
-      half_vertical: { cx: 110, cy: 80, R_max: 65, D_max: 40, tick_inner: 62, tick_outer: 68, tick_label: 75, width: 220, height: 160 },
-      quadrant: { cx: 75, cy: 75, R_max: 67, D_max: 40, tick_inner: 64, tick_outer: 70, tick_label: 0, width: 150, height: 150 }
-    };
+}
 
-    function isWithinBounds(x, y, layout) {
-      return isFinite(x) && isFinite(y) && x >= 0 && x <= layout.width && y >= 0 && y <= layout.height;
+function run(input) {
+  const LAYOUTS = {
+    full: {
+      width: 360, height: 260,
+      x_min: 40, x_max: 345,
+      y_min: 25, y_max: 230,
+      max_ld: 40.0,
+      grid_levels: [10, 20, 30, 40],
+      limit: 12
+    },
+    half_horizontal: {
+      width: 260, height: 150,
+      x_min: 35, x_max: 245,
+      y_min: 18, y_max: 128,
+      max_ld: 40.0,
+      grid_levels: [10, 20, 30, 40],
+      limit: 6
+    },
+    half_vertical: {
+      width: 360, height: 180,
+      x_min: 40, x_max: 345,
+      y_min: 20, y_max: 155,
+      max_ld: 40.0,
+      grid_levels: [10, 20, 30, 40],
+      limit: 8
+    },
+    quadrant: {
+      width: 160, height: 120,
+      x_min: 25, x_max: 145,
+      y_min: 15, y_max: 100,
+      max_ld: 40.0,
+      grid_levels: [20, 40],
+      limit: 4
+    }
+  };
+
+  const emptyPayload = {
+    scan_completed: false,
+    system_status: "SYSTEM OFFLINE: NO DATA",
+    total_count: "—",
+    upcoming_count: "—",
+    closest_dist_ld: "—",
+    closest_name: "—",
+    max_size_m: "—",
+    last_updated: "—",
+    chart_asteroids_full: [],
+    chart_ticks_full: [],
+    chart_gridlines_full: [],
+    chart_asteroids_half_horizontal: [],
+    chart_ticks_half_horizontal: [],
+    chart_gridlines_half_horizontal: [],
+    chart_asteroids_half_vertical: [],
+    chart_ticks_half_vertical: [],
+    chart_gridlines_half_vertical: [],
+    chart_asteroids_quadrant: [],
+    chart_ticks_quadrant: [],
+    chart_gridlines_quadrant: [],
+    now_x_full: 192.5,
+    now_x_half_horizontal: 140,
+    now_x_half_vertical: 192.5,
+    now_x_quadrant: 85,
+    closest_list: []
+  };
+
+  try {
+    if (!input || typeof input !== 'object') {
+      return emptyPayload;
     }
 
     const now = new Date();
     const now_ms = now.getTime();
-    const end_ms = now_ms + 7 * 24 * 3600 * 1000;
+    const start_ms = now_ms - (3.5 * 24 * 3600 * 1000);
+    const end_ms = now_ms + (3.5 * 24 * 3600 * 1000);
+    const total_window_ms = end_ms - start_ms;
 
-    // If the input is empty or invalid
-    if (!input || typeof input !== 'object') {
-      return {
-        scan_completed: false,
-        system_status: "SYSTEM OFFLINE: NO DATA RECEIVED",
-        total_count: "—",
-        closest_dist_ld: "—",
-        closest_name: "—",
-        last_updated: "—",
-        radar_ticks_full: [],
-        radar_asteroids_full: [],
-        radar_ticks_half_horizontal: [],
-        radar_asteroids_half_horizontal: [],
-        radar_ticks_half_vertical: [],
-        radar_asteroids_half_vertical: [],
-        radar_ticks_quadrant: [],
-        radar_asteroids_quadrant: [],
-        closest_list: []
-      };
-    }
+    // Check if valid precalculated payload is provided
+    const hasPrecomputed = input &&
+      Array.isArray(input.chart_ticks_full) && input.chart_ticks_full.length > 0 &&
+      Array.isArray(input.chart_asteroids_full);
 
-    // Verify if all required precalculated layout fields are present and non-empty
-    const has_all_precomputed = input &&
-      Array.isArray(input.radar_ticks_full) && input.radar_ticks_full.length > 0 &&
-      Array.isArray(input.radar_asteroids_full) &&
-      Array.isArray(input.radar_ticks_half_horizontal) && input.radar_ticks_half_horizontal.length > 0 &&
-      Array.isArray(input.radar_asteroids_half_horizontal) &&
-      Array.isArray(input.radar_ticks_half_vertical) && input.radar_ticks_half_vertical.length > 0 &&
-      Array.isArray(input.radar_asteroids_half_vertical) &&
-      Array.isArray(input.radar_ticks_quadrant) && input.radar_ticks_quadrant.length > 0 &&
-      Array.isArray(input.radar_asteroids_quadrant);
-
-    if (has_all_precomputed) {
+    if (hasPrecomputed) {
       return {
         scan_completed: true,
         system_status: input.system_status || "SYSTEM NOMINAL",
-        total_count: (input.total_count !== undefined && input.total_count !== null) ? input.total_count : (input.radar_asteroids_full ? input.radar_asteroids_full.length : "—"),
+        total_count: (input.total_count !== undefined && input.total_count !== null) ? input.total_count : (input.chart_asteroids_full ? input.chart_asteroids_full.length : "—"),
+        upcoming_count: (input.upcoming_count !== undefined && input.upcoming_count !== null) ? input.upcoming_count : "—",
         closest_dist_ld: input.closest_dist_ld || "—",
         closest_name: input.closest_name || "—",
+        max_size_m: input.max_size_m || "—",
         last_updated: input.last_updated || now.toUTCString(),
-        radar_ticks_full: input.radar_ticks_full || [],
-        radar_asteroids_full: input.radar_asteroids_full || [],
-        radar_ticks_half_horizontal: input.radar_ticks_half_horizontal || [],
-        radar_asteroids_half_horizontal: input.radar_asteroids_half_horizontal || [],
-        radar_ticks_half_vertical: input.radar_ticks_half_vertical || [],
-        radar_asteroids_half_vertical: input.radar_asteroids_half_vertical || [],
-        radar_ticks_quadrant: input.radar_ticks_quadrant || [],
-        radar_asteroids_quadrant: input.radar_asteroids_quadrant || [],
+        chart_asteroids_full: input.chart_asteroids_full || [],
+        chart_ticks_full: input.chart_ticks_full || [],
+        chart_gridlines_full: input.chart_gridlines_full || [],
+        chart_asteroids_half_horizontal: input.chart_asteroids_half_horizontal || [],
+        chart_ticks_half_horizontal: input.chart_ticks_half_horizontal || [],
+        chart_gridlines_half_horizontal: input.chart_gridlines_half_horizontal || [],
+        chart_asteroids_half_vertical: input.chart_asteroids_half_vertical || [],
+        chart_ticks_half_vertical: input.chart_ticks_half_vertical || [],
+        chart_gridlines_half_vertical: input.chart_gridlines_half_vertical || [],
+        chart_asteroids_quadrant: input.chart_asteroids_quadrant || [],
+        chart_ticks_quadrant: input.chart_ticks_quadrant || [],
+        chart_gridlines_quadrant: input.chart_gridlines_quadrant || [],
+        now_x_full: isFinite(input.now_x_full) ? input.now_x_full : 192.5,
+        now_x_half_horizontal: isFinite(input.now_x_half_horizontal) ? input.now_x_half_horizontal : 140,
+        now_x_half_vertical: isFinite(input.now_x_half_vertical) ? input.now_x_half_vertical : 192.5,
+        now_x_quadrant: isFinite(input.now_x_quadrant) ? input.now_x_quadrant : 85,
         closest_list: input.closest_list || []
       };
     }
-    
-    let candidates = [];
-    let total_count = 0;
-    let has_synthetic_epochs = false;
 
-    if (input.candidates) {
-      candidates = input.candidates.map((c, idx) => {
-        let epoch = Number(c.epoch);
-        // Normalize past epochs (e.g. 0 in mock/static data) to future offsets
-        if (!epoch || epoch < now_ms) {
-          epoch = now_ms + ((idx + 1) * 1.5 * 24 * 3600 * 1000);
-          has_synthetic_epochs = true;
-          console.warn("[transform.js] Synthetic future epoch assigned to candidate: " + c.name);
-        }
-        return {
-          ...c,
-          name: cleanAsteroidName(c.name),
-          epoch: epoch
-        };
-      });
-      total_count = (input.total_count !== undefined && input.total_count !== null) ? input.total_count : candidates.length;
-    } else if (input.radar_asteroids) {
-      has_synthetic_epochs = true;
-      // If we only have precalculated full-layout asteroids, we extract their properties to reconstruct candidates
-      candidates = input.radar_asteroids.map(a => {
-        // Map back to relative values
-        const x_diff = a.x - 140;
-        const y_diff = 130 - a.y; // cy is 130
-        const R = Math.sqrt(x_diff * x_diff + y_diff * y_diff);
-        const miss_dist = (R / 120.0) * 40.0;
-        
-        let angle_rad = Math.atan2(x_diff, y_diff);
-        if (angle_rad < 0) angle_rad += 2 * Math.PI;
-        const epoch = now_ms + (angle_rad / (2 * Math.PI)) * (end_ms - now_ms);
-        
-        let avg_diam = 20;
-        if (a.r === 5) avg_diam = 80;
-        else if (a.r === 7) avg_diam = 200;
-        else if (a.r === 9) avg_diam = 400;
-        
-        return {
-          name: cleanAsteroidName(a.name),
-          miss_distance_ld: miss_dist,
-          avg_diameter: avg_diam,
-          is_hazardous: a.is_hazardous,
-          epoch: epoch
-        };
-      });
-      total_count = (input.total_count !== undefined && input.total_count !== null) ? input.total_count : candidates.length;
+    // Dynamic computation from candidates
+    let rawCandidates = [];
+    if (Array.isArray(input.candidates)) {
+      rawCandidates = input.candidates;
     }
 
-    // Filter out candidates with invalid or missing epoch/timestamp
-    candidates = candidates.filter(c => c && c.epoch && !isNaN(Number(c.epoch)));
+    let candidates = [];
+    let isSynthetic = false;
 
-    // Fallback if no asteroids found
+    rawCandidates.forEach((c, idx) => {
+      let epoch = Number(c.epoch);
+      if (!epoch || isNaN(epoch) || epoch === 0) {
+        epoch = now_ms + ((idx - 1.5) * 1.5 * 24 * 3600 * 1000);
+        isSynthetic = true;
+      }
+      const missDist = Number(c.miss_distance_ld) || 0;
+      const diam = Number(c.avg_diameter) || 50;
+      const isHaz = Boolean(c.is_hazardous);
+      
+      candidates.push({
+        id: c.id || String(idx),
+        name: cleanAsteroidName(c.name),
+        miss_distance_ld: missDist,
+        velocity_kph: Number(c.velocity_kph) || 30000,
+        avg_diameter: diam,
+        is_hazardous: isHaz,
+        epoch: epoch,
+        is_past: epoch < now_ms
+      });
+    });
+
+    // If no candidates
     if (candidates.length === 0) {
       return {
-        scan_completed: false,
+        ...emptyPayload,
+        scan_completed: true,
         system_status: "SYSTEM STATUS: NOMINAL // CLEAR SPACE",
         total_count: 0,
-        closest_dist_ld: "—",
-        closest_name: "—",
-        last_updated: now.toUTCString(),
-        radar_ticks_full: computeTicks(LAYOUTS.full) || [],
-        radar_asteroids_full: [],
-        radar_ticks_half_horizontal: computeTicks(LAYOUTS.half_horizontal) || [],
-        radar_asteroids_half_horizontal: [],
-        radar_ticks_half_vertical: computeTicks(LAYOUTS.half_vertical) || [],
-        radar_asteroids_half_vertical: [],
-        radar_ticks_quadrant: computeTicks(LAYOUTS.quadrant) || [],
-        radar_asteroids_quadrant: [],
-        closest_list: []
+        upcoming_count: 0,
+        last_updated: now.toUTCString()
       };
     }
 
-    // Sort and extract metrics
-    const sorted_by_distance = [...candidates].sort((a, b) => a.miss_distance_ld - b.miss_distance_ld);
-    const closest_candidate = sorted_by_distance[0];
-    const closest_dist_ld = closest_candidate.miss_distance_ld.toFixed(1) + " LD";
-    const closest_name = closest_candidate.name;
-    
-    let warning_active = false;
-    const closest_list = [];
-    const closest_3 = sorted_by_distance.slice(0, 3);
-    
-    for (const item of closest_3) {
+    // Sort & compute metrics
+    const sortedByDist = [...candidates].sort((a, b) => a.miss_distance_ld - b.miss_distance_ld);
+    const closest = sortedByDist[0];
+    const closest_dist_ld = closest.miss_distance_ld.toFixed(1) + " LD";
+    const closest_name = closest.name;
+
+    const maxDiamObj = [...candidates].sort((a, b) => b.avg_diameter - a.avg_diameter)[0];
+    const max_size_m = Math.round(maxDiamObj.avg_diameter) + "m";
+
+    const upcomingCount = candidates.filter(c => !c.is_past).length;
+
+    let warningActive = false;
+    const closestList = [];
+    const upcomingCandidates = candidates.filter(c => !c.is_past);
+    const displayList = upcomingCandidates.length > 0 ? upcomingCandidates : candidates;
+    const closest3 = [...displayList].sort((a, b) => a.miss_distance_ld - b.miss_distance_ld).slice(0, 3);
+
+    closest3.forEach(item => {
       if (item.is_hazardous && item.miss_distance_ld <= 15.0) {
-        warning_active = true;
+        warningActive = true;
       }
-      const diff_ms = item.epoch - now_ms;
-      const hours_to = Math.floor(diff_ms / 3600000);
-      const days_to = Math.floor(hours_to / 24);
-      const rem_hours = hours_to % 24;
-      const time_str = days_to > 0 ? `T+${days_to}d ${rem_hours}h` : `T+${rem_hours}h`;
-      
-      closest_list.push({
+      const diffMs = item.epoch - now_ms;
+      const hoursDiff = Math.floor(diffMs / (3600 * 1000));
+      const isNeg = hoursDiff < 0;
+      const absHours = Math.abs(hoursDiff);
+      const days = Math.floor(absHours / 24);
+      const remHours = absHours % 24;
+      const prefix = isNeg ? "T-" : "T+";
+      const timeStr = days > 0 ? `${prefix}${days}d ${remHours}h` : `${prefix}${remHours}h`;
+
+      closestList.push({
         name: item.name,
         dist_ld: item.miss_distance_ld.toFixed(1),
+        vel_kph: Math.round(item.velocity_kph).toLocaleString(),
         size_m: Math.round(item.avg_diameter) + "m",
         is_hazardous: !!item.is_hazardous,
-        time_str: time_str
+        time_str: timeStr
       });
-    }
+    });
 
-    const tomorrow_midnight = new Date();
-    tomorrow_midnight.setUTCHours(24, 0, 0, 0);
-
-    // Helper to compute ticks
-    function computeTicks(layout) {
-      const ticks = [];
-      for (let i = 0; i < 7; i++) {
-        const tick_time = tomorrow_midnight.getTime() + i * 24 * 3600 * 1000;
-        if (tick_time >= now_ms && tick_time <= end_ms) {
-          const t_norm = (tick_time - now_ms) / (end_ms - now_ms);
-          const angle = t_norm * 360.0;
-          const alpha = (angle * Math.PI) / 180.0;
-          
-          const x1 = layout.cx + layout.tick_inner * Math.sin(alpha);
-          const y1 = layout.cy - layout.tick_inner * Math.cos(alpha);
-          const x2 = layout.cx + layout.tick_outer * Math.sin(alpha);
-          const y2 = layout.cy - layout.tick_outer * Math.cos(alpha);
-          
-          let label_x = 0;
-          let label_y = 0;
-          let anchor = "middle";
-          
-          if (layout.tick_label > 0) {
-            const xl = layout.cx + layout.tick_label * Math.sin(alpha);
-            const yl = layout.cy - layout.tick_label * Math.cos(alpha);
-            
-            if (angle > 15.0 && angle < 165.0) anchor = "start";
-            else if (angle > 195.0 && angle < 345.0) anchor = "end";
-            
-            label_x = xl;
-            if (angle < 15.0 || angle > 345.0) {
-              label_y = yl - 2;
-            } else if (angle > 165.0 && angle < 195.0) {
-              label_y = yl + 8;
-            } else {
-              label_y = yl + 3;
-            }
-          }
-          
-          const date = new Date(tick_time);
-          const days = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
-          const label = days[date.getUTCDay()];
-          
-          if (isWithinBounds(x1, y1, layout) && isWithinBounds(x2, y2, layout)) {
-            let valid_label_x = null;
-            let valid_label_y = null;
-            if (layout.tick_label > 0 && isWithinBounds(label_x, label_y, layout)) {
-              valid_label_x = parseFloat(label_x.toFixed(1));
-              valid_label_y = parseFloat(label_y.toFixed(1));
-            }
-            ticks.push({
-              x1: parseFloat(x1.toFixed(1)),
-              y1: parseFloat(y1.toFixed(1)),
-              x2: parseFloat(x2.toFixed(1)),
-              y2: parseFloat(y2.toFixed(1)),
-              label_x: valid_label_x,
-              label_y: valid_label_y,
-              anchor: anchor,
-              label: label
-            });
-          }
-        }
-      }
-      return ticks;
-    }
-
-    // Helper to compute asteroids
-    function computeAsteroids(layout) {
-      const radar_candidates = candidates
-        .filter(c => {
-          if (!c.epoch || isNaN(Number(c.epoch))) return false;
-          return c.miss_distance_ld <= layout.D_max && c.name && c.name.trim() !== '';
-        })
-        .sort((a, b) => {
-          if (a.is_hazardous && !b.is_hazardous) return -1;
-          if (!a.is_hazardous && b.is_hazardous) return 1;
-          return a.miss_distance_ld - b.miss_distance_ld;
-        })
-      let limit = 10;
-      if (layout.cx === 75) {
-        limit = 4;
-      } else if (layout.cx === 110) {
-        limit = 6;
-      } else if (layout.cx === 140) {
-        limit = 10;
-      }
-      return radar_candidates.slice(0, limit).map(item => {
-        const t_norm = (item.epoch - now_ms) / (end_ms - now_ms);
-        const angle = t_norm * 360.0;
-        const alpha = (angle * Math.PI) / 180.0;
-        
-        const R = layout.R_max * (item.miss_distance_ld / layout.D_max);
-        const x = layout.cx + R * Math.sin(alpha);
-        const y = layout.cy - R * Math.cos(alpha);
-        
-        if (!isWithinBounds(x, y, layout)) return null;
-        
-        let r = 4;
-        if (item.avg_diameter < 30) r = 4;
-        else if (item.avg_diameter < 100) r = 6;
-        else if (item.avg_diameter < 300) r = 8;
-        else r = 10;
-        
-        if (layout.cx === 75) {
-          r = Math.max(3, Math.round(r * 0.6));
-        }
-        
-        let label_x = 0;
-        let anchor = "start";
-        if (x >= layout.cx) {
-          label_x = x + r + 4;
-          anchor = "start";
-        } else {
-          label_x = x - r - 4;
-          anchor = "end";
-        }
-        const label_y = y + 3;
-        
-        const parts = item.name.split(" ");
-        let name_part_1 = "";
-        let name_part_2 = "";
-        let label_x1 = label_x;
-        let label_y1 = label_y;
-        let label_x2 = null;
-        let label_y2 = null;
-  
-        if (parts.length > 1) {
-          name_part_1 = parts[0];
-          name_part_2 = parts.slice(1).join(" ");
-          label_y1 = label_y - 5;
-          label_y2 = label_y + 7;
-          label_x2 = label_x;
-        } else {
-          name_part_1 = item.name;
-        }
-        
-        let valid_label_x1 = null;
-        let valid_label_y1 = null;
-        let valid_label_x2 = null;
-        let valid_label_y2 = null;
-        
-        if (isWithinBounds(label_x1, label_y1, layout)) {
-          valid_label_x1 = parseFloat(label_x1.toFixed(1));
-          valid_label_y1 = parseFloat(label_y1.toFixed(1));
-        }
-        if (label_x2 !== null && label_y2 !== null && isWithinBounds(label_x2, label_y2, layout)) {
-          valid_label_x2 = parseFloat(label_x2.toFixed(1));
-          valid_label_y2 = parseFloat(label_y2.toFixed(1));
-        }
-        
-        return {
-          name: item.name,
-          name_part_1: name_part_1,
-          name_part_2: name_part_2 ? name_part_2 : null,
-          x: parseFloat(x.toFixed(1)),
-          y: parseFloat(y.toFixed(1)),
-          r: r,
-          label_x1: valid_label_x1,
-          label_y1: valid_label_y1,
-          label_x2: valid_label_x2,
-          label_y2: valid_label_y2,
-          anchor: anchor,
-          is_hazardous: item.is_hazardous
-        };
-      }).filter(a => a !== null);
-    }
-
-    let system_status = warning_active
-      ? "WARNING: POTENTIALLY HAZARDOUS OBJECT IN SECTOR"
-      : "SYSTEM STATUS: NOMINAL // ALL ENCOUNTERS SAFE";
-    if (has_synthetic_epochs) {
-      system_status = "DEMO MODE: SAMPLE ASTEROID DATA";
-    }
-
-    const last_updated = now.toLocaleString("en-US", {
-      month: "short",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: false,
-      timeZone: "UTC"
-    }) + " UTC";
-
-    return {
+    const result = {
       scan_completed: true,
-      system_status: system_status,
-      total_count: total_count,
+      system_status: isSynthetic ? "DEMO MODE: SAMPLE ASTEROID DATA" : (warningActive ? "WARNING: POTENTIALLY HAZARDOUS OBJECT IN SECTOR" : "SYSTEM STATUS: NOMINAL // ALL ENCOUNTERS SAFE"),
+      total_count: (input.total_count !== undefined && input.total_count !== null) ? input.total_count : candidates.length,
+      upcoming_count: upcomingCount,
       closest_dist_ld: closest_dist_ld,
       closest_name: closest_name,
-      last_updated: last_updated,
-      radar_ticks_full: computeTicks(LAYOUTS.full) || [],
-      radar_asteroids_full: computeAsteroids(LAYOUTS.full) || [],
-      radar_ticks_half_horizontal: computeTicks(LAYOUTS.half_horizontal) || [],
-      radar_asteroids_half_horizontal: computeAsteroids(LAYOUTS.half_horizontal) || [],
-      radar_ticks_half_vertical: computeTicks(LAYOUTS.half_vertical) || [],
-      radar_asteroids_half_vertical: computeAsteroids(LAYOUTS.half_vertical) || [],
-      radar_ticks_quadrant: computeTicks(LAYOUTS.quadrant) || [],
-      radar_asteroids_quadrant: computeAsteroids(LAYOUTS.quadrant) || [],
-      closest_list: closest_list || []
+      max_size_m: max_size_m,
+      last_updated: now.toUTCString(),
+      closest_list: closestList
     };
-  } catch (e) {
-    console.error("[transform.js] Error parsing response: ", e);
-    return {
-      scan_completed: false,
-      system_status: "SYSTEM OFFLINE: MALFORMED DATA",
-      total_count: "—",
-      closest_dist_ld: "—",
-      closest_name: "—",
-      last_updated: "—",
-      radar_ticks_full: [],
-      radar_asteroids_full: [],
-      radar_ticks_half_horizontal: [],
-      radar_asteroids_half_horizontal: [],
-      radar_ticks_half_vertical: [],
-      radar_asteroids_half_vertical: [],
-      radar_ticks_quadrant: [],
-      radar_asteroids_quadrant: [],
-      closest_list: []
-    };
+
+    // Calculate layout coordinates
+    Object.keys(LAYOUTS).forEach(key => {
+      const cfg = LAYOUTS[key];
+      const plotW = cfg.x_max - cfg.x_min;
+      const plotH = cfg.y_max - cfg.y_min;
+      const nowX = parseFloat((cfg.x_min + plotW / 2.0).toFixed(1));
+
+      // Gridlines
+      const gridlines = cfg.grid_levels.map(level => ({
+        y: parseFloat((cfg.y_max - (level / cfg.max_ld) * plotH).toFixed(1)),
+        label: `${level} LD`,
+        x_label: cfg.x_min - 4
+      }));
+
+      // Ticks (-3d to +3d)
+      const ticks = [];
+      for (let dayOffset = -3; dayOffset <= 3; dayOffset++) {
+        const tNorm = (dayOffset + 3.5) / 7.0;
+        const xPos = parseFloat((cfg.x_min + tNorm * plotW).toFixed(1));
+        let label = dayOffset === 0 ? "NOW" : (dayOffset < 0 ? `${dayOffset}d` : `+${dayOffset}d`);
+        ticks.push({
+          x: xPos,
+          label: label,
+          is_now: dayOffset === 0,
+          y_tick_top: cfg.y_max,
+          y_tick_bottom: cfg.y_max + 4,
+          y_label: cfg.y_max + 14
+        });
+      }
+
+      // Asteroid dots
+      const inRange = candidates.filter(c => c.miss_distance_ld <= cfg.max_ld);
+      const sorted = inRange.sort((a, b) => a.miss_distance_ld - b.miss_distance_ld).slice(0, cfg.limit);
+
+      const asteroids = sorted.map(item => {
+        let tNorm = (item.epoch - start_ms) / total_window_ms;
+        tNorm = Math.max(0.0, Math.min(1.0, tNorm));
+        const xPos = parseFloat((cfg.x_min + tNorm * plotW).toFixed(1));
+
+        let dNorm = item.miss_distance_ld / cfg.max_ld;
+        dNorm = Math.max(0.0, Math.min(1.0, dNorm));
+        const yPos = parseFloat((cfg.y_max - dNorm * plotH).toFixed(1));
+
+        let r = 4;
+        if (item.avg_diameter < 30) r = 3;
+        else if (item.avg_diameter < 100) r = 5;
+        else if (item.avg_diameter < 300) r = 7;
+        else r = 9;
+
+        if (key === "quadrant") r = Math.max(2, Math.round(r * 0.6));
+        else if (key === "half_horizontal") r = Math.max(3, Math.round(r * 0.8));
+
+        let labelX = xPos >= nowX ? xPos + r + 3 : xPos - r - 3;
+        let anchor = xPos >= nowX ? "start" : "end";
+        if (labelX > cfg.width - 25) { labelX = xPos - r - 3; anchor = "end"; }
+        if (labelX < 5) { labelX = xPos + r + 3; anchor = "start"; }
+
+        return {
+          name: item.name,
+          x: xPos,
+          y: yPos,
+          r: r,
+          label_x: parseFloat(labelX.toFixed(1)),
+          label_y: parseFloat((yPos + 3).toFixed(1)),
+          anchor: anchor,
+          is_hazardous: !!item.is_hazardous,
+          is_past: !!item.is_past,
+          dist_ld: parseFloat(item.miss_distance_ld.toFixed(1))
+        };
+      }).filter(a => isFinite(a.x) && isFinite(a.y));
+
+      result[`chart_asteroids_${key}`] = asteroids;
+      result[`chart_ticks_${key}`] = ticks;
+      result[`chart_gridlines_${key}`] = gridlines;
+      result[`now_x_${key}`] = nowX;
+    });
+
+    return result;
+  } catch (err) {
+    console.error("[transform.js] Error in transform script:", err);
+    return emptyPayload;
   }
 }

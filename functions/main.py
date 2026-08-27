@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 @https_fn.on_request()
 def neo_radar(req: https_fn.Request) -> https_fn.Response:
     """
-    HTTP trigger function that returns Near-Earth Object (NEO) radar telemetry.
+    HTTP trigger function that returns Near-Earth Object (NEO) timeline telemetry.
     Utilizes Firestore to cache responses to stay within NASA API rate limits.
     """
     db = firestore.client()
@@ -53,11 +53,12 @@ def neo_radar(req: https_fn.Request) -> https_fn.Response:
                 logger.error(f"Failed to parse cached_at timestamp: {ex}")
     
     # Cache is stale or missing; fetch fresh data from NASA
+    # We query 3 days past to 3 days future so NOW is centered in the 7-day timeline
     api_key = req.args.get("nasa_api_key") or os.environ.get("NASA_API_KEY", "DEMO_KEY")
-    start_date = now.strftime("%Y-%m-%d")
-    end_date = (now + datetime.timedelta(days=7)).strftime("%Y-%m-%d")
+    start_date = (now - datetime.timedelta(days=3)).strftime("%Y-%m-%d")
+    end_date = (now + datetime.timedelta(days=3)).strftime("%Y-%m-%d")
     
-    logger.info(f"Cache stale or missing. Fetching fresh NASA NEO feed...")
+    logger.info(f"Cache stale or missing. Fetching fresh NASA NEO feed ({start_date} to {end_date})...")
     raw_data = fetch_neo_feed(start_date, end_date, api_key)
     
     if raw_data:

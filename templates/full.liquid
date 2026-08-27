@@ -2,98 +2,106 @@
   {% if scan_completed %}
     <div class="grid grid--cols-2 gap--small w--full grow p--1">
       
-      <!-- Left Column: Radar -->
+      <!-- Left Column: Linear Coordinate Timeline Chart -->
       <div class="col--span-1 w--full flex flex--col flex--center-x">
-        <svg width="280" height="260" viewBox="0 0 280 260" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg" class="w--full md:w--[280px] lg:w--[480px] h--auto">
-            <defs>
-              <clipPath id="label-clip">
-                <rect x="5" y="5" width="270" height="250" />
-              </clipPath>
-            </defs>
-            <!-- Radar Grid Boundaries and Rings -->
-            <g stroke="#000000" fill="none">
-              <circle cx="140" cy="130" r="124" stroke-width="1.5" stroke-dasharray="1 5" />
-              <circle cx="140" cy="130" r="120" stroke-width="2.5" />
-              
-              <g stroke-width="1.5" stroke-dasharray="3 6">
-                <circle cx="140" cy="130" r="90" />
-                <circle cx="140" cy="130" r="60" />
-                <circle cx="140" cy="130" r="30" />
-              </g>
-              
-              <line x1="140" y1="6" x2="140" y2="254" stroke-width="1.5" stroke-dasharray="2 4" />
-              <line x1="16" y1="130" x2="264" y2="130" stroke-width="1.5" stroke-dasharray="2 4" />
+        <svg width="360" height="260" viewBox="0 0 360 260" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg" class="w--full h--auto">
+          <defs>
+            <clipPath id="chart-clip-full">
+              <rect x="38" y="18" width="310" height="214" />
+            </clipPath>
+          </defs>
+
+          <!-- Axes & Borders -->
+          <g stroke="currentColor" stroke-width="1.5">
+            <!-- Y-axis (Distance) & X-axis (Earth/Time) -->
+            <line x1="40" y1="20" x2="40" y2="230" />
+            <line x1="40" y1="230" x2="345" y2="230" stroke-width="2" />
+          </g>
+
+          <!-- Horizontal Distance Gridlines -->
+          {% if chart_gridlines_full and chart_gridlines_full.size > 0 %}
+            <g stroke="currentColor" stroke-width="1" stroke-dasharray="2 4">
+              {% for line in chart_gridlines_full %}
+                {% if line and line.y %}
+                  <line x1="40" y1="{{ line.y }}" x2="345" y2="{{ line.y }}" />
+                {% endif %}
+              {% endfor %}
             </g>
-            
-            <circle cx="140" cy="130" r="5" fill="#000000" />
-            
-            <g fill="#000000" class="label">
-              <text x="170" y="125" text-anchor="middle" fill="#000000">10 LD</text>
-              <text x="200" y="125" text-anchor="middle" fill="#000000">20 LD</text>
-              <text x="230" y="125" text-anchor="middle" fill="#000000">30 LD</text>
-              <text x="260" y="125" text-anchor="end" fill="#000000">40 LD</text>
-              <text x="140" y="145" text-anchor="middle" fill="#000000">EARTH</text>
-              <text x="140" y="15" text-anchor="middle" fill="#000000">NOW (T-0)</text>
+            <g fill="currentColor" class="label label--small">
+              {% for line in chart_gridlines_full %}
+                {% if line and line.y and line.label %}
+                  <text x="{{ line.x_label | default: 36 }}" y="{{ line.y }}" dy="3" text-anchor="end">
+                    {{- line.label -}}
+                  </text>
+                {% endif %}
+              {% endfor %}
             </g>
-            
-            {% if radar_ticks_full and radar_ticks_full.size > 0 %}
-              <g stroke="#000000" stroke-width="2.5">
-                {% for tick in radar_ticks_full %}
-                  {% if tick and tick.x1 and tick.y1 and tick.x2 and tick.y2 %}
-                    <line x1="{{ tick.x1 }}" y1="{{ tick.y1 }}" x2="{{ tick.x2 }}" y2="{{ tick.y2 }}" />
-                  {% endif %}
-                {% endfor %}
-              </g>
-            {% endif %}
-            
-            {% if radar_ticks_full and radar_ticks_full.size > 0 %}
-              <g fill="#000000" class="label label--small">
-                {% for tick in radar_ticks_full %}
-                  {% if tick and tick.label_x and tick.label_y %}
-                    <text x="{{ tick.label_x }}" y="{{ tick.label_y }}" text-anchor="{{ tick.anchor | default: 'middle' }}" fill="#000000">
-                      {{- tick.label | default: '—' -}}
-                    </text>
-                  {% endif %}
-                {% endfor %}
-              </g>
-            {% endif %}
-            
-            {% if radar_asteroids_full and radar_asteroids_full.size > 0 %}
-              <g stroke="#000000" stroke-width="2" fill="none">
-                {% for ast in radar_asteroids_full %}
-                  {% if ast and ast.x and ast.y %}
-                    <circle cx="{{ ast.x }}" cy="{{ ast.y }}" r="{{ ast.r | default: 4 }}" {% if ast.is_hazardous %}fill="#000000"{% endif %} />
-                  {% endif %}
-                {% endfor %}
-              </g>
-              <g fill="#000000" clip-path="url(#label-clip)" class="label">
-                {% for ast in radar_asteroids_full %}
-                  {% if ast and ast.label_x1 and ast.label_y1 %}
-                    {% if ast.name_part_2 %}
-                      <text x="{{ ast.label_x1 }}" y="{{ ast.label_y1 }}" text-anchor="{{ ast.anchor | default: 'start' }}" fill="#000000">{{ ast.name_part_1 }}</text>
-                      <text x="{{ ast.label_x2 }}" y="{{ ast.label_y2 }}" text-anchor="{{ ast.anchor | default: 'start' }}" fill="#000000">{{ ast.name_part_2 }}</text>
-                    {% else %}
-                      <text x="{{ ast.label_x1 }}" y="{{ ast.label_y1 }}" text-anchor="{{ ast.anchor | default: 'start' }}" fill="#000000">{{ ast.name_part_1 }}</text>
-                    {% endif %}
-                  {% endif %}
-                {% endfor %}
-              </g>
-            {% else %}
-              <g fill="#000000" class="label">
-                <text x="140" y="130" text-anchor="middle" fill="#000000">NO ASTEROIDS IN RANGE</text>
-              </g>
-            {% endif %}
-          </svg>
+          {% endif %}
+
+          <!-- NOW Vertical Centerline -->
+          <g stroke="currentColor" stroke-width="1.5" stroke-dasharray="3 3">
+            <line x1="{{ now_x_full }}" y1="20" x2="{{ now_x_full }}" y2="230" />
+          </g>
+          <g fill="currentColor" class="label label--small">
+            <text x="{{ now_x_full }}" y="14" text-anchor="middle">NOW (T-0)</text>
+            <text x="40" y="244" text-anchor="start">0 LD (EARTH)</text>
+          </g>
+
+          <!-- Time Ticks along Bottom X-axis -->
+          {% if chart_ticks_full and chart_ticks_full.size > 0 %}
+            <g stroke="currentColor" stroke-width="1.5">
+              {% for tick in chart_ticks_full %}
+                {% if tick and tick.x %}
+                  <line x1="{{ tick.x }}" y1="{{ tick.y_tick_top | default: 230 }}" x2="{{ tick.x }}" y2="{{ tick.y_tick_bottom | default: 234 }}" />
+                {% endif %}
+              {% endfor %}
+            </g>
+            <g fill="currentColor" class="label label--small">
+              {% for tick in chart_ticks_full %}
+                {% if tick and tick.x and tick.label and tick.is_now != true %}
+                  <text x="{{ tick.x }}" y="{{ tick.y_label | default: 244 }}" text-anchor="middle">
+                    {{- tick.label -}}
+                  </text>
+                {% endif %}
+              {% endfor %}
+            </g>
+          {% endif %}
+
+          <!-- Asteroid Markers and Labels -->
+          {% if chart_asteroids_full and chart_asteroids_full.size > 0 %}
+            <g stroke="currentColor" stroke-width="1.5" clip-path="url(#chart-clip-full)">
+              {% for ast in chart_asteroids_full %}
+                {% if ast and ast.x and ast.y %}
+                  <circle cx="{{ ast.x }}" cy="{{ ast.y }}" r="{{ ast.r | default: 4 }}" {% if ast.is_hazardous %}fill="currentColor"{% else %}fill="none"{% endif %} />
+                {% endif %}
+              {% endfor %}
+            </g>
+            <g fill="currentColor" class="label label--small">
+              {% for ast in chart_asteroids_full %}
+                {% if ast and ast.label_x and ast.label_y and ast.name %}
+                  <text x="{{ ast.label_x }}" y="{{ ast.label_y }}" text-anchor="{{ ast.anchor | default: 'start' }}">
+                    {{- ast.name -}}
+                  </text>
+                {% endif %}
+              {% endfor %}
+            </g>
+          {% else %}
+            <g fill="currentColor" class="label">
+              <text x="192.5" y="130" text-anchor="middle">NO ASTEROIDS IN RANGE</text>
+            </g>
+          {% endif %}
+        </svg>
       </div>
-      
-      <!-- Right Column: Status & Information Panel -->
+
+      <!-- Right Column: Telemetry Header, Stats & Closest Flybys -->
       <div class="col--span-1 w--full flex flex--col">
         <div class="flex flex--col gap--small w--full grow p--1">
-          <!-- Header / Title Row -->
+          
+          <!-- Header / Status Row -->
           <div class="flex flex--row flex--center-y gap--small w--full">
             <div>
               <div class="title title--base">PLANETARY DEFENSE</div>
-              <div class="label">NEO RADAR MONITOR</div>
+              <div class="label">NEO TIMELINE MONITOR</div>
             </div>
             
             <div class="flex flex--row flex--center-y gap--small ml--auto">
@@ -109,10 +117,10 @@
             </div>
           </div>
           
-          <!-- Key Statistics row -->
+          <!-- Key Statistics Grid -->
           <div class="grid grid--cols-2 gap--small w--full">
             <div class="bg--gray-75 rounded p--1 flex flex--col flex--center-x">
-              <span class="label">NEOS DETECTED</span>
+              <span class="label">NEOS IN RANGE</span>
               <span class="value value--base">{{ total_count | default: '—' }}</span>
             </div>
             <div class="bg--gray-75 rounded p--1 flex flex--col flex--center-x">
@@ -152,10 +160,11 @@
           </div>
         </div>
       </div>
+    </div>
   {% else %}
     <div class="flex flex--col layout--center grow">
       <div class="p--4 label">
-        Radar scan offline. System checking for telemetry updates...
+        Timeline scan offline. System checking for telemetry updates...
       </div>
     </div>
   {% endif %}

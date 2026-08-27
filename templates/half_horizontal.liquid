@@ -2,66 +2,98 @@
   {% if scan_completed %}
     <div class="flex flex--col md:flex--row portrait:flex--col gap--xsmall p--0.5 grow w--full">
       
-      <!-- Left Column: Compact Radar (220x160px) -->
-      <div class="w--full md:w--[220px] lg:w--[330px] flex flex--col flex--center-x">
-        <svg width="220" height="160" viewBox="0 0 220 160" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg" class="w--full md:w--[220px] lg:w--[330px] h--auto">
-          <g stroke="#000000" fill="none">
-            <circle cx="110" cy="80" r="70" stroke-width="1.5" stroke-dasharray="1 4" />
-            <circle cx="110" cy="80" r="65" stroke-width="2.5" />
-            
-            <g stroke-width="1.5" stroke-dasharray="2 5">
-              <circle cx="110" cy="80" r="49" />
-              <circle cx="110" cy="80" r="33" />
-              <circle cx="110" cy="80" r="16" />
-            </g>
-            
-            <line x1="110" y1="10" x2="110" y2="150" stroke-width="1.5" stroke-dasharray="2 4" />
-            <line x1="40" y1="80" x2="180" y2="80" stroke-width="1.5" stroke-dasharray="2 4" />
+      <!-- Left Column: Compact Linear Timeline (260x150) -->
+      <div class="w--full md:w--[260px] lg:w--[340px] flex flex--col flex--center-x">
+        <svg width="260" height="150" viewBox="0 0 260 150" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg" class="w--full h--auto">
+          <defs>
+            <clipPath id="chart-clip-half-h">
+              <rect x="33" y="14" width="214" height="116" />
+            </clipPath>
+          </defs>
+
+          <!-- Axes -->
+          <g stroke="currentColor" stroke-width="1.5">
+            <line x1="35" y1="16" x2="35" y2="128" />
+            <line x1="35" y1="128" x2="245" y2="128" stroke-width="2" />
           </g>
-          
-          <circle cx="110" cy="80" r="4" fill="#000000" />
-          
-          {% if radar_ticks_half_horizontal and radar_ticks_half_horizontal.size > 0 %}
-            <g stroke="#000000" stroke-width="2.5">
-              {% for tick in radar_ticks_half_horizontal %}
-                {% if tick and tick.x1 and tick.y1 and tick.x2 and tick.y2 %}
-                  <line x1="{{ tick.x1 }}" y1="{{ tick.y1 }}" x2="{{ tick.x2 }}" y2="{{ tick.y2 }}" />
+
+          <!-- Gridlines -->
+          {% if chart_gridlines_half_horizontal and chart_gridlines_half_horizontal.size > 0 %}
+            <g stroke="currentColor" stroke-width="1" stroke-dasharray="2 4">
+              {% for line in chart_gridlines_half_horizontal %}
+                {% if line and line.y %}
+                  <line x1="35" y1="{{ line.y }}" x2="245" y2="{{ line.y }}" />
                 {% endif %}
               {% endfor %}
             </g>
-          {% endif %}
-          
-          {% if radar_ticks_half_horizontal and radar_ticks_half_horizontal.size > 0 %}
-            <g fill="#000000" class="label label--small">
-              {% for tick in radar_ticks_half_horizontal %}
-                {% if tick and tick.label_x and tick.label_y %}
-                  <text x="{{ tick.label_x }}" y="{{ tick.label_y }}" text-anchor="{{ tick.anchor | default: 'middle' }}">
-                    {{- tick.label | default: '—' -}}
+            <g fill="currentColor" class="label label--small">
+              {% for line in chart_gridlines_half_horizontal %}
+                {% if line and line.y and line.label %}
+                  <text x="{{ line.x_label | default: 32 }}" y="{{ line.y }}" dy="3" text-anchor="end">
+                    {{- line.label -}}
                   </text>
                 {% endif %}
               {% endfor %}
             </g>
           {% endif %}
-          
-          {% if radar_asteroids_half_horizontal and radar_asteroids_half_horizontal.size > 0 %}
-            <g stroke="#000000" stroke-width="2" fill="none">
-              {% for ast in radar_asteroids_half_horizontal %}
+
+          <!-- NOW Vertical Centerline -->
+          <g stroke="currentColor" stroke-width="1.5" stroke-dasharray="3 3">
+            <line x1="{{ now_x_half_horizontal }}" y1="16" x2="{{ now_x_half_horizontal }}" y2="128" />
+          </g>
+          <g fill="currentColor" class="label label--small">
+            <text x="{{ now_x_half_horizontal }}" y="11" text-anchor="middle">NOW (T-0)</text>
+          </g>
+
+          <!-- Time Ticks along Bottom X-axis -->
+          {% if chart_ticks_half_horizontal and chart_ticks_half_horizontal.size > 0 %}
+            <g stroke="currentColor" stroke-width="1.5">
+              {% for tick in chart_ticks_half_horizontal %}
+                {% if tick and tick.x %}
+                  <line x1="{{ tick.x }}" y1="{{ tick.y_tick_top | default: 128 }}" x2="{{ tick.x }}" y2="{{ tick.y_tick_bottom | default: 132 }}" />
+                {% endif %}
+              {% endfor %}
+            </g>
+            <g fill="currentColor" class="label label--small">
+              {% for tick in chart_ticks_half_horizontal %}
+                {% if tick and tick.x and tick.label and tick.is_now != true %}
+                  <text x="{{ tick.x }}" y="{{ tick.y_label | default: 142 }}" text-anchor="middle">
+                    {{- tick.label -}}
+                  </text>
+                {% endif %}
+              {% endfor %}
+            </g>
+          {% endif %}
+
+          <!-- Asteroid Markers -->
+          {% if chart_asteroids_half_horizontal and chart_asteroids_half_horizontal.size > 0 %}
+            <g stroke="currentColor" stroke-width="1.5" clip-path="url(#chart-clip-half-h)">
+              {% for ast in chart_asteroids_half_horizontal %}
                 {% if ast and ast.x and ast.y %}
-                  <circle cx="{{ ast.x }}" cy="{{ ast.y }}" r="{{ ast.r | default: 4 }}" {% if ast.is_hazardous %}fill="#000000"{% endif %} />
+                  <circle cx="{{ ast.x }}" cy="{{ ast.y }}" r="{{ ast.r | default: 3 }}" {% if ast.is_hazardous %}fill="currentColor"{% else %}fill="none"{% endif %} />
+                {% endif %}
+              {% endfor %}
+            </g>
+            <g fill="currentColor" class="label label--small">
+              {% for ast in chart_asteroids_half_horizontal %}
+                {% if ast and ast.label_x and ast.label_y and ast.name %}
+                  <text x="{{ ast.label_x }}" y="{{ ast.label_y }}" text-anchor="{{ ast.anchor | default: 'start' }}">
+                    {{- ast.name -}}
+                  </text>
                 {% endif %}
               {% endfor %}
             </g>
           {% else %}
-            <g fill="#000000" class="label">
-              <text x="110" y="80" text-anchor="middle">NO ASTEROIDS IN RANGE</text>
+            <g fill="currentColor" class="label">
+              <text x="140" y="75" text-anchor="middle">NO ASTEROIDS IN RANGE</text>
             </g>
           {% endif %}
         </svg>
       </div>
-      
-      <!-- Right Column: Status Banner & Summary Ticker (540px wide) -->
+
+      <!-- Right Column: Status Banner & Summary -->
       <div class="grid grid--cols-1 gap--xsmall grow">
-        <!-- System status and refresh banner -->
+        <!-- Status Row -->
         <div class="flex flex--row flex--center-y gap--xsmall mb--0.5">
           <div>
             <div class="title title--small">ASTEROIDS</div>
@@ -77,7 +109,7 @@
           </div>
         </div>
         
-        <!-- Metrics row -->
+        <!-- Metrics Row -->
         <div class="grid grid--cols-2 gap--xsmall mb--0.5">
           <div class="bg--gray-75 rounded p--0.5 flex flex--row gap--xsmall flex--center-x flex--center-y">
             <span class="label">COUNT:</span>
@@ -89,7 +121,7 @@
           </div>
         </div>
         
-        <!-- Closest list schedule -->
+        <!-- Closest List Schedule -->
         <div class="grid grid--cols-1 gap--xsmall">
           {% if closest_list and closest_list.size > 0 %}
             <div class="label"><strong>CLOSEST SCHEDULED FLYBYS</strong></div>
@@ -108,7 +140,7 @@
               </div>
             {% endfor %}
           {% else %}
-            <div class="p--2 rounded flex flex--row flex--center-x label">
+            <div class="p--2 rounded flex flex--row flex--center-x label bg--gray-75">
               No NEO activity detected.
             </div>
           {% endif %}
@@ -118,7 +150,7 @@
   {% else %}
     <div class="flex flex--col layout--center grow">
       <div class="p--4 label">
-        Radar scan offline. System checking for telemetry updates...
+        Timeline scan offline. System checking for telemetry updates...
       </div>
     </div>
   {% endif %}

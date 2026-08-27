@@ -39,5 +39,5 @@ custom_fields:
   learn_more_url: https://api.nasa.gov
   category: discovery,education
 name: Asteroids
-description: Track incoming asteroids on radar
+description: Near-Earth asteroid timeline
 refresh_interval: 60

@@ -1,6 +1,6 @@
 {%- capture svg_logo -%}
 <svg class="image" width="24" height="24" viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
-  <path d="M12,2A10,10,0,1,0,22,12,10,10,0,0,0,12,2Zm1,17a1.5,1.5,0,1,1,1.5-1.5A1.5,1.5,0,0,1,13,19Zm5-5.5a1.5,1.5,0,1,1,1.5-1.5A1.5,1.5,0,0,1,18,13.5ZM12,12a2,2,0,1,1,2-2A2,2,0,0,1,12,12ZM7.5,9A1.5,1.5,0,1,1,9,7.5,1.5,1.5,0,0,1,7.5,9Zm1,7a1.5,1.5,0,1,1,1.5-1.5A1.5,1.5,0,0,1,8.5,16Z" fill="#000000"/>
+  <path d="M12,2A10,10,0,1,0,22,12,10,10,0,0,0,12,2Zm1,17a1.5,1.5,0,1,1,1.5-1.5A1.5,1.5,0,0,1,13,19Zm5-5.5a1.5,1.5,0,1,1,1.5-1.5A1.5,1.5,0,0,1,18,13.5ZM12,12a2,2,0,1,1,2-2A2,2,0,0,1,12,12ZM7.5,9A1.5,1.5,0,1,1,9,7.5,1.5,1.5,0,0,1,7.5,9Zm1,7a1.5,1.5,0,1,1,1.5-1.5A1.5,1.5,0,0,1,8.5,16Z" fill="currentColor"/>
 </svg>
 {%- endcapture -%}
 
@@ -9,23 +9,37 @@
 {% assign system_status = system_status | default: 'SYSTEM OFFLINE: SCAN IN PROGRESS' %}
 {% assign total_count = data.total_count | default: total_count %}
 {% assign total_count = total_count | default: '—' %}
+{% assign upcoming_count = data.upcoming_count | default: upcoming_count %}
+{% assign upcoming_count = upcoming_count | default: '—' %}
 {% assign closest_dist_ld = data.closest_dist_ld | default: closest_dist_ld %}
 {% assign closest_dist_ld = closest_dist_ld | default: '—' %}
 {% assign closest_name = data.closest_name | default: closest_name %}
 {% assign closest_name = closest_name | default: '—' %}
+{% assign max_size_m = data.max_size_m | default: max_size_m %}
+{% assign max_size_m = max_size_m | default: '—' %}
 {% assign last_updated = data.last_updated | default: last_updated %}
 {% assign last_updated = last_updated | default: '—' %}
 {% assign closest_list = data.closest_list | default: closest_list %}
 
-{% assign radar_ticks_full = data.radar_ticks_full | default: radar_ticks_full %}
-{% assign radar_asteroids_full = data.radar_asteroids_full | default: radar_asteroids_full %}
-{% assign radar_ticks_half_horizontal = data.radar_ticks_half_horizontal | default: radar_ticks_half_horizontal %}
-{% assign radar_asteroids_half_horizontal = data.radar_asteroids_half_horizontal | default: radar_asteroids_half_horizontal %}
-{% assign radar_ticks_half_vertical = data.radar_ticks_half_vertical | default: radar_ticks_half_vertical %}
-{% assign radar_asteroids_half_vertical = data.radar_asteroids_half_vertical | default: radar_asteroids_half_vertical %}
-{% assign radar_ticks_quadrant = data.radar_ticks_quadrant | default: radar_ticks_quadrant %}
-{% assign radar_asteroids_quadrant = data.radar_asteroids_quadrant | default: radar_asteroids_quadrant %}
+{% assign chart_asteroids_full = data.chart_asteroids_full | default: chart_asteroids_full %}
+{% assign chart_ticks_full = data.chart_ticks_full | default: chart_ticks_full %}
+{% assign chart_gridlines_full = data.chart_gridlines_full | default: chart_gridlines_full %}
+{% assign now_x_full = data.now_x_full | default: 192.5 %}
 
+{% assign chart_asteroids_half_horizontal = data.chart_asteroids_half_horizontal | default: chart_asteroids_half_horizontal %}
+{% assign chart_ticks_half_horizontal = data.chart_ticks_half_horizontal | default: chart_ticks_half_horizontal %}
+{% assign chart_gridlines_half_horizontal = data.chart_gridlines_half_horizontal | default: chart_gridlines_half_horizontal %}
+{% assign now_x_half_horizontal = data.now_x_half_horizontal | default: 140 %}
+
+{% assign chart_asteroids_half_vertical = data.chart_asteroids_half_vertical | default: chart_asteroids_half_vertical %}
+{% assign chart_ticks_half_vertical = data.chart_ticks_half_vertical | default: chart_ticks_half_vertical %}
+{% assign chart_gridlines_half_vertical = data.chart_gridlines_half_vertical | default: chart_gridlines_half_vertical %}
+{% assign now_x_half_vertical = data.now_x_half_vertical | default: 192.5 %}
+
+{% assign chart_asteroids_quadrant = data.chart_asteroids_quadrant | default: chart_asteroids_quadrant %}
+{% assign chart_ticks_quadrant = data.chart_ticks_quadrant | default: chart_ticks_quadrant %}
+{% assign chart_gridlines_quadrant = data.chart_gridlines_quadrant | default: chart_gridlines_quadrant %}
+{% assign now_x_quadrant = data.now_x_quadrant | default: 85 %}
 
 {% template title_bar %}
   <div class="title_bar">
@@ -37,5 +51,3 @@
   </div>
 {% endtemplate %}
 <!-- class="layout" -->
-
-

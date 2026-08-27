@@ -9,14 +9,6 @@ NASA_FEED_URL = "https://api.nasa.gov/neo/rest/v1/feed"
 def fetch_neo_feed(start_date: str, end_date: str, api_key: str = "DEMO_KEY") -> Optional[Dict[str, Any]]:
     """
     Fetches the Near-Earth Objects (NEO) feed from NASA API for a given date range.
-    
-    Args:
-        start_date: Start date string in YYYY-MM-DD format
-        end_date: End date string in YYYY-MM-DD format
-        api_key: NASA API key (defaults to 'DEMO_KEY')
-        
-    Returns:
-        A dictionary containing the API response, or None if the request failed.
     """
     params = {
         "start_date": start_date,
@@ -28,7 +20,6 @@ def fetch_neo_feed(start_date: str, end_date: str, api_key: str = "DEMO_KEY") ->
     try:
         response = requests.get(NASA_FEED_URL, params=params, timeout=15)
         
-        # Check rate limits in headers
         limit = response.headers.get("X-RateLimit-Limit")
         remaining = response.headers.get("X-RateLimit-Remaining")
         if remaining:
