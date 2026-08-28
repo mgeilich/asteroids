@@ -20,7 +20,7 @@ def clean_asteroid_name(raw_name: str) -> str:
 def calculate_telemetry(raw_data: Optional[Dict[str, Any]]) -> Dict[str, Any]:
     """
     Parses NASA NeoWS feed data and computes linear timeline coordinates and metrics.
-    X-axis is Time with NOW in the center (span: NOW - 3.5 days to NOW + 3.5 days).
+    X-axis is Time starting at NOW (left) and extending +7 days into the future (right).
     Y-axis is Distance in Lunar Distances (LD) from 0 LD (Earth) up to 40 LD.
     """
     now = datetime.datetime.now(datetime.timezone.utc)
@@ -55,10 +55,8 @@ def calculate_telemetry(raw_data: Optional[Dict[str, Any]]) -> Dict[str, Any]:
         return default_payload
 
     now_ms = int(now.timestamp() * 1000)
-    # Timeline spans 7 days total: 3.5 days past to 3.5 days future
-    start_ms = now_ms - int(3.5 * 24 * 3600 * 1000)
-    end_ms = now_ms + int(3.5 * 24 * 3600 * 1000)
-    total_window_ms = end_ms - start_ms
+    end_ms = now_ms + int(7 * 24 * 3600 * 1000)
+    total_window_ms = end_ms - now_ms
     
     candidates = []
     total_objects_in_range = 0
@@ -75,8 +73,8 @@ def calculate_telemetry(raw_data: Optional[Dict[str, Any]]) -> Dict[str, Any]:
             if not epoch:
                 continue
                 
-            # Filter encounters within the 7-day timeline window
-            if start_ms <= epoch <= end_ms:
+            # Filter upcoming encounters within the next 7 days
+            if now_ms <= epoch <= end_ms:
                 total_objects_in_range += 1
                 
                 # Estimated diameter
@@ -100,7 +98,7 @@ def calculate_telemetry(raw_data: Optional[Dict[str, Any]]) -> Dict[str, Any]:
                     "avg_diameter": avg_diam,
                     "is_hazardous": bool(asteroid["is_potentially_hazardous_asteroid"]),
                     "epoch": epoch,
-                    "is_past": epoch < now_ms
+                    "is_past": False
                 })
                 
     closest_list_payload = []
@@ -108,10 +106,10 @@ def calculate_telemetry(raw_data: Optional[Dict[str, Any]]) -> Dict[str, Any]:
     closest_dist_ld = "—"
     closest_name = "—"
     max_size_m = "—"
-    upcoming_count = sum(1 for c in candidates if not c["is_past"])
+    upcoming_count = len(candidates)
     
     if candidates:
-        # Closest approach across entire window
+        # Closest approach across the 7-day window
         closest_candidate = min(candidates, key=lambda c: c["miss_distance_ld"])
         closest_dist_ld = f"{closest_candidate['miss_distance_ld']:.1f} LD"
         closest_name = closest_candidate["name"]
@@ -120,10 +118,8 @@ def calculate_telemetry(raw_data: Optional[Dict[str, Any]]) -> Dict[str, Any]:
         max_diam_candidate = max(candidates, key=lambda c: c["avg_diameter"])
         max_size_m = f"{int(max_diam_candidate['avg_diameter'])}m"
         
-        # List of closest upcoming encounters (or sorted by distance)
-        upcoming_candidates = [c for c in candidates if not c["is_past"]]
-        display_candidates = upcoming_candidates if upcoming_candidates else candidates
-        sorted_by_distance = sorted(display_candidates, key=lambda c: c["miss_distance_ld"])
+        # List of 3 closest upcoming encounters
+        sorted_by_distance = sorted(candidates, key=lambda c: c["miss_distance_ld"])
         closest_3 = sorted_by_distance[:3]
         
         for item in closest_3:
@@ -131,17 +127,14 @@ def calculate_telemetry(raw_data: Optional[Dict[str, Any]]) -> Dict[str, Any]:
                 warning_active = True
                 
             diff_ms = item["epoch"] - now_ms
-            hours_diff = int(diff_ms / (3600 * 1000))
-            is_neg = hours_diff < 0
-            abs_hours = abs(hours_diff)
-            days = abs_hours // 24
-            rem_hours = abs_hours % 24
+            hours_diff = max(0, int(diff_ms / (3600 * 1000)))
+            days = hours_diff // 24
+            rem_hours = hours_diff % 24
             
-            prefix = "T-" if is_neg else "T+"
             if days > 0:
-                time_str = f"{prefix}{days}d {rem_hours}h"
+                time_str = f"T+{days}d {rem_hours}h"
             else:
-                time_str = f"{prefix}{rem_hours}h"
+                time_str = f"T+{rem_hours}h"
                 
             closest_list_payload.append({
                 "name": item["name"],
@@ -198,9 +191,8 @@ def calculate_telemetry(raw_data: Optional[Dict[str, Any]]) -> Dict[str, Any]:
         plot_w = x_max - x_min
         plot_h = y_max - y_min
         max_ld = cfg["max_ld"]
-        now_x = round(x_min + plot_w / 2.0, 1)
         
-        # 1. Compute Horizontal Gridlines
+        # 1. Compute Horizontal Distance Gridlines
         gridlines = []
         for level in cfg["grid_levels"]:
             y_pos = round(y_max - (level / max_ld) * plot_h, 1)
@@ -210,17 +202,14 @@ def calculate_telemetry(raw_data: Optional[Dict[str, Any]]) -> Dict[str, Any]:
                 "x_label": x_min - 4
             })
             
-        # 2. Compute Day Ticks along X-axis
+        # 2. Compute Day Ticks along X-axis from Day 0 (NOW) to Day 7 (+7d)
         ticks = []
-        # Generate ticks for days -3, -2, -1, 0 (NOW), +1, +2, +3
-        for day_offset in range(-3, 4):
-            t_norm = (day_offset + 3.5) / 7.0
+        for day_offset in range(8):  # 0 to 7
+            t_norm = day_offset / 7.0
             x_pos = round(x_min + t_norm * plot_w, 1)
             
             if day_offset == 0:
                 label = "NOW"
-            elif day_offset < 0:
-                label = f"{day_offset}d"
             else:
                 label = f"+{day_offset}d"
                 
@@ -239,8 +228,8 @@ def calculate_telemetry(raw_data: Optional[Dict[str, Any]]) -> Dict[str, Any]:
         
         asteroids_payload = []
         for item in radar_candidates:
-            # X coordinate: Linear time
-            t_norm = (item["epoch"] - start_ms) / total_window_ms
+            # X coordinate: Linear time from NOW (x_min) to +7d (x_max)
+            t_norm = (item["epoch"] - now_ms) / total_window_ms
             t_norm = max(0.0, min(1.0, t_norm))
             x_pos = x_min + t_norm * plot_w
             
@@ -265,18 +254,14 @@ def calculate_telemetry(raw_data: Optional[Dict[str, Any]]) -> Dict[str, Any]:
                 r = max(3, int(r * 0.8))
                 
             # Label position
-            if x_pos >= now_x:
-                label_x = x_pos + r + 3
-                anchor = "start"
-                if label_x > cfg["width"] - 25:
-                    label_x = x_pos - r - 3
-                    anchor = "end"
-            else:
+            label_x = x_pos + r + 3
+            anchor = "start"
+            if label_x > cfg["width"] - 25:
                 label_x = x_pos - r - 3
                 anchor = "end"
-                if label_x < 5:
-                    label_x = x_pos + r + 3
-                    anchor = "start"
+            if label_x < 5:
+                label_x = x_pos + r + 3
+                anchor = "start"
                     
             label_y = y_pos + 3
             
@@ -289,14 +274,12 @@ def calculate_telemetry(raw_data: Optional[Dict[str, Any]]) -> Dict[str, Any]:
                 "label_y": round(label_y, 1),
                 "anchor": anchor,
                 "is_hazardous": bool(item["is_hazardous"]),
-                "is_past": bool(item["is_past"]),
                 "dist_ld": round(item["miss_distance_ld"], 1)
             })
             
         outputs[f"chart_asteroids_{name}"] = asteroids_payload
         outputs[f"chart_ticks_{name}"] = ticks
         outputs[f"chart_gridlines_{name}"] = gridlines
-        outputs[f"now_x_{name}"] = now_x
 
     # Sector status message
     if not candidates:

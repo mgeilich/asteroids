@@ -37,12 +37,10 @@
             </g>
           {% endif %}
 
-          <!-- NOW Vertical Centerline -->
-          <g stroke="currentColor" stroke-width="1.5" stroke-dasharray="3 3">
-            <line x1="{{ now_x_half_horizontal }}" y1="16" x2="{{ now_x_half_horizontal }}" y2="128" />
-          </g>
+          <!-- Header Labels -->
           <g fill="currentColor" class="label label--small">
-            <text x="{{ now_x_half_horizontal }}" y="11" text-anchor="middle">NOW (T-0)</text>
+            <text x="35" y="11" text-anchor="start">NOW (T-0)</text>
+            <text x="245" y="11" text-anchor="end">T+7D</text>
           </g>
 
           <!-- Time Ticks along Bottom X-axis -->
@@ -112,7 +110,7 @@
         <!-- Metrics Row -->
         <div class="grid grid--cols-2 gap--xsmall mb--0.5">
           <div class="bg--gray-75 rounded p--0.5 flex flex--row gap--xsmall flex--center-x flex--center-y">
-            <span class="label">COUNT:</span>
+            <span class="label">UPCOMING:</span>
             <span class="value value--small">{{ total_count | default: '—' }}</span>
           </div>
           <div class="bg--gray-75 rounded p--0.5 flex flex--row gap--xsmall flex--center-x flex--center-y">

@@ -35,12 +35,10 @@
           </g>
         {% endif %}
 
-        <!-- NOW Vertical Centerline -->
-        <g stroke="currentColor" stroke-width="1.5" stroke-dasharray="3 3">
-          <line x1="{{ now_x_half_vertical }}" y1="18" x2="{{ now_x_half_vertical }}" y2="155" />
-        </g>
+        <!-- Header Labels -->
         <g fill="currentColor" class="label label--small">
-          <text x="{{ now_x_half_vertical }}" y="12" text-anchor="middle">NOW (T-0)</text>
+          <text x="40" y="12" text-anchor="start">NOW (T-0)</text>
+          <text x="345" y="12" text-anchor="end">T+7 DAYS</text>
         </g>
 
         <!-- Time Ticks along Bottom X-axis -->
@@ -93,7 +91,7 @@
     <div class="flex flex--row flex--center-y gap--small p--1 w--full">
       <div class="flex flex--col">
         <div class="title title--small">ASTEROIDS</div>
-        <div class="label label--small">DETECTED: {{ total_count | default: '—' }} NEOs</div>
+        <div class="label label--small">UPCOMING: {{ total_count | default: '—' }} NEOs</div>
       </div>
       
       <div class="flex flex--row flex--center-y gap--small ml--auto">

@@ -13,7 +13,7 @@
 
           <!-- Axes & Borders -->
           <g stroke="currentColor" stroke-width="1.5">
-            <!-- Y-axis (Distance) & X-axis (Earth/Time) -->
+            <!-- Y-axis (Distance / NOW) & X-axis (Earth / Future Days) -->
             <line x1="40" y1="20" x2="40" y2="230" />
             <line x1="40" y1="230" x2="345" y2="230" stroke-width="2" />
           </g>
@@ -38,12 +38,10 @@
             </g>
           {% endif %}
 
-          <!-- NOW Vertical Centerline -->
-          <g stroke="currentColor" stroke-width="1.5" stroke-dasharray="3 3">
-            <line x1="{{ now_x_full }}" y1="20" x2="{{ now_x_full }}" y2="230" />
-          </g>
+          <!-- Header Labels -->
           <g fill="currentColor" class="label label--small">
-            <text x="{{ now_x_full }}" y="14" text-anchor="middle">NOW (T-0)</text>
+            <text x="40" y="14" text-anchor="start">NOW (T-0)</text>
+            <text x="345" y="14" text-anchor="end">T+7 DAYS</text>
             <text x="40" y="244" text-anchor="start">0 LD (EARTH)</text>
           </g>
 
@@ -120,7 +118,7 @@
           <!-- Key Statistics Grid -->
           <div class="grid grid--cols-2 gap--small w--full">
             <div class="bg--gray-75 rounded p--1 flex flex--col flex--center-x">
-              <span class="label">NEOS IN RANGE</span>
+              <span class="label">UPCOMING (7D)</span>
               <span class="value value--base">{{ total_count | default: '—' }}</span>
             </div>
             <div class="bg--gray-75 rounded p--1 flex flex--col flex--center-x">

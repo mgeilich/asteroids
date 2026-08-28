@@ -1,6 +1,6 @@
 /**
  * TRMNL Serverless Transform Script for "Asteroids" (NEO Timeline Monitor)
- * Supports linear coordinate timeline calculation and precalculated payload pass-through.
+ * Supports future 7-day timeline calculation and precalculated payload pass-through.
  */
 
 function cleanAsteroidName(rawName) {
@@ -73,10 +73,6 @@ function run(input) {
     chart_asteroids_quadrant: [],
     chart_ticks_quadrant: [],
     chart_gridlines_quadrant: [],
-    now_x_full: 192.5,
-    now_x_half_horizontal: 140,
-    now_x_half_vertical: 192.5,
-    now_x_quadrant: 85,
     closest_list: []
   };
 
@@ -87,9 +83,8 @@ function run(input) {
 
     const now = new Date();
     const now_ms = now.getTime();
-    const start_ms = now_ms - (3.5 * 24 * 3600 * 1000);
-    const end_ms = now_ms + (3.5 * 24 * 3600 * 1000);
-    const total_window_ms = end_ms - start_ms;
+    const end_ms = now_ms + (7 * 24 * 3600 * 1000);
+    const total_window_ms = end_ms - now_ms;
 
     // Check if valid precalculated payload is provided
     const hasPrecomputed = input &&
@@ -118,10 +113,6 @@ function run(input) {
         chart_asteroids_quadrant: input.chart_asteroids_quadrant || [],
         chart_ticks_quadrant: input.chart_ticks_quadrant || [],
         chart_gridlines_quadrant: input.chart_gridlines_quadrant || [],
-        now_x_full: isFinite(input.now_x_full) ? input.now_x_full : 192.5,
-        now_x_half_horizontal: isFinite(input.now_x_half_horizontal) ? input.now_x_half_horizontal : 140,
-        now_x_half_vertical: isFinite(input.now_x_half_vertical) ? input.now_x_half_vertical : 192.5,
-        now_x_quadrant: isFinite(input.now_x_quadrant) ? input.now_x_quadrant : 85,
         closest_list: input.closest_list || []
       };
     }
@@ -137,8 +128,8 @@ function run(input) {
 
     rawCandidates.forEach((c, idx) => {
       let epoch = Number(c.epoch);
-      if (!epoch || isNaN(epoch) || epoch === 0) {
-        epoch = now_ms + ((idx - 1.5) * 1.5 * 24 * 3600 * 1000);
+      if (!epoch || isNaN(epoch) || epoch === 0 || epoch < now_ms) {
+        epoch = now_ms + ((idx + 0.5) * 1.5 * 24 * 3600 * 1000);
         isSynthetic = true;
       }
       const missDist = Number(c.miss_distance_ld) || 0;
@@ -153,7 +144,7 @@ function run(input) {
         avg_diameter: diam,
         is_hazardous: isHaz,
         epoch: epoch,
-        is_past: epoch < now_ms
+        is_past: false
       });
     });
 
@@ -178,26 +169,19 @@ function run(input) {
     const maxDiamObj = [...candidates].sort((a, b) => b.avg_diameter - a.avg_diameter)[0];
     const max_size_m = Math.round(maxDiamObj.avg_diameter) + "m";
 
-    const upcomingCount = candidates.filter(c => !c.is_past).length;
-
     let warningActive = false;
     const closestList = [];
-    const upcomingCandidates = candidates.filter(c => !c.is_past);
-    const displayList = upcomingCandidates.length > 0 ? upcomingCandidates : candidates;
-    const closest3 = [...displayList].sort((a, b) => a.miss_distance_ld - b.miss_distance_ld).slice(0, 3);
+    const closest3 = [...candidates].sort((a, b) => a.miss_distance_ld - b.miss_distance_ld).slice(0, 3);
 
     closest3.forEach(item => {
       if (item.is_hazardous && item.miss_distance_ld <= 15.0) {
         warningActive = true;
       }
-      const diffMs = item.epoch - now_ms;
+      const diffMs = Math.max(0, item.epoch - now_ms);
       const hoursDiff = Math.floor(diffMs / (3600 * 1000));
-      const isNeg = hoursDiff < 0;
-      const absHours = Math.abs(hoursDiff);
-      const days = Math.floor(absHours / 24);
-      const remHours = absHours % 24;
-      const prefix = isNeg ? "T-" : "T+";
-      const timeStr = days > 0 ? `${prefix}${days}d ${remHours}h` : `${prefix}${remHours}h`;
+      const days = Math.floor(hoursDiff / 24);
+      const remHours = hoursDiff % 24;
+      const timeStr = days > 0 ? `T+${days}d ${remHours}h` : `T+${remHours}h`;
 
       closestList.push({
         name: item.name,
@@ -213,7 +197,7 @@ function run(input) {
       scan_completed: true,
       system_status: isSynthetic ? "DEMO MODE: SAMPLE ASTEROID DATA" : (warningActive ? "WARNING: POTENTIALLY HAZARDOUS OBJECT IN SECTOR" : "SYSTEM STATUS: NOMINAL // ALL ENCOUNTERS SAFE"),
       total_count: (input.total_count !== undefined && input.total_count !== null) ? input.total_count : candidates.length,
-      upcoming_count: upcomingCount,
+      upcoming_count: candidates.length,
       closest_dist_ld: closest_dist_ld,
       closest_name: closest_name,
       max_size_m: max_size_m,
@@ -226,7 +210,6 @@ function run(input) {
       const cfg = LAYOUTS[key];
       const plotW = cfg.x_max - cfg.x_min;
       const plotH = cfg.y_max - cfg.y_min;
-      const nowX = parseFloat((cfg.x_min + plotW / 2.0).toFixed(1));
 
       // Gridlines
       const gridlines = cfg.grid_levels.map(level => ({
@@ -235,12 +218,12 @@ function run(input) {
         x_label: cfg.x_min - 4
       }));
 
-      // Ticks (-3d to +3d)
+      // Ticks (0d to +7d)
       const ticks = [];
-      for (let dayOffset = -3; dayOffset <= 3; dayOffset++) {
-        const tNorm = (dayOffset + 3.5) / 7.0;
+      for (let dayOffset = 0; dayOffset <= 7; dayOffset++) {
+        const tNorm = dayOffset / 7.0;
         const xPos = parseFloat((cfg.x_min + tNorm * plotW).toFixed(1));
-        let label = dayOffset === 0 ? "NOW" : (dayOffset < 0 ? `${dayOffset}d` : `+${dayOffset}d`);
+        let label = dayOffset === 0 ? "NOW" : `+${dayOffset}d`;
         ticks.push({
           x: xPos,
           label: label,
@@ -256,7 +239,7 @@ function run(input) {
       const sorted = inRange.sort((a, b) => a.miss_distance_ld - b.miss_distance_ld).slice(0, cfg.limit);
 
       const asteroids = sorted.map(item => {
-        let tNorm = (item.epoch - start_ms) / total_window_ms;
+        let tNorm = (item.epoch - now_ms) / total_window_ms;
         tNorm = Math.max(0.0, Math.min(1.0, tNorm));
         const xPos = parseFloat((cfg.x_min + tNorm * plotW).toFixed(1));
 
@@ -273,8 +256,8 @@ function run(input) {
         if (key === "quadrant") r = Math.max(2, Math.round(r * 0.6));
         else if (key === "half_horizontal") r = Math.max(3, Math.round(r * 0.8));
 
-        let labelX = xPos >= nowX ? xPos + r + 3 : xPos - r - 3;
-        let anchor = xPos >= nowX ? "start" : "end";
+        let labelX = xPos + r + 3;
+        let anchor = "start";
         if (labelX > cfg.width - 25) { labelX = xPos - r - 3; anchor = "end"; }
         if (labelX < 5) { labelX = xPos + r + 3; anchor = "start"; }
 
@@ -287,7 +270,6 @@ function run(input) {
           label_y: parseFloat((yPos + 3).toFixed(1)),
           anchor: anchor,
           is_hazardous: !!item.is_hazardous,
-          is_past: !!item.is_past,
           dist_ld: parseFloat(item.miss_distance_ld.toFixed(1))
         };
       }).filter(a => isFinite(a.x) && isFinite(a.y));
@@ -295,7 +277,6 @@ function run(input) {
       result[`chart_asteroids_${key}`] = asteroids;
       result[`chart_ticks_${key}`] = ticks;
       result[`chart_gridlines_${key}`] = gridlines;
-      result[`now_x_${key}`] = nowX;
     });
 
     return result;
