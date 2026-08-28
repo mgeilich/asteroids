@@ -62,10 +62,10 @@
 <!-- class="layout" -->
 <div class="layout layout--col p--0">
   
-    <div class="flex flex--row gap--small p--0.5 grow w--full">
+    <div class="grid grid--cols-1 md:grid--cols-12 portrait:grid--cols-1 gap--small p--0.5 grow w--full">
       
-      <!-- Left Column: Linear Timeline (280x150) -->
-      <div class="w--[280px] flex flex--col flex--center-x">
+      <!-- Left Column: Linear Timeline (5 cols) -->
+      <div class="col--span-1 md:col--span-5 portrait:col--span-1 flex flex--col flex--center-x">
         <svg width="280" height="150" viewBox="0 0 280 150" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg" class="w--full h--auto">
           <defs>
             <clipPath id="chart-clip-half-h">
@@ -200,75 +200,75 @@
             </g>
           
 
-          <!-- Asteroid Markers -->
+          <!-- Asteroid Markers and Labels -->
           
             <g stroke="currentColor" stroke-width="1.5" clip-path="url(#chart-clip-half-h)">
               
                 
-                  <circle cx="51.7" cy="79.8" r="7" fill="currentColor" />
+                  <circle cx="51.4" cy="79.8" r="7" fill="currentColor" />
                 
               
                 
-                  <circle cx="114.7" cy="35.5" r="5" fill="currentColor" />
+                  <circle cx="114.5" cy="35.5" r="5" fill="currentColor" />
                 
               
                 
-                  <circle cx="229.8" cy="30.4" r="7" fill="currentColor" />
+                  <circle cx="229.6" cy="30.4" r="7" fill="currentColor" />
                 
               
                 
-                  <circle cx="173.6" cy="23.6" r="7" fill="currentColor" />
+                  <circle cx="173.3" cy="23.6" r="7" fill="currentColor" />
                 
               
                 
-                  <circle cx="143.4" cy="84.8" r="3" fill="none" />
+                  <circle cx="143.1" cy="84.8" r="3" fill="none" />
                 
               
                 
-                  <circle cx="107.1" cy="80.2" r="3" fill="none" />
+                  <circle cx="106.8" cy="80.2" r="3" fill="none" />
                 
               
                 
-                  <circle cx="158" cy="68.6" r="3" fill="none" />
+                  <circle cx="157.7" cy="68.6" r="3" fill="none" />
                 
               
                 
-                  <circle cx="117.7" cy="53.5" r="3" fill="none" />
+                  <circle cx="117.4" cy="53.5" r="3" fill="none" />
                 
               
             </g>
-            <g fill="currentColor" class="label label--small">
+            <g fill="currentColor" class="label label--small" clip-path="url(#chart-clip-half-h)">
               
                 
-                  <text x="61.7" y="82.8" text-anchor="start">BP31</text>
-                
-              
-                
-                  <text x="122.7" y="38.5" text-anchor="start">JR28</text>
+                  <text x="61.4" y="82.8" text-anchor="start">BP31</text>
                 
               
                 
-                  <text x="239.8" y="33.4" text-anchor="start">1998 QC1</text>
+                  <text x="122.5" y="38.5" text-anchor="start">JR28</text>
                 
               
                 
-                  <text x="183.6" y="26.6" text-anchor="start">CT4</text>
+                  <text x="239.6" y="33.4" text-anchor="start">1998 ..</text>
                 
               
                 
-                  <text x="149.4" y="87.8" text-anchor="start">RH16</text>
+                  <text x="183.3" y="26.6" text-anchor="start">CT4</text>
                 
               
                 
-                  <text x="113.1" y="83.2" text-anchor="start">EK</text>
+                  <text x="149.1" y="87.8" text-anchor="start">RH16</text>
                 
               
                 
-                  <text x="164" y="71.6" text-anchor="start">RD2</text>
+                  <text x="112.8" y="83.2" text-anchor="start">EK</text>
                 
               
                 
-                  <text x="123.7" y="56.5" text-anchor="start">HU4</text>
+                  <text x="163.7" y="71.6" text-anchor="start">RD2</text>
+                
+              
+                
+                  <text x="123.4" y="56.5" text-anchor="start">HU4</text>
                 
               
             </g>
@@ -276,8 +276,8 @@
         </svg>
       </div>
 
-      <!-- Right Column: Status Banner & Summary -->
-      <div class="flex flex--col gap--xsmall grow">
+      <!-- Right Column: Status Banner & Summary (7 cols) -->
+      <div class="col--span-1 md:col--span-7 portrait:col--span-1 flex flex--col gap--xsmall">
         <!-- Status Row -->
         <div class="flex flex--row flex--center-y gap--xsmall">
           <div>
@@ -312,7 +312,7 @@
               <div class="flex flex--row flex--center-y gap--xsmall p--0.5 rounded bg--gray-75">
                 <div class="grow">
                   <div class="title title--small" data-clamp="1">RH16</div>
-                  <div class="label label--small" data-clamp="1">T+3d 0h &bull; Size: 25m</div>
+                  <div class="label label--small" data-clamp="1">T+2d 23h &bull; Size: 25m</div>
                 </div>
                 <div class="text--right flex flex--col layout--right">
                   <div class="value value--small" data-clamp="1">8.7 LD</div>
