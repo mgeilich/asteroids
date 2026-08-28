@@ -96,7 +96,7 @@
       </div>
       
       <div class="flex flex--row flex--center-y gap--xsmall ml--auto">
-        {% if system_status contains "WARNING" or system_status contains "DEMO" %}
+        {% if is_alert %}
           <span class="label label--warning px--1 py--0.5"><strong>ALERT</strong></span>
         {% else %}
           <span class="label label--outline px--1 py--0.5"><strong>NOMINAL</strong></span>

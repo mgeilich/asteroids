@@ -1,9 +1,3 @@
-{%- capture svg_logo -%}
-<svg class="image" width="24" height="24" viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
-  <path d="M12,2A10,10,0,1,0,22,12,10,10,0,0,0,12,2Zm1,17a1.5,1.5,0,1,1,1.5-1.5A1.5,1.5,0,0,1,13,19Zm5-5.5a1.5,1.5,0,1,1,1.5-1.5A1.5,1.5,0,0,1,18,13.5ZM12,12a2,2,0,1,1,2-2A2,2,0,0,1,12,12ZM7.5,9A1.5,1.5,0,1,1,9,7.5,1.5,1.5,0,0,1,7.5,9Zm1,7a1.5,1.5,0,1,1,1.5-1.5A1.5,1.5,0,0,1,8.5,16Z" fill="currentColor"/>
-</svg>
-{%- endcapture -%}
-
 {% assign scan_completed = data.scan_completed | default: scan_completed %}
 {% assign system_status = data.system_status | default: system_status %}
 {% assign system_status = system_status | default: 'SYSTEM OFFLINE: SCAN IN PROGRESS' %}
@@ -20,6 +14,12 @@
 {% assign last_updated = data.last_updated | default: last_updated %}
 {% assign last_updated = last_updated | default: '—' %}
 {% assign closest_list = data.closest_list | default: closest_list %}
+
+{% assign status_lower = system_status | downcase %}
+{% assign is_alert = false %}
+{% if status_lower contains "warning" or status_lower contains "demo" or status_lower contains "alert" %}
+  {% assign is_alert = true %}
+{% endif %}
 
 {% assign chart_asteroids_full = data.chart_asteroids_full | default: chart_asteroids_full %}
 {% assign chart_ticks_full = data.chart_ticks_full | default: chart_ticks_full %}
@@ -43,7 +43,9 @@
 
 {% template title_bar %}
   <div class="title_bar">
-    {{ svg_logo }}
+    <svg class="image" width="24" height="24" viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12,2A10,10,0,1,0,22,12,10,10,0,0,0,12,2Zm1,17a1.5,1.5,0,1,1,1.5-1.5A1.5,1.5,0,0,1,13,19Zm5-5.5a1.5,1.5,0,1,1,1.5-1.5A1.5,1.5,0,0,1,18,13.5ZM12,12a2,2,0,1,1,2-2A2,2,0,0,1,12,12ZM7.5,9A1.5,1.5,0,1,1,9,7.5,1.5,1.5,0,0,1,7.5,9Zm1,7a1.5,1.5,0,1,1,1.5-1.5A1.5,1.5,0,0,1,8.5,16Z" fill="currentColor"/>
+    </svg>
     <span class="title">Asteroids</span>
     {% if trmnl.plugin_settings.instance_name and trmnl.plugin_settings.instance_name != "" %}
       <span class="instance">{{ trmnl.plugin_settings.instance_name }}</span>

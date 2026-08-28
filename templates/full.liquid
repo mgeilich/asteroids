@@ -103,7 +103,7 @@
             </div>
             
             <div class="flex flex--row flex--center-y gap--small ml--auto">
-              {% if system_status contains "WARNING" or system_status contains "DEMO" %}
+              {% if is_alert %}
                 <div class="label label--warning p--1 flex flex--row flex--center-x">
                   <strong>{{ system_status }}</strong>
                 </div>
