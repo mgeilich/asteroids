@@ -1,20 +1,20 @@
-<div class="layout layout--col">
+<div class="layout layout--col p--0">
   {% if scan_completed %}
-    <div class="flex flex--col md:flex--row portrait:flex--col gap--xsmall p--0.5 grow w--full">
+    <div class="flex flex--row gap--small p--0.5 grow w--full">
       
-      <!-- Left Column: Compact Linear Timeline (260x150) -->
-      <div class="w--full md:w--[260px] lg:w--[340px] flex flex--col flex--center-x">
-        <svg width="260" height="150" viewBox="0 0 260 150" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg" class="w--full h--auto">
+      <!-- Left Column: Linear Timeline (280x150) -->
+      <div class="w--[280px] flex flex--col flex--center-x">
+        <svg width="280" height="150" viewBox="0 0 280 150" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg" class="w--full h--auto">
           <defs>
             <clipPath id="chart-clip-half-h">
-              <rect x="33" y="14" width="214" height="116" />
+              <rect x="46" y="16" width="226" height="114" />
             </clipPath>
           </defs>
 
           <!-- Axes -->
           <g stroke="currentColor" stroke-width="1.5">
-            <line x1="35" y1="16" x2="35" y2="128" />
-            <line x1="35" y1="128" x2="245" y2="128" stroke-width="2" />
+            <line x1="48" y1="18" x2="48" y2="128" />
+            <line x1="48" y1="128" x2="270" y2="128" stroke-width="2" />
           </g>
 
           <!-- Gridlines -->
@@ -22,26 +22,26 @@
             <g stroke="currentColor" stroke-width="1" stroke-dasharray="2 4">
               {% for line in chart_gridlines_half_horizontal %}
                 {% if line and line.y %}
-                  <line x1="35" y1="{{ line.y }}" x2="245" y2="{{ line.y }}" />
+                  <line x1="48" y1="{{ line.y }}" x2="270" y2="{{ line.y }}" />
                 {% endif %}
               {% endfor %}
             </g>
             <g fill="currentColor" class="label label--small">
               {% for line in chart_gridlines_half_horizontal %}
                 {% if line and line.y and line.label %}
-                  <text x="{{ line.x_label | default: 32 }}" y="{{ line.y }}" dy="3" text-anchor="end">
+                  <text x="{{ line.x_label | default: 44 }}" y="{{ line.y }}" dy="3" text-anchor="end">
                     {{- line.label -}}
                   </text>
                 {% endif %}
               {% endfor %}
-              <text x="32" y="128" dy="3" text-anchor="end">Earth</text>
+              <text x="44" y="128" dy="3" text-anchor="end">Earth</text>
             </g>
           {% endif %}
 
           <!-- Header Labels -->
           <g fill="currentColor" class="label label--small">
-            <text x="35" y="11" text-anchor="start">NOW (T-0)</text>
-            <text x="245" y="11" text-anchor="end">T+7D</text>
+            <text x="48" y="14" text-anchor="start">NOW (T-0)</text>
+            <text x="270" y="14" text-anchor="end">T+7D</text>
           </g>
 
           <!-- Time Ticks along Bottom X-axis -->
@@ -84,32 +84,32 @@
             </g>
           {% else %}
             <g fill="currentColor" class="label">
-              <text x="140" y="75" text-anchor="middle">NO ASTEROIDS IN RANGE</text>
+              <text x="160" y="75" text-anchor="middle">NO ASTEROIDS IN RANGE</text>
             </g>
           {% endif %}
         </svg>
       </div>
 
       <!-- Right Column: Status Banner & Summary -->
-      <div class="grid grid--cols-1 gap--xsmall grow">
+      <div class="flex flex--col gap--xsmall grow">
         <!-- Status Row -->
-        <div class="flex flex--row flex--center-y gap--xsmall mb--0.5">
+        <div class="flex flex--row flex--center-y gap--xsmall">
           <div>
             <div class="title title--small">ASTEROIDS</div>
-            <div class="label label--small">Planetary Defense Telemetry</div>
+            <div class="label label--small">Planetary Defense</div>
           </div>
           
           <div class="flex flex--row flex--center-y gap--xsmall ml--auto">
             {% if system_status contains "WARNING" or system_status contains "DEMO" %}
-              <span class="label label--warning p--1"><strong>ALERT</strong></span>
+              <span class="label label--warning px--1 py--0.5"><strong>ALERT</strong></span>
             {% else %}
-              <span class="label label--outline p--1"><strong>NOMINAL</strong></span>
+              <span class="label label--outline px--1 py--0.5"><strong>NOMINAL</strong></span>
             {% endif %}
           </div>
         </div>
         
         <!-- Metrics Row -->
-        <div class="grid grid--cols-2 gap--xsmall mb--0.5">
+        <div class="grid grid--cols-2 gap--xsmall">
           <div class="bg--gray-75 rounded p--0.5 flex flex--row gap--xsmall flex--center-x flex--center-y">
             <span class="label">UPCOMING:</span>
             <span class="value value--small">{{ total_count | default: '—' }}</span>
@@ -121,11 +121,11 @@
         </div>
         
         <!-- Closest List Schedule -->
-        <div class="grid grid--cols-1 gap--xsmall">
+        <div class="flex flex--col gap--xsmall">
+          <div class="label"><strong>CLOSEST SCHEDULED FLYBYS</strong></div>
           {% if closest_list and closest_list.size > 0 %}
-            <div class="label"><strong>CLOSEST SCHEDULED FLYBYS</strong></div>
             {% for item in closest_list limit: 2 %}
-              <div class="flex flex--row flex--center-y gap--xsmall p--0.5 rounded bg--gray-75 grow">
+              <div class="flex flex--row flex--center-y gap--xsmall p--0.5 rounded bg--gray-75">
                 <div class="grow">
                   <div class="title title--small" data-clamp="1">{{ item.name | default: '—' }}</div>
                   <div class="label label--small" data-clamp="1">{{ item.time_str | default: '—' }} &bull; Size: {{ item.size_m | default: '—' }}</div>
@@ -139,7 +139,7 @@
               </div>
             {% endfor %}
           {% else %}
-            <div class="p--2 rounded flex flex--row flex--center-x label bg--gray-75">
+            <div class="p--1 rounded flex flex--row flex--center-x label bg--gray-75">
               No NEO activity detected.
             </div>
           {% endif %}

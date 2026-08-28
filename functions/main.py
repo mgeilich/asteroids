@@ -22,7 +22,7 @@ def neo_radar(req: https_fn.Request) -> https_fn.Response:
     Utilizes Firestore to cache responses to stay within NASA API rate limits.
     """
     db = firestore.client()
-    cache_ref = db.collection("cache").document("neo_telemetry_v4")
+    cache_ref = db.collection("cache").document("neo_telemetry_v5")
     force_refresh = req.args.get("refresh") in ("true", "1", "yes")
     
     now = datetime.datetime.now(datetime.timezone.utc)

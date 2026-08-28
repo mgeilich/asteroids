@@ -1,18 +1,18 @@
-<div class="layout layout--col gap--small">
+<div class="layout layout--col p--0 gap--xsmall">
   {% if scan_completed %}
-    <!-- Top Half: Linear Timeline Chart (360x180) -->
+    <!-- Top Half: Linear Timeline Chart (360x160) -->
     <div class="w--full flex flex--col flex--center-x">
-      <svg width="360" height="180" viewBox="0 0 360 180" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg" class="w--full h--auto">
+      <svg width="360" height="160" viewBox="0 0 360 160" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg" class="w--full h--auto">
         <defs>
           <clipPath id="chart-clip-half-v">
-            <rect x="38" y="16" width="310" height="142" />
+            <rect x="46" y="16" width="306" height="122" />
           </clipPath>
         </defs>
 
         <!-- Axes -->
         <g stroke="currentColor" stroke-width="1.5">
-          <line x1="40" y1="18" x2="40" y2="155" />
-          <line x1="40" y1="155" x2="345" y2="155" stroke-width="2" />
+          <line x1="48" y1="16" x2="48" y2="135" />
+          <line x1="48" y1="135" x2="350" y2="135" stroke-width="2" />
         </g>
 
         <!-- Horizontal Gridlines -->
@@ -20,26 +20,26 @@
           <g stroke="currentColor" stroke-width="1" stroke-dasharray="2 4">
             {% for line in chart_gridlines_half_vertical %}
               {% if line and line.y %}
-                <line x1="40" y1="{{ line.y }}" x2="345" y2="{{ line.y }}" />
+                <line x1="48" y1="{{ line.y }}" x2="350" y2="{{ line.y }}" />
               {% endif %}
             {% endfor %}
           </g>
           <g fill="currentColor" class="label label--small">
             {% for line in chart_gridlines_half_vertical %}
               {% if line and line.y and line.label %}
-                <text x="{{ line.x_label | default: 36 }}" y="{{ line.y }}" dy="3" text-anchor="end">
+                <text x="{{ line.x_label | default: 44 }}" y="{{ line.y }}" dy="3" text-anchor="end">
                   {{- line.label -}}
                 </text>
               {% endif %}
             {% endfor %}
-            <text x="36" y="155" dy="3" text-anchor="end">Earth</text>
+            <text x="44" y="135" dy="3" text-anchor="end">Earth</text>
           </g>
         {% endif %}
 
         <!-- Header Labels -->
         <g fill="currentColor" class="label label--small">
-          <text x="40" y="12" text-anchor="start">NOW (T-0)</text>
-          <text x="345" y="12" text-anchor="end">T+7 DAYS</text>
+          <text x="48" y="12" text-anchor="start">NOW (T-0)</text>
+          <text x="350" y="12" text-anchor="end">T+7 DAYS</text>
         </g>
 
         <!-- Time Ticks along Bottom X-axis -->
@@ -47,14 +47,14 @@
           <g stroke="currentColor" stroke-width="1.5">
             {% for tick in chart_ticks_half_vertical %}
               {% if tick and tick.x %}
-                <line x1="{{ tick.x }}" y1="{{ tick.y_tick_top | default: 155 }}" x2="{{ tick.x }}" y2="{{ tick.y_tick_bottom | default: 159 }}" />
+                <line x1="{{ tick.x }}" y1="{{ tick.y_tick_top | default: 135 }}" x2="{{ tick.x }}" y2="{{ tick.y_tick_bottom | default: 139 }}" />
               {% endif %}
             {% endfor %}
           </g>
           <g fill="currentColor" class="label label--small">
             {% for tick in chart_ticks_half_vertical %}
               {% if tick and tick.x and tick.label and tick.is_now != true %}
-                <text x="{{ tick.x }}" y="{{ tick.y_label | default: 169 }}" text-anchor="middle">
+                <text x="{{ tick.x }}" y="{{ tick.y_label | default: 150 }}" text-anchor="middle">
                   {{- tick.label -}}
                 </text>
               {% endif %}
@@ -82,40 +82,40 @@
           </g>
         {% else %}
           <g fill="currentColor" class="label">
-            <text x="192.5" y="85" text-anchor="middle">NO ASTEROIDS IN RANGE</text>
+            <text x="192.5" y="80" text-anchor="middle">NO ASTEROIDS IN RANGE</text>
           </g>
         {% endif %}
       </svg>
     </div>
     
     <!-- Middle Telemetry Status Row -->
-    <div class="flex flex--row flex--center-y gap--small p--1 w--full">
+    <div class="flex flex--row flex--center-y gap--small px--1 py--0.5 w--full">
       <div class="flex flex--col">
         <div class="title title--small">ASTEROIDS</div>
         <div class="label label--small">UPCOMING: {{ total_count | default: '—' }} NEOs</div>
       </div>
       
-      <div class="flex flex--row flex--center-y gap--small ml--auto">
+      <div class="flex flex--row flex--center-y gap--xsmall ml--auto">
         {% if system_status contains "WARNING" or system_status contains "DEMO" %}
-          <span class="label label--warning p--1"><strong>ALERT</strong></span>
+          <span class="label label--warning px--1 py--0.5"><strong>ALERT</strong></span>
         {% else %}
-          <span class="label label--outline p--1"><strong>NOMINAL</strong></span>
+          <span class="label label--outline px--1 py--0.5"><strong>NOMINAL</strong></span>
         {% endif %}
       </div>
       
       <div class="flex flex--col items--end ml--auto text--right">
-        <span class="label">CLOSEST</span>
+        <span class="label label--small">CLOSEST</span>
         <span class="value value--small">{{ closest_dist_ld | default: '—' }}</span>
       </div>
     </div>
 
-    <!-- Bottom: Closest Scheduled Flybys -->
-    <div class="flex flex--col gap--xsmall w--full p--1">
+    <!-- Bottom: Closest Scheduled Flybys (2 items for clean vertical space) -->
+    <div class="flex flex--col gap--xsmall w--full px--1">
       <div class="label"><strong>CLOSEST SCHEDULED FLYBYS</strong></div>
       
       {% if closest_list and closest_list.size > 0 %}
-        {% for item in closest_list limit: 3 %}
-          <div class="flex flex--row flex--center-y gap--small p--1 rounded bg--gray-75 grow">
+        {% for item in closest_list limit: 2 %}
+          <div class="flex flex--row flex--center-y gap--xsmall p--0.5 rounded bg--gray-75">
             <div class="grow">
               <div class="title title--small" data-clamp="1">{{ item.name | default: '—' }}</div>
               <div class="label label--small" data-clamp="1">{{ item.time_str | default: '—' }} &bull; Size: {{ item.size_m | default: '—' }}</div>
@@ -129,7 +129,7 @@
           </div>
         {% endfor %}
       {% else %}
-        <div class="p--2 rounded flex flex--row flex--center-x label bg--gray-75">
+        <div class="p--1 rounded flex flex--row flex--center-x label bg--gray-75">
           No NEO activity detected.
         </div>
       {% endif %}

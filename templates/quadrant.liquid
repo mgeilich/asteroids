@@ -1,35 +1,36 @@
-<div class="layout layout--col layout--center p--1">
+<div class="layout layout--col p--0 gap--xsmall">
   {% if scan_completed %}
-    <div class="flex flex--row flex--center-y gap--xsmall w--full mb--1">
-      <div class="label"><strong>TIMELINE MONITOR</strong></div>
+    <!-- Header Row -->
+    <div class="flex flex--row flex--center-y gap--xsmall w--full">
+      <div class="title title--small">ASTEROIDS</div>
       <div class="ml--auto">
         {% if system_status contains "WARNING" or system_status contains "DEMO" %}
-          <span class="label label--warning p--0.5"><strong>ALERT</strong></span>
+          <span class="label label--warning px--1 py--0.5"><strong>ALERT</strong></span>
         {% else %}
-          <span class="label label--outline p--0.5"><strong>NOMINAL</strong></span>
+          <span class="label label--outline px--1 py--0.5"><strong>NOMINAL</strong></span>
         {% endif %}
       </div>
     </div>
     
-    <!-- Hero Metric -->
-    <div class="value value--large mb--0.5">
-      {{ total_count | default: '0' }}
+    <!-- Hero Metric Block -->
+    <div class="flex flex--col flex--center-x py--0.5">
+      <div class="value value--large">{{ total_count | default: '0' }}</div>
+      <div class="label label--small">UPCOMING NEOS (7 DAYS)</div>
     </div>
-    <div class="label mb--1">UPCOMING NEOS (7 DAYS)</div>
     
     <!-- Secondary Glance Callouts -->
     <div class="grid grid--cols-2 gap--xsmall w--full">
       <div class="bg--gray-75 rounded p--0.5 flex flex--col flex--center-x">
-        <span class="label">CLOSEST</span>
+        <span class="label label--small">CLOSEST</span>
         <span class="value value--small">{{ closest_dist_ld | default: '—' }}</span>
       </div>
       <div class="bg--gray-75 rounded p--0.5 flex flex--col flex--center-x">
-        <span class="label">MAX SIZE</span>
+        <span class="label label--small">MAX SIZE</span>
         <span class="value value--small">{{ max_size_m | default: '—' }}</span>
       </div>
     </div>
   {% else %}
-    <div class="p--3 label">
+    <div class="p--2 label">
       Timeline scan in progress...
     </div>
   {% endif %}

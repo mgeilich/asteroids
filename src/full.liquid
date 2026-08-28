@@ -12,10 +12,11 @@
           </defs>
 
           <!-- Axes & Borders -->
+          <!-- Axes -->
           <g stroke="currentColor" stroke-width="1.5">
-            <!-- Y-axis (Distance / NOW) & X-axis (Earth / Future Days) -->
-            <line x1="40" y1="20" x2="40" y2="230" />
-            <line x1="40" y1="230" x2="345" y2="230" stroke-width="2" />
+             <!-- Y-axis (Distance / NOW) & X-axis (Earth / Future Days) -->
+            <line x1="46" y1="20" x2="46" y2="230" />
+            <line x1="46" y1="230" x2="350" y2="230" stroke-width="2" />
           </g>
 
           <!-- Horizontal Distance Gridlines -->
@@ -23,26 +24,26 @@
             <g stroke="currentColor" stroke-width="1" stroke-dasharray="2 4">
               {% for line in chart_gridlines_full %}
                 {% if line and line.y %}
-                  <line x1="40" y1="{{ line.y }}" x2="345" y2="{{ line.y }}" />
+                  <line x1="46" y1="{{ line.y }}" x2="350" y2="{{ line.y }}" />
                 {% endif %}
               {% endfor %}
             </g>
             <g fill="currentColor" class="label label--small">
               {% for line in chart_gridlines_full %}
                 {% if line and line.y and line.label %}
-                  <text x="{{ line.x_label | default: 36 }}" y="{{ line.y }}" dy="3" text-anchor="end">
+                  <text x="{{ line.x_label | default: 42 }}" y="{{ line.y }}" dy="3" text-anchor="end">
                     {{- line.label -}}
                   </text>
                 {% endif %}
               {% endfor %}
-              <text x="36" y="230" dy="3" text-anchor="end">Earth</text>
+              <text x="42" y="230" dy="3" text-anchor="end">Earth</text>
             </g>
           {% endif %}
 
           <!-- Header Labels -->
           <g fill="currentColor" class="label label--small">
-            <text x="40" y="14" text-anchor="start">NOW (T-0)</text>
-            <text x="345" y="14" text-anchor="end">T+7 DAYS</text>
+            <text x="46" y="14" text-anchor="start">NOW (T-0)</text>
+            <text x="350" y="14" text-anchor="end">T+7 DAYS</text>
           </g>
 
           <!-- Time Ticks along Bottom X-axis -->

@@ -152,35 +152,35 @@ def calculate_telemetry(raw_data: Optional[Dict[str, Any]]) -> Dict[str, Any]:
                 "time_str": time_str
             })
             
-    # Chart coordinate setups for each layout
+    # Refined chart coordinate setups for each layout with safe Y-axis label margins
     layouts = {
         "full": {
             "width": 360, "height": 260,
-            "x_min": 40, "x_max": 345,
+            "x_min": 46, "x_max": 350,
             "y_min": 25, "y_max": 230,
             "grid_levels": [2, 5, 10, 25, 50, 100, 200],
             "limit": 18,
             "min_dx": 26, "min_dy": 14, "min_r_sq": 400
         },
         "half_horizontal": {
-            "width": 260, "height": 150,
-            "x_min": 35, "x_max": 245,
-            "y_min": 18, "y_max": 128,
+            "width": 280, "height": 150,
+            "x_min": 48, "x_max": 270,
+            "y_min": 22, "y_max": 128,
             "grid_levels": [5, 20, 100, 200],
             "limit": 8,
             "min_dx": 24, "min_dy": 12, "min_r_sq": 324
         },
         "half_vertical": {
-            "width": 360, "height": 180,
-            "x_min": 40, "x_max": 345,
-            "y_min": 20, "y_max": 155,
+            "width": 360, "height": 160,
+            "x_min": 48, "x_max": 350,
+            "y_min": 20, "y_max": 135,
             "grid_levels": [5, 20, 50, 100, 200],
-            "limit": 12,
+            "limit": 10,
             "min_dx": 26, "min_dy": 13, "min_r_sq": 361
         },
         "quadrant": {
             "width": 160, "height": 120,
-            "x_min": 25, "x_max": 145,
+            "x_min": 35, "x_max": 145,
             "y_min": 15, "y_max": 100,
             "grid_levels": [10, 50, 200],
             "limit": 5,
