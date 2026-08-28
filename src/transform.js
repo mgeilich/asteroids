@@ -1,7 +1,7 @@
 /**
  * TRMNL Serverless Transform Script for "Asteroids" (NEO Timeline Monitor)
- * Supports future 7-day timeline calculation with logarithmic distance Y-axis
- * and greedy collision prevention to prioritize hazardous/closest/largest objects.
+ * Supports future 7-day timeline calculation with logarithmic distance Y-axis,
+ * greedy collision prevention, and label boundary clamping.
  */
 
 function cleanAsteroidName(rawName) {
@@ -11,8 +11,8 @@ function cleanAsteroidName(rawName) {
   if (parts.length > 1 && /^\d+$/.test(parts[0])) {
     name = parts.slice(1).join(" ");
   }
-  if (name.length > 8) {
-    name = name.substring(0, 6) + "..";
+  if (name.length > 7) {
+    name = name.substring(0, 5) + "..";
   }
   return name;
 }
@@ -294,8 +294,19 @@ function run(input) {
 
         let labelX = xPos + r + 3;
         let anchor = "start";
-        if (labelX > cfg.width - 25) { labelX = xPos - r - 3; anchor = "end"; }
-        if (labelX < 5) { labelX = xPos + r + 3; anchor = "start"; }
+        if (xPos > cfg.x_max - 30) {
+          labelX = xPos - r - 3;
+          anchor = "end";
+        } else if (xPos < cfg.x_min + 20) {
+          labelX = xPos + r + 3;
+          anchor = "start";
+        } else if (labelX > cfg.width - 25) {
+          labelX = xPos - r - 3;
+          anchor = "end";
+        } else {
+          labelX = xPos + r + 3;
+          anchor = "start";
+        }
 
         selectedAsteroids.push({
           name: item.name,

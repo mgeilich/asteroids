@@ -71,7 +71,7 @@
               {% endif %}
             {% endfor %}
           </g>
-          <g fill="currentColor" class="label label--small">
+          <g fill="currentColor" class="label label--small" clip-path="url(#chart-clip-half-v)">
             {% for ast in chart_asteroids_half_vertical %}
               {% if ast and ast.label_x and ast.label_y and ast.name %}
                 <text x="{{ ast.label_x }}" y="{{ ast.label_y }}" text-anchor="{{ ast.anchor | default: 'start' }}">

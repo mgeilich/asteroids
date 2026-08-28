@@ -13,15 +13,15 @@ def clean_asteroid_name(raw_name: str) -> str:
     parts = name.split()
     if len(parts) > 1 and parts[0].isdigit():
         name = " ".join(parts[1:])
-    if len(name) > 8:
-        name = name[:6] + ".."
+    if len(name) > 7:
+        name = name[:5] + ".."
     return name
 
 def calculate_telemetry(raw_data: Optional[Dict[str, Any]]) -> Dict[str, Any]:
     """
     Parses NASA NeoWS feed data and computes log-scale linear timeline coordinates and metrics.
-    Applies greedy collision detection to prevent marker and label overlaps, prioritizing
-    hazardous, closest, and largest NEOs.
+    Applies greedy collision detection and label bounding to prevent marker and label overlaps,
+    prioritizing hazardous, closest, and largest NEOs.
     """
     now = datetime.datetime.now(datetime.timezone.utc)
     last_updated_str = now.strftime("%b %d, %H:%M UTC")
@@ -152,7 +152,7 @@ def calculate_telemetry(raw_data: Optional[Dict[str, Any]]) -> Dict[str, Any]:
                 "time_str": time_str
             })
             
-    # Refined chart coordinate setups for each layout with safe Y-axis label margins
+    # Refined chart coordinate setups for each layout
     layouts = {
         "full": {
             "width": 360, "height": 260,
@@ -281,13 +281,17 @@ def calculate_telemetry(raw_data: Optional[Dict[str, Any]]) -> Dict[str, Any]:
             elif name == "half_horizontal":
                 r = max(3, int(r * 0.8))
                 
-            # Label position
-            label_x = x_pos + r + 3
-            anchor = "start"
-            if label_x > cfg["width"] - 25:
+            # Label position with boundary protection
+            if x_pos > cfg["x_max"] - 30:
                 label_x = x_pos - r - 3
                 anchor = "end"
-            if label_x < 5:
+            elif x_pos < cfg["x_min"] + 20:
+                label_x = x_pos + r + 3
+                anchor = "start"
+            elif label_x > cfg["width"] - 25:
+                label_x = x_pos - r - 3
+                anchor = "end"
+            else:
                 label_x = x_pos + r + 3
                 anchor = "start"
                     
