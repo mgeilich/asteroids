@@ -20,8 +20,8 @@ def clean_asteroid_name(raw_name: str) -> str:
 def calculate_telemetry(raw_data: Optional[Dict[str, Any]]) -> Dict[str, Any]:
     """
     Parses NASA NeoWS feed data and computes log-scale linear timeline coordinates and metrics.
-    X-axis is Time starting at NOW (left) and extending +7 days into the future (right).
-    Y-axis is Distance in Lunar Distances (LD) on a LOGARITHMIC scale from 1 LD (Earth baseline) to 200 LD.
+    Applies greedy collision detection to prevent marker and label overlaps, prioritizing
+    hazardous, closest, and largest NEOs.
     """
     now = datetime.datetime.now(datetime.timezone.utc)
     last_updated_str = now.strftime("%b %d, %H:%M UTC")
@@ -61,7 +61,7 @@ def calculate_telemetry(raw_data: Optional[Dict[str, Any]]) -> Dict[str, Any]:
     candidates = []
     total_objects_in_range = 0
     
-    # Log scale bounds
+    # Log scale bounds (1 LD to 200 LD)
     MIN_LD = 1.0
     MAX_LD = 200.0
     LOG_MIN = math.log10(MIN_LD)
@@ -152,39 +152,49 @@ def calculate_telemetry(raw_data: Optional[Dict[str, Any]]) -> Dict[str, Any]:
                 "time_str": time_str
             })
             
-    # Chart coordinate setups for each layout with Logarithmic Y-axis
+    # Chart coordinate setups for each layout
     layouts = {
         "full": {
             "width": 360, "height": 260,
             "x_min": 40, "x_max": 345,
             "y_min": 25, "y_max": 230,
             "grid_levels": [2, 5, 10, 25, 50, 100, 200],
-            "limit": 18
+            "limit": 18,
+            "min_dx": 26, "min_dy": 14, "min_r_sq": 400
         },
         "half_horizontal": {
             "width": 260, "height": 150,
             "x_min": 35, "x_max": 245,
             "y_min": 18, "y_max": 128,
             "grid_levels": [5, 20, 100, 200],
-            "limit": 8
+            "limit": 8,
+            "min_dx": 24, "min_dy": 12, "min_r_sq": 324
         },
         "half_vertical": {
             "width": 360, "height": 180,
             "x_min": 40, "x_max": 345,
             "y_min": 20, "y_max": 155,
             "grid_levels": [5, 20, 50, 100, 200],
-            "limit": 12
+            "limit": 12,
+            "min_dx": 26, "min_dy": 13, "min_r_sq": 361
         },
         "quadrant": {
             "width": 160, "height": 120,
             "x_min": 25, "x_max": 145,
             "y_min": 15, "y_max": 100,
             "grid_levels": [10, 50, 200],
-            "limit": 6
+            "limit": 5,
+            "min_dx": 20, "min_dy": 10, "min_r_sq": 256
         }
     }
     
     outputs = {}
+    
+    # Priority sorting: 1. Hazardous, 2. Miss distance (closest first), 3. Diameter (largest first)
+    prioritized_candidates = sorted(
+        [c for c in candidates if c["miss_distance_ld"] <= MAX_LD],
+        key=lambda c: (not c["is_hazardous"], c["miss_distance_ld"], -c["avg_diameter"])
+    )
     
     for name, cfg in layouts.items():
         x_min = cfg["x_min"]
@@ -226,12 +236,13 @@ def calculate_telemetry(raw_data: Optional[Dict[str, Any]]) -> Dict[str, Any]:
                 "y_label": y_max + 14
             })
             
-        # 3. Compute Asteroid Coordinates using Logarithmic distance
-        radar_candidates = [c for c in candidates if c["miss_distance_ld"] <= MAX_LD]
-        radar_candidates = sorted(radar_candidates, key=lambda c: c["miss_distance_ld"])[:cfg["limit"]]
-        
+        # 3. Compute Asteroid Coordinates with Non-Overlap Filtering
         asteroids_payload = []
-        for item in radar_candidates:
+        
+        for item in prioritized_candidates:
+            if len(asteroids_payload) >= cfg["limit"]:
+                break
+                
             # X coordinate: Linear time from NOW (x_min) to +7d (x_max)
             t_norm = (item["epoch"] - now_ms) / total_window_ms
             t_norm = max(0.0, min(1.0, t_norm))
@@ -243,6 +254,18 @@ def calculate_telemetry(raw_data: Optional[Dict[str, Any]]) -> Dict[str, Any]:
             d_norm = max(0.0, min(1.0, d_norm))
             y_pos = y_max - d_norm * plot_h
             
+            # Collision detection against higher-priority selected asteroids
+            overlap = False
+            for existing in asteroids_payload:
+                dx = abs(x_pos - existing["x"])
+                dy = abs(y_pos - existing["y"])
+                if (dx < cfg["min_dx"] and dy < cfg["min_dy"]) or (dx*dx + dy*dy < cfg["min_r_sq"]):
+                    overlap = True
+                    break
+                    
+            if overlap:
+                continue
+                
             # Radius based on size
             if item["avg_diameter"] < 30:
                 r = 3

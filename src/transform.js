@@ -1,6 +1,7 @@
 /**
  * TRMNL Serverless Transform Script for "Asteroids" (NEO Timeline Monitor)
- * Supports future 7-day timeline calculation with logarithmic distance Y-axis.
+ * Supports future 7-day timeline calculation with logarithmic distance Y-axis
+ * and greedy collision prevention to prioritize hazardous/closest/largest objects.
  */
 
 function cleanAsteroidName(rawName) {
@@ -23,28 +24,32 @@ function run(input) {
       x_min: 40, x_max: 345,
       y_min: 25, y_max: 230,
       grid_levels: [2, 5, 10, 25, 50, 100, 200],
-      limit: 18
+      limit: 18,
+      min_dx: 26, min_dy: 14, min_r_sq: 400
     },
     half_horizontal: {
       width: 260, height: 150,
       x_min: 35, x_max: 245,
       y_min: 18, y_max: 128,
       grid_levels: [5, 20, 100, 200],
-      limit: 8
+      limit: 8,
+      min_dx: 24, min_dy: 12, min_r_sq: 324
     },
     half_vertical: {
       width: 360, height: 180,
       x_min: 40, x_max: 345,
       y_min: 20, y_max: 155,
       grid_levels: [5, 20, 50, 100, 200],
-      limit: 12
+      limit: 12,
+      min_dx: 26, min_dy: 13, min_r_sq: 361
     },
     quadrant: {
       width: 160, height: 120,
       x_min: 25, x_max: 145,
       y_min: 15, y_max: 100,
       grid_levels: [10, 50, 200],
-      limit: 6
+      limit: 5,
+      min_dx: 20, min_dy: 10, min_r_sq: 256
     }
   };
 
@@ -207,6 +212,15 @@ function run(input) {
       closest_list: closestList
     };
 
+    // Priority sort: Hazardous -> Distance -> Diameter
+    const prioritized = [...candidates]
+      .filter(c => c.miss_distance_ld <= MAX_LD)
+      .sort((a, b) => {
+        if (a.is_hazardous !== b.is_hazardous) return b.is_hazardous ? 1 : -1;
+        if (a.miss_distance_ld !== b.miss_distance_ld) return a.miss_distance_ld - b.miss_distance_ld;
+        return b.avg_diameter - a.avg_diameter;
+      });
+
     // Calculate layout coordinates
     Object.keys(LAYOUTS).forEach(key => {
       const cfg = LAYOUTS[key];
@@ -240,11 +254,13 @@ function run(input) {
         });
       }
 
-      // Asteroid dots mapped to log distance
-      const inRange = candidates.filter(c => c.miss_distance_ld <= MAX_LD);
-      const sorted = inRange.sort((a, b) => a.miss_distance_ld - b.miss_distance_ld).slice(0, cfg.limit);
+      // Asteroids with non-overlap collision filter
+      const selectedAsteroids = [];
 
-      const asteroids = sorted.map(item => {
+      for (let i = 0; i < prioritized.length; i++) {
+        if (selectedAsteroids.length >= cfg.limit) break;
+        const item = prioritized[i];
+
         let tNorm = (item.epoch - now_ms) / total_window_ms;
         tNorm = Math.max(0.0, Math.min(1.0, tNorm));
         const xPos = parseFloat((cfg.x_min + tNorm * plotW).toFixed(1));
@@ -252,6 +268,20 @@ function run(input) {
         const distClamped = Math.max(MIN_LD, Math.min(MAX_LD, item.miss_distance_ld));
         const dNorm = Math.max(0.0, Math.min(1.0, (Math.log10(distClamped) - LOG_MIN) / LOG_RANGE));
         const yPos = parseFloat((cfg.y_max - dNorm * plotH).toFixed(1));
+
+        // Overlap check
+        let overlap = false;
+        for (let j = 0; j < selectedAsteroids.length; j++) {
+          const ex = selectedAsteroids[j];
+          const dx = Math.abs(xPos - ex.x);
+          const dy = Math.abs(yPos - ex.y);
+          if ((dx < cfg.min_dx && dy < cfg.min_dy) || (dx * dx + dy * dy < cfg.min_r_sq)) {
+            overlap = true;
+            break;
+          }
+        }
+
+        if (overlap) continue;
 
         let r = 4;
         if (item.avg_diameter < 30) r = 3;
@@ -267,7 +297,7 @@ function run(input) {
         if (labelX > cfg.width - 25) { labelX = xPos - r - 3; anchor = "end"; }
         if (labelX < 5) { labelX = xPos + r + 3; anchor = "start"; }
 
-        return {
+        selectedAsteroids.push({
           name: item.name,
           x: xPos,
           y: yPos,
@@ -277,10 +307,10 @@ function run(input) {
           anchor: anchor,
           is_hazardous: !!item.is_hazardous,
           dist_ld: parseFloat(item.miss_distance_ld.toFixed(1))
-        };
-      }).filter(a => isFinite(a.x) && isFinite(a.y));
+        });
+      }
 
-      result[`chart_asteroids_${key}`] = asteroids;
+      result[`chart_asteroids_${key}`] = selectedAsteroids.filter(a => isFinite(a.x) && isFinite(a.y));
       result[`chart_ticks_${key}`] = ticks;
       result[`chart_gridlines_${key}`] = gridlines;
     });
