@@ -1,6 +1,6 @@
 /**
  * TRMNL Serverless Transform Script for "Asteroids" (NEO Timeline Monitor)
- * Supports future 7-day timeline calculation and precalculated payload pass-through.
+ * Supports future 7-day timeline calculation with logarithmic distance Y-axis.
  */
 
 function cleanAsteroidName(rawName) {
@@ -22,35 +22,37 @@ function run(input) {
       width: 360, height: 260,
       x_min: 40, x_max: 345,
       y_min: 25, y_max: 230,
-      max_ld: 40.0,
-      grid_levels: [10, 20, 30, 40],
-      limit: 12
+      grid_levels: [2, 5, 10, 25, 50, 100, 200],
+      limit: 18
     },
     half_horizontal: {
       width: 260, height: 150,
       x_min: 35, x_max: 245,
       y_min: 18, y_max: 128,
-      max_ld: 40.0,
-      grid_levels: [10, 20, 30, 40],
-      limit: 6
+      grid_levels: [5, 20, 100, 200],
+      limit: 8
     },
     half_vertical: {
       width: 360, height: 180,
       x_min: 40, x_max: 345,
       y_min: 20, y_max: 155,
-      max_ld: 40.0,
-      grid_levels: [10, 20, 30, 40],
-      limit: 8
+      grid_levels: [5, 20, 50, 100, 200],
+      limit: 12
     },
     quadrant: {
       width: 160, height: 120,
       x_min: 25, x_max: 145,
       y_min: 15, y_max: 100,
-      max_ld: 40.0,
-      grid_levels: [20, 40],
-      limit: 4
+      grid_levels: [10, 50, 200],
+      limit: 6
     }
   };
+
+  const MIN_LD = 1.0;
+  const MAX_LD = 200.0;
+  const LOG_MIN = Math.log10(MIN_LD);
+  const LOG_MAX = Math.log10(MAX_LD);
+  const LOG_RANGE = LOG_MAX - LOG_MIN;
 
   const emptyPayload = {
     scan_completed: false,
@@ -211,12 +213,16 @@ function run(input) {
       const plotW = cfg.x_max - cfg.x_min;
       const plotH = cfg.y_max - cfg.y_min;
 
-      // Gridlines
-      const gridlines = cfg.grid_levels.map(level => ({
-        y: parseFloat((cfg.y_max - (level / cfg.max_ld) * plotH).toFixed(1)),
-        label: `${level} LD`,
-        x_label: cfg.x_min - 4
-      }));
+      // Logarithmic Gridlines
+      const gridlines = cfg.grid_levels.map(level => {
+        const logVal = Math.log10(Math.max(MIN_LD, level));
+        const norm = (logVal - LOG_MIN) / LOG_RANGE;
+        return {
+          y: parseFloat((cfg.y_max - norm * plotH).toFixed(1)),
+          label: `${level} LD`,
+          x_label: cfg.x_min - 4
+        };
+      });
 
       // Ticks (0d to +7d)
       const ticks = [];
@@ -234,8 +240,8 @@ function run(input) {
         });
       }
 
-      // Asteroid dots
-      const inRange = candidates.filter(c => c.miss_distance_ld <= cfg.max_ld);
+      // Asteroid dots mapped to log distance
+      const inRange = candidates.filter(c => c.miss_distance_ld <= MAX_LD);
       const sorted = inRange.sort((a, b) => a.miss_distance_ld - b.miss_distance_ld).slice(0, cfg.limit);
 
       const asteroids = sorted.map(item => {
@@ -243,8 +249,8 @@ function run(input) {
         tNorm = Math.max(0.0, Math.min(1.0, tNorm));
         const xPos = parseFloat((cfg.x_min + tNorm * plotW).toFixed(1));
 
-        let dNorm = item.miss_distance_ld / cfg.max_ld;
-        dNorm = Math.max(0.0, Math.min(1.0, dNorm));
+        const distClamped = Math.max(MIN_LD, Math.min(MAX_LD, item.miss_distance_ld));
+        const dNorm = Math.max(0.0, Math.min(1.0, (Math.log10(distClamped) - LOG_MIN) / LOG_RANGE));
         const yPos = parseFloat((cfg.y_max - dNorm * plotH).toFixed(1));
 
         let r = 4;

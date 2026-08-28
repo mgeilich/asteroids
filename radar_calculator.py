@@ -19,9 +19,9 @@ def clean_asteroid_name(raw_name: str) -> str:
 
 def calculate_telemetry(raw_data: Optional[Dict[str, Any]]) -> Dict[str, Any]:
     """
-    Parses NASA NeoWS feed data and computes linear timeline coordinates and metrics.
+    Parses NASA NeoWS feed data and computes log-scale linear timeline coordinates and metrics.
     X-axis is Time starting at NOW (left) and extending +7 days into the future (right).
-    Y-axis is Distance in Lunar Distances (LD) from 0 LD (Earth) up to 40 LD.
+    Y-axis is Distance in Lunar Distances (LD) on a LOGARITHMIC scale from 1 LD (Earth baseline) to 200 LD.
     """
     now = datetime.datetime.now(datetime.timezone.utc)
     last_updated_str = now.strftime("%b %d, %H:%M UTC")
@@ -60,6 +60,13 @@ def calculate_telemetry(raw_data: Optional[Dict[str, Any]]) -> Dict[str, Any]:
     
     candidates = []
     total_objects_in_range = 0
+    
+    # Log scale bounds
+    MIN_LD = 1.0
+    MAX_LD = 200.0
+    LOG_MIN = math.log10(MIN_LD)
+    LOG_MAX = math.log10(MAX_LD)
+    LOG_RANGE = LOG_MAX - LOG_MIN
     
     # Iterate through near_earth_objects dictionary
     neo_dict = raw_data["near_earth_objects"]
@@ -145,39 +152,35 @@ def calculate_telemetry(raw_data: Optional[Dict[str, Any]]) -> Dict[str, Any]:
                 "time_str": time_str
             })
             
-    # Chart coordinate setups for each layout
+    # Chart coordinate setups for each layout with Logarithmic Y-axis
     layouts = {
         "full": {
             "width": 360, "height": 260,
             "x_min": 40, "x_max": 345,
             "y_min": 25, "y_max": 230,
-            "max_ld": 40.0,
-            "grid_levels": [10, 20, 30, 40],
-            "limit": 12
+            "grid_levels": [2, 5, 10, 25, 50, 100, 200],
+            "limit": 18
         },
         "half_horizontal": {
             "width": 260, "height": 150,
             "x_min": 35, "x_max": 245,
             "y_min": 18, "y_max": 128,
-            "max_ld": 40.0,
-            "grid_levels": [10, 20, 30, 40],
-            "limit": 6
+            "grid_levels": [5, 20, 100, 200],
+            "limit": 8
         },
         "half_vertical": {
             "width": 360, "height": 180,
             "x_min": 40, "x_max": 345,
             "y_min": 20, "y_max": 155,
-            "max_ld": 40.0,
-            "grid_levels": [10, 20, 30, 40],
-            "limit": 8
+            "grid_levels": [5, 20, 50, 100, 200],
+            "limit": 12
         },
         "quadrant": {
             "width": 160, "height": 120,
             "x_min": 25, "x_max": 145,
             "y_min": 15, "y_max": 100,
-            "max_ld": 40.0,
-            "grid_levels": [20, 40],
-            "limit": 4
+            "grid_levels": [10, 50, 200],
+            "limit": 6
         }
     }
     
@@ -190,12 +193,13 @@ def calculate_telemetry(raw_data: Optional[Dict[str, Any]]) -> Dict[str, Any]:
         y_max = cfg["y_max"]
         plot_w = x_max - x_min
         plot_h = y_max - y_min
-        max_ld = cfg["max_ld"]
         
-        # 1. Compute Horizontal Distance Gridlines
+        # 1. Compute Horizontal Distance Gridlines using Logarithmic scale
         gridlines = []
         for level in cfg["grid_levels"]:
-            y_pos = round(y_max - (level / max_ld) * plot_h, 1)
+            log_val = math.log10(max(MIN_LD, level))
+            norm = (log_val - LOG_MIN) / LOG_RANGE
+            y_pos = round(y_max - norm * plot_h, 1)
             gridlines.append({
                 "y": y_pos,
                 "label": f"{level} LD",
@@ -222,8 +226,8 @@ def calculate_telemetry(raw_data: Optional[Dict[str, Any]]) -> Dict[str, Any]:
                 "y_label": y_max + 14
             })
             
-        # 3. Compute Asteroid Coordinates
-        radar_candidates = [c for c in candidates if c["miss_distance_ld"] <= max_ld]
+        # 3. Compute Asteroid Coordinates using Logarithmic distance
+        radar_candidates = [c for c in candidates if c["miss_distance_ld"] <= MAX_LD]
         radar_candidates = sorted(radar_candidates, key=lambda c: c["miss_distance_ld"])[:cfg["limit"]]
         
         asteroids_payload = []
@@ -233,8 +237,9 @@ def calculate_telemetry(raw_data: Optional[Dict[str, Any]]) -> Dict[str, Any]:
             t_norm = max(0.0, min(1.0, t_norm))
             x_pos = x_min + t_norm * plot_w
             
-            # Y coordinate: Linear distance (0 LD is at y_max, max_ld is at y_min)
-            d_norm = item["miss_distance_ld"] / max_ld
+            # Y coordinate: Logarithmic distance from 1 LD (y_max) to 200 LD (y_min)
+            dist_clamped = max(MIN_LD, min(MAX_LD, item["miss_distance_ld"]))
+            d_norm = (math.log10(dist_clamped) - LOG_MIN) / LOG_RANGE
             d_norm = max(0.0, min(1.0, d_norm))
             y_pos = y_max - d_norm * plot_h
             
