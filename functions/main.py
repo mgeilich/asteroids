@@ -22,42 +22,44 @@ def neo_radar(req: https_fn.Request) -> https_fn.Response:
     Utilizes Firestore to cache responses to stay within NASA API rate limits.
     """
     db = firestore.client()
-    cache_ref = db.collection("cache").document("neo_telemetry")
+    cache_ref = db.collection("cache").document("neo_telemetry_v2")
+    force_refresh = req.args.get("refresh") in ("true", "1", "yes")
     
     now = datetime.datetime.now(datetime.timezone.utc)
     
-    # Try reading from Firestore cache
+    # Try reading from Firestore cache (unless force_refresh is requested)
     cached_doc = None
-    try:
-        cached_doc = cache_ref.get()
-    except Exception as e:
-        logger.error(f"Error reading from Firestore cache: {e}")
+    if not force_refresh:
+        try:
+            cached_doc = cache_ref.get()
+        except Exception as e:
+            logger.error(f"Error reading from Firestore cache: {e}")
 
-    # If cache exists, check freshness (1 hour cache TTL)
-    if cached_doc and cached_doc.exists:
-        cache_data = cached_doc.to_dict()
-        cached_at_str = cache_data.get("cached_at")
-        
-        if cached_at_str:
-            try:
-                cached_at = datetime.datetime.fromisoformat(cached_at_str)
-                age = now - cached_at
-                
-                if age < datetime.timedelta(hours=1):
-                    logger.info("Serving telemetry from fresh Firestore cache.")
-                    return https_fn.Response(
-                        json.dumps(cache_data["payload"]),
-                        mimetype="application/json"
-                    )
-            except Exception as ex:
-                logger.error(f"Failed to parse cached_at timestamp: {ex}")
+        # If cache exists, check freshness (1 hour cache TTL)
+        if cached_doc and cached_doc.exists:
+            cache_data = cached_doc.to_dict()
+            cached_at_str = cache_data.get("cached_at")
+            
+            if cached_at_str:
+                try:
+                    cached_at = datetime.datetime.fromisoformat(cached_at_str)
+                    age = now - cached_at
+                    
+                    if age < datetime.timedelta(hours=1):
+                        logger.info("Serving telemetry from fresh Firestore cache.")
+                        return https_fn.Response(
+                            json.dumps(cache_data["payload"]),
+                            mimetype="application/json"
+                        )
+                except Exception as ex:
+                    logger.error(f"Failed to parse cached_at timestamp: {ex}")
     
-    # Cache is stale or missing; fetch fresh data from NASA for next 7 days
+    # Cache is stale, missing, or force-refreshed; fetch fresh data from NASA for next 7 days
     api_key = req.args.get("nasa_api_key") or os.environ.get("NASA_API_KEY", "DEMO_KEY")
     start_date = now.strftime("%Y-%m-%d")
     end_date = (now + datetime.timedelta(days=7)).strftime("%Y-%m-%d")
     
-    logger.info(f"Cache stale or missing. Fetching fresh NASA NEO feed ({start_date} to {end_date})...")
+    logger.info(f"Fetching fresh NASA NEO feed ({start_date} to {end_date})...")
     raw_data = fetch_neo_feed(start_date, end_date, api_key)
     
     if raw_data:
