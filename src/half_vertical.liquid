@@ -24,7 +24,7 @@
               {% endif %}
             {% endfor %}
           </g>
-          <g fill="#000" class="label label--small">
+          <g fill="#000">
             {% for line in chart_gridlines_half_vertical %}
               {% if line and line.y and line.label %}
                 <text x="{{ line.x_label | default: 44 }}" y="{{ line.y }}" dy="3" text-anchor="end">
@@ -37,7 +37,7 @@
         {% endif %}
 
         <!-- Header Labels -->
-        <g fill="#000" class="label label--small">
+        <g fill="#000" font-weight="bold">
           <text x="48" y="12" text-anchor="start">NOW (T-0)</text>
           <text x="350" y="12" text-anchor="end">T+7 DAYS</text>
         </g>
@@ -51,7 +51,7 @@
               {% endif %}
             {% endfor %}
           </g>
-          <g fill="#000" class="label label--small">
+          <g fill="#000">
             {% for tick in chart_ticks_half_vertical %}
               {% if tick and tick.x and tick.label and tick.is_now != true %}
                 <text x="{{ tick.x }}" y="{{ tick.y_label | default: 150 }}" text-anchor="middle">
@@ -71,7 +71,7 @@
               {% endif %}
             {% endfor %}
           </g>
-          <g fill="#000" class="label label--small" clip-path="url(#chart-clip-half-v)">
+          <g fill="#000" clip-path="url(#chart-clip-half-v)">
             {% for ast in chart_asteroids_half_vertical %}
               {% if ast and ast.label_x and ast.label_y and ast.name %}
                 <text x="{{ ast.label_x }}" y="{{ ast.label_y }}" text-anchor="{{ ast.anchor | default: 'start' }}">
@@ -81,7 +81,7 @@
             {% endfor %}
           </g>
         {% else %}
-          <g fill="#000" class="label">
+          <g fill="#000">
             <text x="192.5" y="80" text-anchor="middle">NO ASTEROIDS IN RANGE</text>
           </g>
         {% endif %}
@@ -97,9 +97,9 @@
       
       <div class="flex flex--row flex--center-y gap--xsmall ml--auto">
         {% if is_alert %}
-          <span class="label label--warning px--1 py--0.5"><strong>ALERT</strong></span>
+          <span class="label label--filled px--1 py--0.5"><strong>ALERT</strong></span>
         {% else %}
-          <span class="label label--primary px--1 py--0.5"><strong>NOMINAL</strong></span>
+          <span class="label label--outline px--1 py--0.5"><strong>NOMINAL</strong></span>
         {% endif %}
       </div>
       
@@ -123,7 +123,7 @@
             <div class="text--right flex flex--col layout--right">
               <div class="value value--small" data-clamp="1">{{ item.dist_ld | default: '—' }} LD</div>
               {% if item.is_hazardous == true %}
-                <span class="label label--warning px--1"><strong>HAZARD</strong></span>
+                <span class="label label--filled px--1"><strong>HAZARD</strong></span>
               {% endif %}
             </div>
           </div>

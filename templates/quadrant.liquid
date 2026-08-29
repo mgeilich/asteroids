@@ -5,9 +5,9 @@
       <div class="title title--small">ASTEROIDS</div>
       <div class="ml--auto">
         {% if is_alert %}
-          <span class="label label--warning px--1 py--0.5"><strong>ALERT</strong></span>
+          <span class="label label--filled px--1 py--0.5"><strong>ALERT</strong></span>
         {% else %}
-          <span class="label label--primary px--1 py--0.5"><strong>NOMINAL</strong></span>
+          <span class="label label--outline px--1 py--0.5"><strong>NOMINAL</strong></span>
         {% endif %}
       </div>
     </div>
@@ -28,6 +28,11 @@
         <span class="label label--small">MAX SIZE</span>
         <span class="value value--small">{{ max_size_m | default: '—' }}</span>
       </div>
+    </div>
+
+    <!-- Micro-Status Callout -->
+    <div class="rounded bg--gray-75 p--0.5 flex flex--row flex--center-x w--full">
+      <span class="label label--small">{% if is_alert %}<strong>HAZARD DETECTED IN SECTOR</strong>{% else %}ALL FLYBYS SAFE (NOMINAL){% endif %}</span>
     </div>
   {% else %}
     <div class="p--2 label">

@@ -1,7 +1,10 @@
 /**
  * TRMNL Serverless Transform Script for "Asteroids" (NEO Timeline Monitor)
- * Supports future 7-day timeline calculation with logarithmic distance Y-axis,
- * greedy collision prevention, and label boundary clamping.
+ * 
+ * Supports 3 data ingestion modes:
+ * 1. Precalculated backend payload (from Cloud Functions / proxy cache)
+ * 2. Raw NASA NeoWS API feed (near_earth_objects dictionary)
+ * 3. Static/sample candidate payload (settings.yml test data)
  */
 
 function cleanAsteroidName(rawName) {
@@ -93,7 +96,7 @@ function run(input) {
     const end_ms = now_ms + (7 * 24 * 3600 * 1000);
     const total_window_ms = end_ms - now_ms;
 
-    // Check if valid precalculated payload is provided
+    // Mode 1: Precalculated layout payload
     const hasPrecomputed = input &&
       Array.isArray(input.chart_ticks_full) && input.chart_ticks_full.length > 0 &&
       Array.isArray(input.chart_asteroids_full);
@@ -124,9 +127,34 @@ function run(input) {
       };
     }
 
-    // Dynamic computation from candidates
+    // Mode 2 & 3: Ingest from raw NASA NeoWS feed or candidates list
     let rawCandidates = [];
-    if (Array.isArray(input.candidates)) {
+    if (input.near_earth_objects && typeof input.near_earth_objects === 'object') {
+      Object.keys(input.near_earth_objects).forEach(dateKey => {
+        const list = input.near_earth_objects[dateKey];
+        if (Array.isArray(list)) {
+          list.forEach(ast => {
+            if (ast && ast.close_approach_data && ast.close_approach_data.length > 0) {
+              const app = ast.close_approach_data[0];
+              const epoch = Number(app.epoch_date_close_approach);
+              if (epoch && epoch >= now_ms && epoch <= end_ms) {
+                const diamMin = (ast.estimated_diameter && ast.estimated_diameter.meters) ? ast.estimated_diameter.meters.estimated_diameter_min : 50;
+                const diamMax = (ast.estimated_diameter && ast.estimated_diameter.meters) ? ast.estimated_diameter.meters.estimated_diameter_max : 150;
+                rawCandidates.push({
+                  id: ast.id,
+                  name: ast.name,
+                  miss_distance_ld: parseFloat(app.miss_distance ? app.miss_distance.lunar : 10) || 10,
+                  velocity_kph: parseFloat(app.relative_velocity ? app.relative_velocity.kilometers_per_hour : 35000) || 35000,
+                  avg_diameter: (diamMin + diamMax) / 2,
+                  is_hazardous: Boolean(ast.is_potentially_hazardous_asteroid),
+                  epoch: epoch
+                });
+              }
+            }
+          });
+        }
+      });
+    } else if (Array.isArray(input.candidates)) {
       rawCandidates = input.candidates;
     }
 
