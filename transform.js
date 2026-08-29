@@ -294,15 +294,12 @@ function run(input) {
 
         let labelX = xPos + r + 3;
         let anchor = "start";
-        if (xPos > cfg.x_max - 30) {
+        if (xPos + r + 3 > cfg.x_max - 15 || xPos + r + 28 > cfg.width) {
           labelX = xPos - r - 3;
           anchor = "end";
-        } else if (xPos < cfg.x_min + 20) {
+        } else if (xPos - r - 3 < cfg.x_min + 5) {
           labelX = xPos + r + 3;
           anchor = "start";
-        } else if (labelX > cfg.width - 25) {
-          labelX = xPos - r - 3;
-          anchor = "end";
         } else {
           labelX = xPos + r + 3;
           anchor = "start";

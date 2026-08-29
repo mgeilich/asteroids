@@ -281,16 +281,13 @@ def calculate_telemetry(raw_data: Optional[Dict[str, Any]]) -> Dict[str, Any]:
             elif name == "half_horizontal":
                 r = max(3, int(r * 0.8))
                 
-            # Label position with boundary protection
-            if x_pos > cfg["x_max"] - 30:
+            # Label position with safe boundary check
+            if x_pos + r + 3 > cfg["x_max"] - 15 or x_pos + r + 28 > cfg["width"]:
                 label_x = x_pos - r - 3
                 anchor = "end"
-            elif x_pos < cfg["x_min"] + 20:
+            elif x_pos - r - 3 < cfg["x_min"] + 5:
                 label_x = x_pos + r + 3
                 anchor = "start"
-            elif label_x > cfg["width"] - 25:
-                label_x = x_pos - r - 3
-                anchor = "end"
             else:
                 label_x = x_pos + r + 3
                 anchor = "start"
