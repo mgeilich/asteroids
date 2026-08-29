@@ -45,16 +45,6 @@
 {% assign chart_gridlines_quadrant = data.chart_gridlines_quadrant | default: chart_gridlines_quadrant %}
 {% assign now_x_quadrant = data.now_x_quadrant | default: 85 %}
 
-<style>
-  .svg-text { fill: #000; font-family: sans-serif; font-size: 10px; }
-  .svg-text--bold { font-weight: bold; }
-  .svg-text--small { font-size: 9px; }
-  .svg-text--tiny { font-size: 8px; }
-  .svg-text--start { text-anchor: start; }
-  .svg-text--end { text-anchor: end; }
-  .svg-text--middle { text-anchor: middle; }
-</style>
-
 {% template title_bar %}
   <div class="title_bar">
     <svg class="image image-stroke image-stroke--medium" width="24" height="24" viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">

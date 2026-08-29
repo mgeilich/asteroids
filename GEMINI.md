@@ -2,7 +2,15 @@
 
 Always follow these guidelines when editing or deploying files in this repository:
 
-## 1. Title Bar Architecture & Sibling Placement
+## 1. Zero Custom `<style>` Blocks Rule
+* **Rule**: NEVER include `<style>` blocks or custom CSS anywhere in `templates/`, `src/`, or `shared.liquid`. The TRMNL framework forbids custom style tags.
+* **SVG Text Styling**: Use standard SVG `<text>` and `<tspan>` attributes (`fill="#000"`, `text-anchor="..."`, `font-weight="bold"`, `dy="3"`, `font-size="..."` if necessary) or let default SVG rendering handle font families.
+
+## 2. Strict Offline / Empty Data Handling in `transform.js`
+* **Rule**: If `input` is empty `{}` or lacks `chart_ticks_full` (precomputed), `near_earth_objects` (NASA raw), or `candidates` (static demo list), `transform.js` MUST return `emptyPayload` with `scan_completed: false`.
+* Never synthesize fake asteroids when the API fails or returns `{}` — show the offline message so users know telemetry is unreachable.
+
+## 3. Title Bar Template & Sibling Placement
 * **Rule**: Define the title bar template inside `templates/shared.liquid` (and `src/shared.liquid`) using:
   ```liquid
   {% template title_bar %}
@@ -19,63 +27,31 @@ Always follow these guidelines when editing or deploying files in this repositor
   <!-- class="layout" -->
   ```
 * In every view file (`full.liquid`, `half_horizontal.liquid`, `half_vertical.liquid`, `quadrant.liquid`), place `{% render 'title_bar' %}` at the very end of the file, directly after the closing `</div>` of the root `<div class="layout">`.
-* **Icon Class**: The `<svg>` icon inside the title bar must always include `class="image image-stroke image-stroke--medium"` for clean 1-bit e-ink rendering.
 
-## 2. SVG Text & Typography Styling
-* **Rule**: Do not use framework HTML utility classes (such as `class="label label--small"`) directly on SVG `<text>` or `<g>` tags.
-* **CSS Classes via `shared.liquid`**: Define centralized SVG text utility classes in a `<style>` block inside `shared.liquid`:
-  ```html
-  <style>
-    .svg-text { fill: #000; font-family: sans-serif; font-size: 10px; }
-    .svg-text--bold { font-weight: bold; }
-    .svg-text--small { font-size: 9px; }
-    .svg-text--tiny { font-size: 8px; }
-    .svg-text--start { text-anchor: start; }
-    .svg-text--end { text-anchor: end; }
-    .svg-text--middle { text-anchor: middle; }
-  </style>
-  ```
-* Apply these classes (`class="svg-text"`, `class="svg-text--bold"`, `class="svg-text--start"`, etc.) to SVG `<g>` and `<text>` elements.
-
-## 3. Explicit 1-bit SVG Fills, Strokes, and Aspect Ratio
-* **Rule**: Use explicit `#000` fills and strokes inside SVGs instead of `currentColor` for predictable 1-bit e-ink rendering:
-  - Hazardous Asteroids: `<circle ... fill="#000" stroke="#000" />` (solid black)
-  - Non-Hazardous Asteroids: `<circle ... fill="none" stroke="#000" />` (clean outline)
-  - Axes & Gridlines: `stroke="#000"`
-  - Text: `fill="#000"`
-* **Aspect Ratio**: Every SVG must include `preserveAspectRatio="xMidYMid meet"` along with explicit `width`, `height`, and `viewBox` attributes.
-
-## 4. Grid System & Column Spans
+## 4. `settings.yml` Custom Fields & `learn_more_url`
 * **Rule**:
-  - In a 2-column grid (`<div class="grid grid--cols-2 portrait:grid--cols-1 ...">`), do **NOT** use `col--span-1` on child `<div>` containers. Children automatically span 1 column each.
-  - In a 12-column grid (`<div class="grid grid--cols-12 portrait:grid--cols-1 gap--small ...">`), use matching spans totaling 12 (e.g. `col--span-5 portrait:col--span-12` and `col--span-7 portrait:col--span-12`).
-  - Use explicit `gap--*` utilities on `grid` containers for intentional column spacing.
+  - Always include `api_key` custom field under `custom_fields` for optional user-provided NASA API keys.
+  - Always include `author_bio` custom field with `learn_more_url: https://api.nasa.gov/#neo`.
+  - Keep `description` under 35 characters.
 
-## 5. Universal 1-bit Badge Classes
-* **Rule**: Use TRMNL's universal monochrome badge classes that render reliably across all hardware generations:
-  - **ALERT / HAZARD**: `label label--filled` (solid black badge with white text)
-  - **NOMINAL / SAFE**: `label label--outline` (outlined badge with black text)
-  - Avoid unverified color-only semantic classes like `label--primary` or `label--warning`.
-
-## 6. Deterministic Alert Flag & Transform Ingestion
+## 5. Grid System & Flex Placement
 * **Rule**:
-  - `radar_calculator.py` and `transform.js` must return an explicit boolean `"is_alert": bool(...)` and `"scan_completed": True`.
-  - `shared.liquid` evaluates `is_alert` directly without fragile string-parsing (`status_lower contains "warning"`).
-  - In `transform.js`, synthetic demo data must only flag `is_alert: true` when matching real hazard criteria (`warningActive`).
-  - `transform.js` must support precalculated payloads (`input.chart_ticks_full`), direct NASA NeoWS JSON (`input.near_earth_objects`), and candidate lists (`input.candidates`).
+  - In a 2-column grid (`grid--cols-2`), do NOT use `col--span-1`.
+  - In a 12-column grid (`grid--cols-12`), use matching spans (`col--span-5` and `col--span-7`) with explicit `gap--*` utilities.
+  - Use `ml--auto` only inside flex containers (`flex flex--row`).
 
-## 7. Metadata & `settings.yml` Documentation Links
-* **Rule**:
-  - In `settings.yml` and `src/settings.yml`, the `learn_more_url` under `author_bio` must point specifically to the NeoWS API documentation (`https://api.nasa.gov/#neo`).
-  - Keep the plugin description under 35 characters (`Near-Earth asteroid timeline`).
+## 6. Universal 1-bit Badge Classes
+* **Rule**: Use TRMNL's universal monochrome badge classes:
+  - **ALERT / HAZARD**: `label label--filled`
+  - **NOMINAL / SAFE**: `label label--outline`
 
-## 8. Dual File Synchronization
-* **Rule**: Keep files in `src/` (`src/shared.liquid`, `src/full.liquid`, `src/half_horizontal.liquid`, `src/half_vertical.liquid`, `src/quadrant.liquid`, `src/transform.js`, `src/settings.yml`) identical to their counterparts in `templates/` and project root.
+## 7. Dual File Synchronization
+* **Rule**: Keep files in `src/` identical to their counterparts in `templates/` and root.
 
-## 9. Automated Git Synchronization & Verification Workflow
+## 8. Verification Workflow
 * **Rule**: Whenever changes are made:
-  1. Test locally: `export LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 && /usr/local/lib/ruby/gems/4.0.0/bin/trmnlp lint`
-  2. Build previews: `export LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 && /usr/local/lib/ruby/gems/4.0.0/bin/trmnlp build`
-  3. Push to TRMNL: `export LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 && echo "y" | /usr/local/lib/ruby/gems/4.0.0/bin/trmnlp push`
-  4. Deploy Firebase (when backend changes): `firebase deploy --project neo-radar-trmnl-2026 --only functions:neo_radar`
-  5. Stage, commit, and push to git: `git add -A && git commit -m "..." && git push`
+  1. `export LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 && /usr/local/lib/ruby/gems/4.0.0/bin/trmnlp lint`
+  2. `export LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 && /usr/local/lib/ruby/gems/4.0.0/bin/trmnlp build`
+  3. `export LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 && echo "y" | /usr/local/lib/ruby/gems/4.0.0/bin/trmnlp push`
+  4. Deploy Firebase if backend changed: `firebase deploy --project neo-radar-trmnl-2026 --only functions:neo_radar`
+  5. Commit and push to git: `git add -A && git commit -m "..." && git push`

@@ -88,7 +88,7 @@ function run(input) {
   };
 
   try {
-    if (!input || typeof input !== 'object') {
+    if (!input || typeof input !== 'object' || Object.keys(input).length === 0) {
       return emptyPayload;
     }
 
@@ -160,16 +160,19 @@ function run(input) {
           });
         }
       });
-    } else if (Array.isArray(input.candidates)) {
+    } else if (Array.isArray(input.candidates) && input.candidates.length > 0) {
       rawCandidates = input.candidates;
+    }
+
+    // If no valid candidates or payload data found, return scan_completed: false
+    if (rawCandidates.length === 0) {
+      return emptyPayload;
     }
 
     let candidates = [];
     let isSynthetic = false;
 
-    // Fallback Note: For static mock testing/demo data where epoch timestamps are omitted or zero,
-    // we calculate a synthetic upcoming epoch spaced across the 7-day radar window so that demo asteroids
-    // appear visibly on the timeline rather than dropping off as past events.
+    // For test data where epochs are omitted, compute relative test schedule
     rawCandidates.forEach((c, idx) => {
       let epoch = Number(c.epoch);
       if (!epoch || isNaN(epoch) || epoch === 0 || epoch < now_ms) {
@@ -191,19 +194,6 @@ function run(input) {
         is_past: false
       });
     });
-
-    // If no candidates
-    if (candidates.length === 0) {
-      return {
-        ...emptyPayload,
-        scan_completed: true,
-        system_status: "SYSTEM STATUS: NOMINAL // CLEAR SPACE",
-        is_alert: false,
-        total_count: 0,
-        upcoming_count: 0,
-        last_updated: now.toUTCString()
-      };
-    }
 
     // Sort & compute metrics
     const sortedByDist = [...candidates].sort((a, b) => a.miss_distance_ld - b.miss_distance_ld);

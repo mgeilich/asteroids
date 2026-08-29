@@ -26,22 +26,22 @@
                 {% endif %}
               {% endfor %}
             </g>
-            <g class="svg-text svg-text--small svg-text--end">
+            <g fill="#000">
               {% for line in chart_gridlines_half_horizontal %}
                 {% if line and line.y and line.label %}
-                  <text x="{{ line.x_label | default: 44 }}" y="{{ line.y }}" dy="3">
+                  <text x="{{ line.x_label | default: 44 }}" y="{{ line.y }}" dy="3" text-anchor="end">
                     {{- line.label -}}
                   </text>
                 {% endif %}
               {% endfor %}
-              <text x="44" y="128" dy="3">Earth</text>
+              <text x="44" y="128" dy="3" text-anchor="end">Earth</text>
             </g>
           {% endif %}
 
           <!-- Header Labels -->
-          <g class="svg-text svg-text--small svg-text--bold">
-            <text x="48" y="14" class="svg-text--start">NOW (T-0)</text>
-            <text x="270" y="14" class="svg-text--end">T+7D</text>
+          <g fill="#000" font-weight="bold">
+            <text x="48" y="14" text-anchor="start">NOW (T-0)</text>
+            <text x="270" y="14" text-anchor="end">T+7D</text>
           </g>
 
           <!-- Time Ticks along Bottom X-axis -->
@@ -53,10 +53,10 @@
                 {% endif %}
               {% endfor %}
             </g>
-            <g class="svg-text svg-text--small svg-text--middle">
+            <g fill="#000">
               {% for tick in chart_ticks_half_horizontal %}
                 {% if tick and tick.x and tick.label and tick.is_now != true %}
-                  <text x="{{ tick.x }}" y="{{ tick.y_label | default: 142 }}">
+                  <text x="{{ tick.x }}" y="{{ tick.y_label | default: 142 }}" text-anchor="middle">
                     {{- tick.label -}}
                   </text>
                 {% endif %}
@@ -73,18 +73,18 @@
                 {% endif %}
               {% endfor %}
             </g>
-            <g class="svg-text svg-text--tiny" clip-path="url(#chart-clip-half-h)">
+            <g fill="#000" clip-path="url(#chart-clip-half-h)">
               {% for ast in chart_asteroids_half_horizontal %}
                 {% if ast and ast.label_x and ast.label_y and ast.name %}
-                  <text x="{{ ast.label_x }}" y="{{ ast.label_y }}" class="svg-text--{{ ast.anchor | default: 'start' }}">
+                  <text x="{{ ast.label_x }}" y="{{ ast.label_y }}" text-anchor="{{ ast.anchor | default: 'start' }}">
                     {{- ast.name -}}
                   </text>
                 {% endif %}
               {% endfor %}
             </g>
           {% else %}
-            <g class="svg-text svg-text--middle">
-              <text x="160" y="75">NO ASTEROIDS IN RANGE</text>
+            <g fill="#000">
+              <text x="160" y="75" text-anchor="middle">NO ASTEROIDS IN RANGE</text>
             </g>
           {% endif %}
         </svg>
