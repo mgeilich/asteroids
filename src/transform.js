@@ -65,6 +65,7 @@ function run(input) {
   const emptyPayload = {
     scan_completed: false,
     system_status: "SYSTEM OFFLINE: NO DATA",
+    is_alert: false,
     total_count: "—",
     upcoming_count: "—",
     closest_dist_ld: "—",
@@ -96,15 +97,20 @@ function run(input) {
     const end_ms = now_ms + (7 * 24 * 3600 * 1000);
     const total_window_ms = end_ms - now_ms;
 
-    // Mode 1: Precalculated layout payload
+    // Mode 1: Precalculated layout payload (from backend Cloud Function)
     const hasPrecomputed = input &&
       Array.isArray(input.chart_ticks_full) && input.chart_ticks_full.length > 0 &&
       Array.isArray(input.chart_asteroids_full);
 
     if (hasPrecomputed) {
+      const isPrecomputedAlert = (input.is_alert !== undefined && input.is_alert !== null) 
+        ? Boolean(input.is_alert)
+        : (input.system_status ? (input.system_status.toLowerCase().includes("warning") || input.system_status.toLowerCase().includes("alert")) : false);
+
       return {
         scan_completed: true,
         system_status: input.system_status || "SYSTEM NOMINAL",
+        is_alert: isPrecomputedAlert,
         total_count: (input.total_count !== undefined && input.total_count !== null) ? input.total_count : (input.chart_asteroids_full ? input.chart_asteroids_full.length : "—"),
         upcoming_count: (input.upcoming_count !== undefined && input.upcoming_count !== null) ? input.upcoming_count : "—",
         closest_dist_ld: input.closest_dist_ld || "—",
@@ -161,6 +167,9 @@ function run(input) {
     let candidates = [];
     let isSynthetic = false;
 
+    // Fallback Note: For static mock testing/demo data where epoch timestamps are omitted or zero,
+    // we calculate a synthetic upcoming epoch spaced across the 7-day radar window so that demo asteroids
+    // appear visibly on the timeline rather than dropping off as past events.
     rawCandidates.forEach((c, idx) => {
       let epoch = Number(c.epoch);
       if (!epoch || isNaN(epoch) || epoch === 0 || epoch < now_ms) {
@@ -189,6 +198,7 @@ function run(input) {
         ...emptyPayload,
         scan_completed: true,
         system_status: "SYSTEM STATUS: NOMINAL // CLEAR SPACE",
+        is_alert: false,
         total_count: 0,
         upcoming_count: 0,
         last_updated: now.toUTCString()
@@ -231,6 +241,7 @@ function run(input) {
     const result = {
       scan_completed: true,
       system_status: isSynthetic ? "DEMO MODE: SAMPLE ASTEROID DATA" : (warningActive ? "WARNING: POTENTIALLY HAZARDOUS OBJECT IN SECTOR" : "SYSTEM STATUS: NOMINAL // ALL ENCOUNTERS SAFE"),
+      is_alert: warningActive || isSynthetic,
       total_count: (input.total_count !== undefined && input.total_count !== null) ? input.total_count : candidates.length,
       upcoming_count: candidates.length,
       closest_dist_ld: closest_dist_ld,

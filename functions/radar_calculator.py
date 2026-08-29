@@ -319,6 +319,8 @@ def calculate_telemetry(raw_data: Optional[Dict[str, Any]]) -> Dict[str, Any]:
         status_msg = "SYSTEM STATUS: NOMINAL // ALL ENCOUNTERS SAFE"
 
     result = {
+        "scan_completed": True,
+        "is_alert": bool(warning_active),
         "closest_list": closest_list_payload,
         "total_count": total_objects_in_range,
         "upcoming_count": upcoming_count,
