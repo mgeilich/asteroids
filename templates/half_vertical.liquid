@@ -1,4 +1,4 @@
-<div class="layout layout--col p--0 gap--xsmall">
+<div class="layout layout--col layout--stretch p--0 gap--xsmall">
   {% if scan_completed %}
     <!-- Top Half: Linear Timeline Chart (360x160) -->
     <div class="w--full flex flex--col flex--center-x">
@@ -99,7 +99,7 @@
         {% if is_alert %}
           <span class="label label--warning px--1 py--0.5"><strong>ALERT</strong></span>
         {% else %}
-          <span class="label label--outline px--1 py--0.5"><strong>NOMINAL</strong></span>
+          <span class="label label--primary px--1 py--0.5"><strong>NOMINAL</strong></span>
         {% endif %}
       </div>
       

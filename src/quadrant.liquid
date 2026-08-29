@@ -1,13 +1,13 @@
-<div class="layout layout--col p--0 gap--xsmall">
+<div class="layout layout--col layout--stretch p--0 gap--xsmall">
   {% if scan_completed %}
-    <!-- Header Row -->
+    <!-- Header -->
     <div class="flex flex--row flex--center-y gap--xsmall w--full">
       <div class="title title--small">ASTEROIDS</div>
       <div class="ml--auto">
         {% if is_alert %}
           <span class="label label--warning px--1 py--0.5"><strong>ALERT</strong></span>
         {% else %}
-          <span class="label label--outline px--1 py--0.5"><strong>NOMINAL</strong></span>
+          <span class="label label--primary px--1 py--0.5"><strong>NOMINAL</strong></span>
         {% endif %}
       </div>
     </div>
