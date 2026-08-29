@@ -57,8 +57,6 @@
 
 
 
-
-
 <!-- class="layout" -->
 <div class="layout layout--col layout--stretch gap--small">
   
@@ -74,7 +72,7 @@
           </defs>
 
           <!-- Axes -->
-          <g stroke="currentColor" stroke-width="1.5">
+          <g stroke="#000" stroke-width="1.5">
             <!-- Y-axis (Distance / NOW) & X-axis (Earth / Future Days) -->
             <line x1="46" y1="20" x2="46" y2="230" />
             <line x1="46" y1="230" x2="350" y2="230" stroke-width="2" />
@@ -82,7 +80,7 @@
 
           <!-- Horizontal Distance Gridlines -->
           
-            <g stroke="currentColor" stroke-width="1" stroke-dasharray="2 4">
+            <g stroke="#000" stroke-width="1" stroke-dasharray="2 4">
               
                 
                   <line x1="46" y1="203.2" x2="350" y2="203.2" />
@@ -113,7 +111,7 @@
                 
               
             </g>
-            <g fill="currentColor" class="label label--small">
+            <g fill="#000" class="label label--small">
               
                 
                   <text x="42" y="203.2" dy="3" text-anchor="end">2 LD</text>
@@ -148,14 +146,14 @@
           
 
           <!-- Header Labels -->
-          <g fill="currentColor" class="label label--small">
+          <g fill="#000" class="label label--small">
             <text x="46" y="14" text-anchor="start">NOW (T-0)</text>
             <text x="350" y="14" text-anchor="end">T+7 DAYS</text>
           </g>
 
           <!-- Time Ticks along Bottom X-axis -->
           
-            <g stroke="currentColor" stroke-width="1.5">
+            <g stroke="#000" stroke-width="1.5">
               
                 
                   <line x1="46" y1="230" x2="46" y2="234" />
@@ -190,7 +188,7 @@
                 
               
             </g>
-            <g fill="currentColor" class="label label--small">
+            <g fill="#000" class="label label--small">
               
                 
               
@@ -227,22 +225,22 @@
 
           <!-- Asteroid Markers and Labels -->
           
-            <g stroke="currentColor" stroke-width="1.5" clip-path="url(#chart-clip-full)">
+            <g stroke="#000" stroke-width="1.5" clip-path="url(#chart-clip-full)">
               
                 
-                  <circle cx="106.6" cy="51.1" r="7" fill="currentColor" />
-                
-              
-                
-                  <circle cx="264.3" cy="41.2" r="9" fill="currentColor" />
+                  <circle cx="106.6" cy="51.1" r="7" fill="#000" />
                 
               
                 
-                  <circle cx="337.7" cy="39.5" r="7" fill="currentColor" />
+                  <circle cx="264.3" cy="41.2" r="9" fill="#000" />
                 
               
                 
-                  <circle cx="187.3" cy="28" r="9" fill="currentColor" />
+                  <circle cx="337.7" cy="39.5" r="7" fill="#000" />
+                
+              
+                
+                  <circle cx="187.3" cy="28" r="9" fill="#000" />
                 
               
                 
@@ -294,7 +292,7 @@
                 
               
             </g>
-            <g fill="currentColor" class="label label--small" clip-path="url(#chart-clip-full)">
+            <g fill="#000" class="label label--small" clip-path="url(#chart-clip-full)">
               
                 
                   <text x="116.6" y="54.1" text-anchor="start">JR28</text>
@@ -452,12 +450,14 @@
   
 </div>
 <div class="title_bar">
-    <svg class="image" width="24" height="24" viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
-      <path d="M12,2A10,10,0,1,0,22,12,10,10,0,0,0,12,2Zm1,17a1.5,1.5,0,1,1,1.5-1.5A1.5,1.5,0,0,1,13,19Zm5-5.5a1.5,1.5,0,1,1,1.5-1.5A1.5,1.5,0,0,1,18,13.5ZM12,12a2,2,0,1,1,2-2A2,2,0,0,1,12,12ZM7.5,9A1.5,1.5,0,1,1,9,7.5,1.5,1.5,0,0,1,7.5,9Zm1,7a1.5,1.5,0,1,1,1.5-1.5A1.5,1.5,0,0,1,8.5,16Z" fill="currentColor"/>
-    </svg>
-    <span class="title">Asteroids</span>
-    
-  </div>
+  <svg class="image" width="24" height="24" viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+    <path d="M12,2A10,10,0,1,0,22,12,10,10,0,0,0,12,2Zm1,17a1.5,1.5,0,1,1,1.5-1.5A1.5,1.5,0,0,1,13,19Zm5-5.5a1.5,1.5,0,1,1,1.5-1.5A1.5,1.5,0,0,1,18,13.5ZM12,12a2,2,0,1,1,2-2A2,2,0,0,1,12,12ZM7.5,9A1.5,1.5,0,1,1,9,7.5,1.5,1.5,0,0,1,7.5,9Zm1,7a1.5,1.5,0,1,1,1.5-1.5A1.5,1.5,0,0,1,8.5,16Z" fill="#000"/>
+  </svg>
+  <span class="title">Asteroids</span>
+  
+    <span class="instance">instance_name</span>
+  
+</div>
 
       </div>
       

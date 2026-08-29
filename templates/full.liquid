@@ -12,7 +12,7 @@
           </defs>
 
           <!-- Axes -->
-          <g stroke="currentColor" stroke-width="1.5">
+          <g stroke="#000" stroke-width="1.5">
             <!-- Y-axis (Distance / NOW) & X-axis (Earth / Future Days) -->
             <line x1="46" y1="20" x2="46" y2="230" />
             <line x1="46" y1="230" x2="350" y2="230" stroke-width="2" />
@@ -20,14 +20,14 @@
 
           <!-- Horizontal Distance Gridlines -->
           {% if chart_gridlines_full and chart_gridlines_full.size > 0 %}
-            <g stroke="currentColor" stroke-width="1" stroke-dasharray="2 4">
+            <g stroke="#000" stroke-width="1" stroke-dasharray="2 4">
               {% for line in chart_gridlines_full %}
                 {% if line and line.y %}
                   <line x1="46" y1="{{ line.y }}" x2="350" y2="{{ line.y }}" />
                 {% endif %}
               {% endfor %}
             </g>
-            <g fill="currentColor" class="label label--small">
+            <g fill="#000" class="label label--small">
               {% for line in chart_gridlines_full %}
                 {% if line and line.y and line.label %}
                   <text x="{{ line.x_label | default: 42 }}" y="{{ line.y }}" dy="3" text-anchor="end">
@@ -40,21 +40,21 @@
           {% endif %}
 
           <!-- Header Labels -->
-          <g fill="currentColor" class="label label--small">
+          <g fill="#000" class="label label--small">
             <text x="46" y="14" text-anchor="start">NOW (T-0)</text>
             <text x="350" y="14" text-anchor="end">T+7 DAYS</text>
           </g>
 
           <!-- Time Ticks along Bottom X-axis -->
           {% if chart_ticks_full and chart_ticks_full.size > 0 %}
-            <g stroke="currentColor" stroke-width="1.5">
+            <g stroke="#000" stroke-width="1.5">
               {% for tick in chart_ticks_full %}
                 {% if tick and tick.x %}
                   <line x1="{{ tick.x }}" y1="{{ tick.y_tick_top | default: 230 }}" x2="{{ tick.x }}" y2="{{ tick.y_tick_bottom | default: 234 }}" />
                 {% endif %}
               {% endfor %}
             </g>
-            <g fill="currentColor" class="label label--small">
+            <g fill="#000" class="label label--small">
               {% for tick in chart_ticks_full %}
                 {% if tick and tick.x and tick.label and tick.is_now != true %}
                   <text x="{{ tick.x }}" y="{{ tick.y_label | default: 244 }}" text-anchor="middle">
@@ -67,14 +67,14 @@
 
           <!-- Asteroid Markers and Labels -->
           {% if chart_asteroids_full and chart_asteroids_full.size > 0 %}
-            <g stroke="currentColor" stroke-width="1.5" clip-path="url(#chart-clip-full)">
+            <g stroke="#000" stroke-width="1.5" clip-path="url(#chart-clip-full)">
               {% for ast in chart_asteroids_full %}
                 {% if ast and ast.x and ast.y %}
-                  <circle cx="{{ ast.x }}" cy="{{ ast.y }}" r="{{ ast.r | default: 4 }}" {% if ast.is_hazardous %}fill="currentColor"{% else %}fill="none"{% endif %} />
+                  <circle cx="{{ ast.x }}" cy="{{ ast.y }}" r="{{ ast.r | default: 4 }}" {% if ast.is_hazardous %}fill="#000"{% else %}fill="none"{% endif %} />
                 {% endif %}
               {% endfor %}
             </g>
-            <g fill="currentColor" class="label label--small" clip-path="url(#chart-clip-full)">
+            <g fill="#000" class="label label--small" clip-path="url(#chart-clip-full)">
               {% for ast in chart_asteroids_full %}
                 {% if ast and ast.label_x and ast.label_y and ast.name %}
                   <text x="{{ ast.label_x }}" y="{{ ast.label_y }}" text-anchor="{{ ast.anchor | default: 'start' }}">
@@ -84,7 +84,7 @@
               {% endfor %}
             </g>
           {% else %}
-            <g fill="currentColor" class="label">
+            <g fill="#000" class="label">
               <text x="192.5" y="130" text-anchor="middle">NO ASTEROIDS IN RANGE</text>
             </g>
           {% endif %}
@@ -167,4 +167,12 @@
     </div>
   {% endif %}
 </div>
-{% render 'title_bar' %}
+<div class="title_bar">
+  <svg class="image" width="24" height="24" viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+    <path d="M12,2A10,10,0,1,0,22,12,10,10,0,0,0,12,2Zm1,17a1.5,1.5,0,1,1,1.5-1.5A1.5,1.5,0,0,1,13,19Zm5-5.5a1.5,1.5,0,1,1,1.5-1.5A1.5,1.5,0,0,1,18,13.5ZM12,12a2,2,0,1,1,2-2A2,2,0,0,1,12,12ZM7.5,9A1.5,1.5,0,1,1,9,7.5,1.5,1.5,0,0,1,7.5,9Zm1,7a1.5,1.5,0,1,1,1.5-1.5A1.5,1.5,0,0,1,8.5,16Z" fill="#000"/>
+  </svg>
+  <span class="title">Asteroids</span>
+  {% if trmnl.plugin_settings.instance_name and trmnl.plugin_settings.instance_name != "" %}
+    <span class="instance">{{ trmnl.plugin_settings.instance_name }}</span>
+  {% endif %}
+</div>
