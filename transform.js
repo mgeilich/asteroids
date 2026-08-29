@@ -241,7 +241,7 @@ function run(input) {
     const result = {
       scan_completed: true,
       system_status: isSynthetic ? "DEMO MODE: SAMPLE ASTEROID DATA" : (warningActive ? "WARNING: POTENTIALLY HAZARDOUS OBJECT IN SECTOR" : "SYSTEM STATUS: NOMINAL // ALL ENCOUNTERS SAFE"),
-      is_alert: warningActive || isSynthetic,
+      is_alert: warningActive,
       total_count: (input.total_count !== undefined && input.total_count !== null) ? input.total_count : candidates.length,
       upcoming_count: candidates.length,
       closest_dist_ld: closest_dist_ld,

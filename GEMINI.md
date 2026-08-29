@@ -1,66 +1,81 @@
-# Asteroids TRMNL Plugin Guidelines
+# Asteroids TRMNL Plugin Guidelines & Chef Verification Rules
 
 Always follow these guidelines when editing or deploying files in this repository:
 
-## 1. SVG Viewport Dimensions (Quadrant Layout)
-* **Rule**: In `src/quadrant.liquid` and `templates/quadrant.liquid`, the SVG dimensions for the tiny radar must be kept at `120x120` (width="120" height="120") with `viewBox="0 0 150 150"`. 
-* **Reasoning**: The target screen size is ~400×240. An SVG dimension of `140x140` is too large and will cause the radar to overflow its container and clip text labels. Do not increase it back to `140x140`.
+## 1. Title Bar Architecture & Sibling Placement
+* **Rule**: Define the title bar template inside `templates/shared.liquid` (and `src/shared.liquid`) using:
+  ```liquid
+  {% template title_bar %}
+    <div class="title_bar">
+      <svg class="image image-stroke image-stroke--medium" width="24" height="24" viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+        <path d="..." fill="#000"/>
+      </svg>
+      <span class="title">Asteroids</span>
+      {% if trmnl.plugin_settings.instance_name and trmnl.plugin_settings.instance_name != "" %}
+        <span class="instance">{{ trmnl.plugin_settings.instance_name }}</span>
+      {% endif %}
+    </div>
+  {% endtemplate %}
+  <!-- class="layout" -->
+  ```
+* In every view file (`full.liquid`, `half_horizontal.liquid`, `half_vertical.liquid`, `quadrant.liquid`), place `{% render 'title_bar' %}` at the very end of the file, directly after the closing `</div>` of the root `<div class="layout">`.
+* **Icon Class**: The `<svg>` icon inside the title bar must always include `class="image image-stroke image-stroke--medium"` for clean 1-bit e-ink rendering.
 
-## 2. No Dead Code in Templates
-* **Rule**: Do not add or leave dead blocks (such as `{% if false %}<div class="layout layout--col"></div>{% endif %}`) at the end of templates (`shared.liquid`, etc.). Keep templates clean and minimal.
+## 2. SVG Text & Typography Styling
+* **Rule**: Do not use framework HTML utility classes (such as `class="label label--small"`) directly on SVG `<text>` or `<g>` tags.
+* **CSS Classes via `shared.liquid`**: Define centralized SVG text utility classes in a `<style>` block inside `shared.liquid`:
+  ```html
+  <style>
+    .svg-text { fill: #000; font-family: sans-serif; font-size: 10px; }
+    .svg-text--bold { font-weight: bold; }
+    .svg-text--small { font-size: 9px; }
+    .svg-text--tiny { font-size: 8px; }
+    .svg-text--start { text-anchor: start; }
+    .svg-text--end { text-anchor: end; }
+    .svg-text--middle { text-anchor: middle; }
+  </style>
+  ```
+* Apply these classes (`class="svg-text"`, `class="svg-text--bold"`, `class="svg-text--start"`, etc.) to SVG `<g>` and `<text>` elements.
 
-## 3. Deploying Templates to TRMNL
-* **Rule**: When you modify any template/liquid file, make sure the changes are deployed to TRMNL.
-* **Manual push command**: Use `/usr/local/lib/ruby/gems/4.0.0/bin/trmnlp push` (which runs `trmnlp push` with the correct Ruby gem path) to upload the updated templates directly to the TRMNL portal.
+## 3. Explicit 1-bit SVG Fills, Strokes, and Aspect Ratio
+* **Rule**: Use explicit `#000` fills and strokes inside SVGs instead of `currentColor` for predictable 1-bit e-ink rendering:
+  - Hazardous Asteroids: `<circle ... fill="#000" stroke="#000" />` (solid black)
+  - Non-Hazardous Asteroids: `<circle ... fill="none" stroke="#000" />` (clean outline)
+  - Axes & Gridlines: `stroke="#000"`
+  - Text: `fill="#000"`
+* **Aspect Ratio**: Every SVG must include `preserveAspectRatio="xMidYMid meet"` along with explicit `width`, `height`, and `viewBox` attributes.
 
-## 4. Automatically Commit and Push to Git
-* **Rule**: Whenever you modify, create, or delete files in this repository (e.g. templates, rules, backend functions), automatically stage them (`git add`), commit them with a descriptive commit message (`git commit`), and push them to the remote repository (`git push`).
-* **Reasoning**: This keeps the codebase in sync immediately without requiring explicit user prompts to commit/push.
+## 4. Grid System & Column Spans
+* **Rule**:
+  - In a 2-column grid (`<div class="grid grid--cols-2 portrait:grid--cols-1 ...">`), do **NOT** use `col--span-1` on child `<div>` containers. Children automatically span 1 column each.
+  - In a 12-column grid (`<div class="grid grid--cols-12 portrait:grid--cols-1 gap--small ...">`), use matching spans totaling 12 (e.g. `col--span-5 portrait:col--span-12` and `col--span-7 portrait:col--span-12`).
+  - Use explicit `gap--*` utilities on `grid` containers for intentional column spacing.
 
-## 5. Test Publishing and Chef Verification Process
-* **Rule**: After making edits to the templates, follow the test publishing process to verify Chef checks:
-  1. Validate templates locally if needed using the command: `export LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 && /usr/local/lib/ruby/gems/4.0.0/bin/trmnlp lint`.
-  2. Push templates to the TRMNL server using: `/usr/local/lib/ruby/gems/4.0.0/bin/trmnlp push`.
-  3. Navigate to the plugin settings edit page (e.g. `https://trmnl.com/plugin_settings/411563/edit`), click the "Publish" button (or "Publish plugin?"), check "Acknowledge best practices", and try to publish as a public plugin to trigger Chef's full validation.
-  4. Inspect Chef's warnings or error messages, and iterate until validation is successful.
+## 5. Universal 1-bit Badge Classes
+* **Rule**: Use TRMNL's universal monochrome badge classes that render reliably across all hardware generations:
+  - **ALERT / HAZARD**: `label label--filled` (solid black badge with white text)
+  - **NOMINAL / SAFE**: `label label--outline` (outlined badge with black text)
+  - Avoid unverified color-only semantic classes like `label--primary` or `label--warning`.
 
-## 6. Strict Styling and Layout Class Guardrails
-*   **No custom CSS or `<style>` blocks**: Do not include `<style>` tags anywhere in templates or shared components. Move all styling to standard HTML/SVG attributes (e.g. `fill`, `stroke`, `stroke-width`, `stroke-dasharray`).
-*   **No inline `style` attributes**: Do not use inline `style="..."` attributes on any tags. Use native layout/sizing attributes (like `width="..."` and `height="..."` on images or SVGs) or TRMNL utility classes instead.
-*   **Single Root Layout Wrapper**: Ensure that each individual view template (e.g. `full.liquid`) starts with exactly one root layout container class (e.g. `<div class="layout layout--col">`). Do not wrap shared library files (`shared.liquid` / `markup_shared`) in layout containers, as this results in nested layouts during compilation.
-*   **Title Bar Rendering Placement**: Rendered components like `{% render 'title_bar' %}` must not be inside the root layout wrapper; instead, place them at the very end of the template file, after the closing `</div>` tag of the root layout, so it behaves as a sibling layout to the main view under the screen wrapper.
-*   **Title Bar Linter Wrapper**: Avoid wrapping the template definition inside shared.liquid in layout divs. Instead, add a dummy layout comment (e.g. `<!-- class="layout" -->`) below the template definition to satisfy file-based compiler layout checks without polluting the outer namespace.
-*   **Grid Nesting Separation**: Grid cells (`col--span-*` or auto-grid children) should be layout-agnostic and should not directly contain flex/container layout classes (e.g. `flex`, `flex--col`, `grow`, `p--*`). Nest a separate flex container `div` inside the grid cell.
-*   **SVG Sizing & Aspect Ratio Consistency**: Match the SVG width/height display dimensions exactly to the viewBox coordinate aspect ratio (e.g., `width="280" height="260" viewBox="0 0 280 260"`) to prevent rendering engine distortions on e-ink.
-*   **SVG Text Styles & Attributes**: Explicitly define SVG text elements using native attributes (e.g. `fill="..."`) alongside standard framework classes to ensure rendering engine compatibility. Do not use explicit `font-size="..."` attributes on SVG `<text>` tags as the parser flags them as inline style violations; rely on framework text helper classes instead.
-*   **Inline SVG Title Bar Icons**: Do not use `base64_encode` filters or base64 data URIs inside `<img>` tags for title bar icons. Inline the `<svg>` element directly in the title bar markup using Liquid captures or raw HTML, applying the standard `image image-stroke image-stroke--medium` classes on the `<svg>` tag.
-*   **Transform Array Key Safety**: Every return path inside `transform.js` (including input fallbacks, errors, or pass-through blocks) must return all layout variant arrays (e.g., `radar_ticks_full`, `radar_asteroids_full`, etc.) initialized to empty arrays `[]` rather than leaving them `undefined`. If input data is precalculated, detect and pass it through directly while defaulting missing arrays to `[]`.
-*   **Full Layout Columns**: Use a two-column grid layout for the `full` layout: the left column renders the radar SVG (width="280" height="260"), and the right column contains the status header, key stats (in 2 columns), and the closest scheduled flybys (in a vertical list).
-*   **No data-clamp on SVG text**: Do not use `data-clamp` on SVG `<text>` elements. Perform name truncation directly in the data engine (Python or JS) before rendering, enforcing an 8-character maximum limit (`name.substring(0, 6) + ".."`) for all radar asteroid labels.
-*   **Pass-through Validation**: If `transform.js` supports precalculated payloads, validate that tick and asteroid arrays for all four layout sizes (`full`, `half_horizontal`, `half_vertical`, `quadrant`) are present and non-empty. If any key is missing or empty, fall back to calculating them dynamically from raw candidates.
-*   **High Contrast Badges**: Avoid solid gray fills (like `bg--gray-70`) for nominal badges. Switch nominal statuses to outline badges using the framework `label--outline` class.
-*   **Data Truncation Attributes**: Avoid `data-overflow="true"` on text elements; instead use `data-clamp="1"` for explicit line-clamping and text truncation.
-*   **SVG Isolation**: Embed raw SVG layouts directly within their corresponding template file instead of rendering them via shared Liquid partial blocks to avoid compilation resolution failure.
-*   **Quadrant Hero Emphasis**: Do not render charts or complex details inside quadrant layouts. Focus on a single hero statistic (e.g. total counts) paired with minimal secondary indicators.
-*   **SVG Viewport & Sizing Constraints**: SVGs must always include explicit `width` and `height` attributes matching their `viewBox` coordinates (e.g., `width="350" height="330"`), along with classes like `w--full max-w--full` to constrain them from stretching beyond their calculated coordinates in wide grid cells.
-*   **Use `currentColor` inside SVGs**: Use `stroke="currentColor"` and `fill="currentColor"` (or parent context inheritance) instead of hardcoding `#000` hex colors. This allows the SVG to adapt to framework dither levels and light/dark theme switches.
-*   **No SVG Text Squeezing**: Do not use `textLength` or `lengthAdjust="spacingAndGlyphs"` to compress labels inside SVG text blocks as it distorts glyphs on e-ink. Let text render naturally using appropriate positioning or sizing.
-*   **Synchronize Dual Files**: Keep files in `src/` (e.g. `src/transform.js`, `src/settings.yml`) and their root counterparts (`transform.js`, `settings.yml`) identical. The TRMNL CLI deploys files from the root.
-*   **Metadata Limits**: Keep the root `description` field in `settings.yml` under TRMNL's maximum limit of 35 characters.
-*   **Sanitize Coordinate Computations**: Always validate math results inside transform scripts using `isFinite()` before passing coordinates to Liquid SVG templates, avoiding rendering breaks from `NaN` or `Infinity`.
-*   **Layout Vertical Breathing Room**: Use explicit spacing classes (e.g., `gap--large` or `gap--space-between`) on root layout wrappers and grid rows to prevent stacked telemetry items from sitting too tight under SVGs during portrait column wrapping.
-*   **Responsive SVG Quadrants**: Define portrait-specific width utilities (e.g., `portrait:w--1-2`) on quadrant views to prevent square SVGs from taking up excessive vertical screen space when columns stack vertically.
-*   **No Inline Style Attributes**: Never use inline style attributes (like `style="..."`) on any layout or wrapper container. Use TRMNL framework layout classes instead, or let SVGs constrain themselves via native attributes.
-*   **Valid Framework Typography**: Never use custom or invalid text utility classes (e.g. `text--black`, `text--white`, `text--bold`, `text--small`, `text--center`). Replace them with framework elements and sizes (`title`, `label`, `value`, `description` with modifiers like `title--small` or `value--small`) and container positioning.
-*   **Semantic Badge Classes**: Use `label--outline` for nominal state chips and `label--warning` for ALERT/HAZARD badges.
-*   **No User-Configurable API Keys**: Do not expose user configuration fields for third-party API keys (e.g. NASA) in `settings.yml`. Manage all API key secret configurations directly in the Firebase backend.
-*   **Required Support Custom Field**: Always include a field with `field_type: author_bio` under `custom_fields` in `settings.yml` as it is strictly required by the TRMNL plugin validation engine for support details.
-*   **Standardized Empty State**: Standardize empty state text inside the SVG radar face to `"NO ASTEROIDS IN RANGE"` centered at the exact radar coordinates.
-*   **Unified Title Bar Rendering**: Ensure `{% render 'title_bar' %}` is included at the end of every layout template file, including quadrant layouts, as a direct sibling of the root layout container.
-*   **Template Condition Nesting**: The root element of any layout template file must be the `div.layout` container. Wrap all conditional rendering blocks (`{% if scan_completed %}...{% endif %}`) *inside* the layout container to maintain correct AST sibling structure with the title bar.
-*   **Enforce scan_completed in JavaScript Transforms**: In `transform.js`, ensure `scan_completed: true` is returned for all successful paths (including the precalculated layout block path) and `scan_completed: false` for catch/offline paths.
+## 6. Deterministic Alert Flag & Transform Ingestion
+* **Rule**:
+  - `radar_calculator.py` and `transform.js` must return an explicit boolean `"is_alert": bool(...)` and `"scan_completed": True`.
+  - `shared.liquid` evaluates `is_alert` directly without fragile string-parsing (`status_lower contains "warning"`).
+  - In `transform.js`, synthetic demo data must only flag `is_alert: true` when matching real hazard criteria (`warningActive`).
+  - `transform.js` must support precalculated payloads (`input.chart_ticks_full`), direct NASA NeoWS JSON (`input.near_earth_objects`), and candidate lists (`input.candidates`).
 
-## 7. Direct Local Firebase Deployment
-* **Rule**: Whenever deploying updates to Firebase (functions, rules, indexes), perform direct deployment from the local machine using the command: `firebase deploy --project neo-radar-trmnl-2026`.
-* **Reasoning**: Your local authenticated session (`mgeilich9@gmail.com`) has full owner rights, which bypasses GitHub Actions setup complexity, service account credential configurations, and IAM propagation delays.
-* **No automated GitHub Actions CI/CD**: Do not configure or maintain automated deployment workflows (such as `.github/workflows/deploy.yml`) that attempt to push assets or code to TRMNL or Firebase on Git commit. Perform all deployments locally via the CLI.
+## 7. Metadata & `settings.yml` Documentation Links
+* **Rule**:
+  - In `settings.yml` and `src/settings.yml`, the `learn_more_url` under `author_bio` must point specifically to the NeoWS API documentation (`https://api.nasa.gov/#neo`).
+  - Keep the plugin description under 35 characters (`Near-Earth asteroid timeline`).
+
+## 8. Dual File Synchronization
+* **Rule**: Keep files in `src/` (`src/shared.liquid`, `src/full.liquid`, `src/half_horizontal.liquid`, `src/half_vertical.liquid`, `src/quadrant.liquid`, `src/transform.js`, `src/settings.yml`) identical to their counterparts in `templates/` and project root.
+
+## 9. Automated Git Synchronization & Verification Workflow
+* **Rule**: Whenever changes are made:
+  1. Test locally: `export LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 && /usr/local/lib/ruby/gems/4.0.0/bin/trmnlp lint`
+  2. Build previews: `export LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 && /usr/local/lib/ruby/gems/4.0.0/bin/trmnlp build`
+  3. Push to TRMNL: `export LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 && echo "y" | /usr/local/lib/ruby/gems/4.0.0/bin/trmnlp push`
+  4. Deploy Firebase (when backend changes): `firebase deploy --project neo-radar-trmnl-2026 --only functions:neo_radar`
+  5. Stage, commit, and push to git: `git add -A && git commit -m "..." && git push`

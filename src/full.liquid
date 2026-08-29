@@ -27,22 +27,22 @@
                 {% endif %}
               {% endfor %}
             </g>
-            <g fill="#000">
+            <g class="svg-text svg-text--end">
               {% for line in chart_gridlines_full %}
                 {% if line and line.y and line.label %}
-                  <text x="{{ line.x_label | default: 42 }}" y="{{ line.y }}" dy="3" text-anchor="end">
+                  <text x="{{ line.x_label | default: 42 }}" y="{{ line.y }}" dy="3">
                     {{- line.label -}}
                   </text>
                 {% endif %}
               {% endfor %}
-              <text x="42" y="230" dy="3" text-anchor="end">Earth</text>
+              <text x="42" y="230" dy="3">Earth</text>
             </g>
           {% endif %}
 
           <!-- Header Labels -->
-          <g fill="#000" font-weight="bold">
-            <text x="46" y="14" text-anchor="start">NOW (T-0)</text>
-            <text x="350" y="14" text-anchor="end">T+7 DAYS</text>
+          <g class="svg-text svg-text--bold">
+            <text x="46" y="14" class="svg-text--start">NOW (T-0)</text>
+            <text x="350" y="14" class="svg-text--end">T+7 DAYS</text>
           </g>
 
           <!-- Time Ticks along Bottom X-axis -->
@@ -54,10 +54,10 @@
                 {% endif %}
               {% endfor %}
             </g>
-            <g fill="#000">
+            <g class="svg-text svg-text--middle">
               {% for tick in chart_ticks_full %}
                 {% if tick and tick.x and tick.label and tick.is_now != true %}
-                  <text x="{{ tick.x }}" y="{{ tick.y_label | default: 244 }}" text-anchor="middle">
+                  <text x="{{ tick.x }}" y="{{ tick.y_label | default: 244 }}">
                     {{- tick.label -}}
                   </text>
                 {% endif %}
@@ -74,18 +74,18 @@
                 {% endif %}
               {% endfor %}
             </g>
-            <g fill="#000" clip-path="url(#chart-clip-full)">
+            <g class="svg-text svg-text--small" clip-path="url(#chart-clip-full)">
               {% for ast in chart_asteroids_full %}
                 {% if ast and ast.label_x and ast.label_y and ast.name %}
-                  <text x="{{ ast.label_x }}" y="{{ ast.label_y }}" text-anchor="{{ ast.anchor | default: 'start' }}">
+                  <text x="{{ ast.label_x }}" y="{{ ast.label_y }}" class="svg-text--{{ ast.anchor | default: 'start' }}">
                     {{- ast.name -}}
                   </text>
                 {% endif %}
               {% endfor %}
             </g>
           {% else %}
-            <g fill="#000">
-              <text x="192.5" y="130" text-anchor="middle">NO ASTEROIDS IN RANGE</text>
+            <g class="svg-text svg-text--middle">
+              <text x="192.5" y="130">NO ASTEROIDS IN RANGE</text>
             </g>
           {% endif %}
         </svg>
@@ -127,13 +127,13 @@
             </div>
           </div>
           
-          <!-- Closest Scheduled Flybys -->
+          <!-- Closest Scheduled Flybys (2 items for clean vertical breathing room in all orientations) -->
           <div class="flex flex--col gap--xsmall w--full">
             <div class="label"><strong>CLOSEST SCHEDULED FLYBYS</strong></div>
             
             {% if closest_list and closest_list.size > 0 %}
-              <div class="grid grid--cols-1 gap--small w--full">
-                {% for item in closest_list limit: 3 %}
+              <div class="grid grid--cols-1 gap--xsmall w--full">
+                {% for item in closest_list limit: 2 %}
                   <div class="rounded bg--gray-75 p--1">
                     <div class="flex flex--row flex--center-y gap--small w--full">
                       <div class="grow">

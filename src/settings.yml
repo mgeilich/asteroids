@@ -36,7 +36,7 @@ custom_fields:
   name: Support & Creator Info
   description: Tracking of near-Earth objects powered by the NASA NeoWS API.
   github_url: https://github.com/mgeilich/asteroids
-  learn_more_url: https://api.nasa.gov
+  learn_more_url: https://api.nasa.gov/#neo
   category: discovery,education
 name: Asteroids
 description: Near-Earth asteroid timeline
