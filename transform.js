@@ -31,9 +31,9 @@ function run(input) {
       min_dx: 26, min_dy: 14, min_r_sq: 400
     },
     half_horizontal: {
-      width: 280, height: 150,
-      x_min: 48, x_max: 270,
-      y_min: 22, y_max: 128,
+      width: 240, height: 140,
+      x_min: 44, x_max: 232,
+      y_min: 20, y_max: 120,
       grid_levels: [5, 20, 100, 200],
       limit: 8,
       min_dx: 24, min_dy: 12, min_r_sq: 324
@@ -212,6 +212,8 @@ function run(input) {
 
     let warningActive = false;
     const closestList = [];
+    // Note: We compute top 3 closest items for telemetry context; view templates iterate with limit: 2
+    // to preserve vertical breathing room on compact screen resolutions (800x480 / Kindle).
     const closest3 = [...candidates].sort((a, b) => a.miss_distance_ld - b.miss_distance_ld).slice(0, 3);
 
     closest3.forEach(item => {

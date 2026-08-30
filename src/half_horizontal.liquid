@@ -4,17 +4,17 @@
        
       <!-- Left Column: Linear Timeline (5 cols) -->
       <div class="col--span-5 portrait:col--span-12 flex flex--col flex--center-x">
-        <svg width="280" height="150" viewBox="0 0 280 150" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg" class="w--full h--auto">
+        <svg width="240" height="140" viewBox="0 0 240 140" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg" class="w--full h--auto max-w--full">
           <defs>
             <clipPath id="chart-clip-half-h">
-              <rect x="46" y="16" width="226" height="114" />
+              <rect x="42" y="14" width="192" height="110" />
             </clipPath>
           </defs>
 
           <!-- Axes -->
           <g stroke="#000" stroke-width="1.5">
-            <line x1="48" y1="18" x2="48" y2="128" />
-            <line x1="48" y1="128" x2="270" y2="128" stroke-width="2" />
+            <line x1="44" y1="16" x2="44" y2="120" />
+            <line x1="44" y1="120" x2="232" y2="120" stroke-width="2" />
           </g>
 
           <!-- Gridlines -->
@@ -22,26 +22,26 @@
             <g stroke="#000" stroke-width="1" stroke-dasharray="2 4">
               {% for line in chart_gridlines_half_horizontal %}
                 {% if line and line.y %}
-                  <line x1="48" y1="{{ line.y }}" x2="270" y2="{{ line.y }}" />
+                  <line x1="44" y1="{{ line.y }}" x2="232" y2="{{ line.y }}" />
                 {% endif %}
               {% endfor %}
             </g>
             <g fill="#000">
               {% for line in chart_gridlines_half_horizontal %}
                 {% if line and line.y and line.label %}
-                  <text x="{{ line.x_label | default: 44 }}" y="{{ line.y }}" dy="3" text-anchor="end">
+                  <text x="{{ line.x_label | default: 40 }}" y="{{ line.y }}" dy="3" text-anchor="end">
                     {{- line.label -}}
                   </text>
                 {% endif %}
               {% endfor %}
-              <text x="44" y="128" dy="3" text-anchor="end">Earth</text>
+              <text x="40" y="120" dy="3" text-anchor="end">Earth</text>
             </g>
           {% endif %}
 
           <!-- Header Labels -->
           <g fill="#000" font-weight="bold">
-            <text x="48" y="14" text-anchor="start">NOW (T-0)</text>
-            <text x="270" y="14" text-anchor="end">T+7D</text>
+            <text x="44" y="12" text-anchor="start">NOW (T-0)</text>
+            <text x="232" y="12" text-anchor="end">T+7D</text>
           </g>
 
           <!-- Time Ticks along Bottom X-axis -->
@@ -49,14 +49,14 @@
             <g stroke="#000" stroke-width="1.5">
               {% for tick in chart_ticks_half_horizontal %}
                 {% if tick and tick.x %}
-                  <line x1="{{ tick.x }}" y1="{{ tick.y_tick_top | default: 128 }}" x2="{{ tick.x }}" y2="{{ tick.y_tick_bottom | default: 132 }}" />
+                  <line x1="{{ tick.x }}" y1="{{ tick.y_tick_top | default: 120 }}" x2="{{ tick.x }}" y2="{{ tick.y_tick_bottom | default: 124 }}" />
                 {% endif %}
               {% endfor %}
             </g>
             <g fill="#000">
               {% for tick in chart_ticks_half_horizontal %}
                 {% if tick and tick.x and tick.label and tick.is_now != true %}
-                  <text x="{{ tick.x }}" y="{{ tick.y_label | default: 142 }}" text-anchor="middle">
+                  <text x="{{ tick.x }}" y="{{ tick.y_label | default: 134 }}" text-anchor="middle">
                     {{- tick.label -}}
                   </text>
                 {% endif %}
@@ -84,7 +84,7 @@
             </g>
           {% else %}
             <g fill="#000">
-              <text x="160" y="75" text-anchor="middle">NO ASTEROIDS IN RANGE</text>
+              <text x="138" y="70" text-anchor="middle">NO ASTEROIDS IN RANGE</text>
             </g>
           {% endif %}
         </svg>
@@ -101,9 +101,9 @@
           
           <div class="flex flex--row flex--center-y gap--xsmall ml--auto">
             {% if is_alert %}
-              <span class="label label--filled px--1 py--0.5"><strong>ALERT</strong></span>
+              <span class="label label--filled px--1 py--0.5">ALERT</span>
             {% else %}
-              <span class="label label--outline px--1 py--0.5"><strong>NOMINAL</strong></span>
+              <span class="label label--outline px--1 py--0.5">NOMINAL</span>
             {% endif %}
           </div>
         </div>
@@ -122,7 +122,7 @@
         
         <!-- Closest List Schedule -->
         <div class="flex flex--col gap--xsmall">
-          <div class="label"><strong>CLOSEST SCHEDULED FLYBYS</strong></div>
+          <div class="label">CLOSEST SCHEDULED FLYBYS</div>
           {% if closest_list and closest_list.size > 0 %}
             {% for item in closest_list limit: 2 %}
               <div class="flex flex--row flex--center-y gap--space-between p--0.5 rounded bg--gray-75">
@@ -133,7 +133,7 @@
                 <div class="text--right flex flex--col ml--auto">
                   <div class="value value--small" data-clamp="1">{{ item.dist_ld | default: '—' }} LD</div>
                   {% if item.is_hazardous == true %}
-                    <span class="label label--filled px--1"><strong>HAZARD</strong></span>
+                    <span class="label label--filled px--1">HAZARD</span>
                   {% endif %}
                 </div>
               </div>
