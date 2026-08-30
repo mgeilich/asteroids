@@ -34,11 +34,13 @@ Always follow these guidelines when editing or deploying files in this repositor
   - Always include `author_bio` custom field with `learn_more_url: https://api.nasa.gov/#neo`.
   - Keep `description` under 35 characters.
 
-## 5. Grid System & Flex Placement
+## 5. Right-Alignment, Flex Layouts & Margin Utilities
 * **Rule**:
+  - Use `layout--right` on flex children (e.g. `<div class="layout--right flex flex--row flex--center-y gap--small">`) instead of `ml--auto` for robust right-justification across 1-bit devices.
+  - Use `gap--space-between` on parent flex containers (e.g. flyby list rows `<div class="flex flex--row flex--center-y gap--space-between w--full">`) to naturally push children to opposite edges.
   - In a 2-column grid (`grid--cols-2`), do NOT use `col--span-1`.
   - In a 12-column grid (`grid--cols-12`), use matching spans (`col--span-5` and `col--span-7`) with explicit `gap--*` utilities.
-  - Use `ml--auto` only inside flex containers (`flex flex--row`).
+  - Multi-column metric subgrids must include `portrait:grid--cols-1` or `portrait:flex--col` to reflow cleanly when outer columns stack.
 
 ## 6. Universal 1-bit Badge Classes
 * **Rule**: Use TRMNL's universal monochrome badge classes:
