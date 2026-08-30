@@ -1,31 +1,39 @@
-{% assign scan_completed = data.scan_completed | default: false %}
-{% assign last_error = data.last_error %}
-{% assign system_status = data.system_status | default: 'SYSTEM OFFLINE: SCAN IN PROGRESS' %}
-{% assign total_count = data.total_count | default: '—' %}
-{% assign upcoming_count = data.upcoming_count | default: '—' %}
-{% assign closest_dist_ld = data.closest_dist_ld | default: '—' %}
-{% assign closest_name = data.closest_name | default: '—' %}
-{% assign max_size_m = data.max_size_m | default: '—' %}
-{% assign last_updated = data.last_updated | default: '—' %}
-{% assign closest_list = data.closest_list | default: empty %}
+{% if scan_completed == nil %}
+  {% if data.scan_completed != nil %}
+    {% assign scan_completed = data.scan_completed %}
+  {% elsif chart_asteroids_full and chart_asteroids_full.size > 0 %}
+    {% assign scan_completed = true %}
+  {% elsif total_count and total_count != '—' and total_count != 0 %}
+    {% assign scan_completed = true %}
+  {% else %}
+    {% assign scan_completed = false %}
+  {% endif %}
+{% endif %}
 
-{% assign is_alert = data.is_alert | default: false %}
-
-{% assign chart_asteroids_full = data.chart_asteroids_full | default: empty %}
-{% assign chart_ticks_full = data.chart_ticks_full | default: empty %}
-{% assign chart_gridlines_full = data.chart_gridlines_full | default: empty %}
-
-{% assign chart_asteroids_half_horizontal = data.chart_asteroids_half_horizontal | default: empty %}
-{% assign chart_ticks_half_horizontal = data.chart_ticks_half_horizontal | default: empty %}
-{% assign chart_gridlines_half_horizontal = data.chart_gridlines_half_horizontal | default: empty %}
-
-{% assign chart_asteroids_half_vertical = data.chart_asteroids_half_vertical | default: empty %}
-{% assign chart_ticks_half_vertical = data.chart_ticks_half_vertical | default: empty %}
-{% assign chart_gridlines_half_vertical = data.chart_gridlines_half_vertical | default: empty %}
-
-{% assign chart_asteroids_quadrant = data.chart_asteroids_quadrant | default: empty %}
-{% assign chart_ticks_quadrant = data.chart_ticks_quadrant | default: empty %}
-{% assign chart_gridlines_quadrant = data.chart_gridlines_quadrant | default: empty %}
+{% if data and data.total_count != nil and total_count == nil %}
+  {% assign total_count = data.total_count %}
+  {% assign upcoming_count = data.upcoming_count %}
+  {% assign closest_dist_ld = data.closest_dist_ld %}
+  {% assign closest_name = data.closest_name %}
+  {% assign max_size_m = data.max_size_m %}
+  {% assign last_updated = data.last_updated %}
+  {% assign closest_list = data.closest_list %}
+  {% assign system_status = data.system_status %}
+  {% assign is_alert = data.is_alert %}
+  {% assign last_error = data.last_error %}
+  {% assign chart_asteroids_full = data.chart_asteroids_full %}
+  {% assign chart_ticks_full = data.chart_ticks_full %}
+  {% assign chart_gridlines_full = data.chart_gridlines_full %}
+  {% assign chart_asteroids_half_horizontal = data.chart_asteroids_half_horizontal %}
+  {% assign chart_ticks_half_horizontal = data.chart_ticks_half_horizontal %}
+  {% assign chart_gridlines_half_horizontal = data.chart_gridlines_half_horizontal %}
+  {% assign chart_asteroids_half_vertical = data.chart_asteroids_half_vertical %}
+  {% assign chart_ticks_half_vertical = data.chart_ticks_half_vertical %}
+  {% assign chart_gridlines_half_vertical = data.chart_gridlines_half_vertical %}
+  {% assign chart_asteroids_quadrant = data.chart_asteroids_quadrant %}
+  {% assign chart_ticks_quadrant = data.chart_ticks_quadrant %}
+  {% assign chart_gridlines_quadrant = data.chart_gridlines_quadrant %}
+{% endif %}
 
 {% template title_bar %}
   <div class="title_bar">

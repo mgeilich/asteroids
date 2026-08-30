@@ -22,37 +22,397 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <!-- class="layout" -->
 <div class="layout layout--col layout--stretch p--0">
   
-    <div class="flex flex--col layout--center grow">
-      <div class="p--4 label">
-        Timeline scan offline. System checking for telemetry updates...
+    <div class="grid grid--cols-2 portrait:grid--cols-1 gap--small w--full grow p--1">
+      
+      <!-- Left Column: Linear Coordinate Timeline Chart -->
+      <div class="w--full flex flex--col flex--center-x">
+        <svg width="360" height="260" viewBox="0 0 360 260" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg" class="w--full max-w--full h--auto portrait:w--full">
+          <defs>
+            <clipPath id="chart-clip-full">
+              <rect x="38" y="18" width="310" height="214" />
+            </clipPath>
+          </defs>
+
+          <!-- Axes -->
+          <g stroke="#000" stroke-width="1.5">
+            <!-- Y-axis (Distance / NOW) & X-axis (Earth / Future Days) -->
+            <line x1="46" y1="20" x2="46" y2="230" />
+            <line x1="46" y1="230" x2="350" y2="230" stroke-width="2" />
+          </g>
+
+          <!-- Horizontal Distance Gridlines -->
+          
+            <g stroke="#000" stroke-width="1" stroke-dasharray="2 4">
+              
+                
+                  <line x1="46" y1="203.2" x2="350" y2="203.2" />
+                
+              
+                
+                  <line x1="46" y1="167.7" x2="350" y2="167.7" />
+                
+              
+                
+                  <line x1="46" y1="140.9" x2="350" y2="140.9" />
+                
+              
+                
+                  <line x1="46" y1="105.5" x2="350" y2="105.5" />
+                
+              
+                
+                  <line x1="46" y1="78.6" x2="350" y2="78.6" />
+                
+              
+                
+                  <line x1="46" y1="51.8" x2="350" y2="51.8" />
+                
+              
+                
+                  <line x1="46" y1="25" x2="350" y2="25" />
+                
+              
+            </g>
+            <g fill="#000">
+              
+                
+                  <text x="42" y="203.2" dy="3" text-anchor="end">2 LD</text>
+                
+              
+                
+                  <text x="42" y="167.7" dy="3" text-anchor="end">5 LD</text>
+                
+              
+                
+                  <text x="42" y="140.9" dy="3" text-anchor="end">10 LD</text>
+                
+              
+                
+                  <text x="42" y="105.5" dy="3" text-anchor="end">25 LD</text>
+                
+              
+                
+                  <text x="42" y="78.6" dy="3" text-anchor="end">50 LD</text>
+                
+              
+                
+                  <text x="42" y="51.8" dy="3" text-anchor="end">100 LD</text>
+                
+              
+                
+                  <text x="42" y="25" dy="3" text-anchor="end">200 LD</text>
+                
+              
+              <text x="42" y="230" dy="3" text-anchor="end">Earth</text>
+            </g>
+          
+
+          <!-- Header Labels -->
+          <g fill="#000" font-weight="bold">
+            <text x="46" y="14" text-anchor="start">NOW (T-0)</text>
+            <text x="350" y="14" text-anchor="end">T+7 DAYS</text>
+          </g>
+
+          <!-- Time Ticks along Bottom X-axis -->
+          
+            <g stroke="#000" stroke-width="1.5">
+              
+                
+                  <line x1="46" y1="230" x2="46" y2="234" />
+                
+              
+                
+                  <line x1="89.4" y1="230" x2="89.4" y2="234" />
+                
+              
+                
+                  <line x1="132.9" y1="230" x2="132.9" y2="234" />
+                
+              
+                
+                  <line x1="176.3" y1="230" x2="176.3" y2="234" />
+                
+              
+                
+                  <line x1="219.7" y1="230" x2="219.7" y2="234" />
+                
+              
+                
+                  <line x1="263.1" y1="230" x2="263.1" y2="234" />
+                
+              
+                
+                  <line x1="306.6" y1="230" x2="306.6" y2="234" />
+                
+              
+                
+                  <line x1="350" y1="230" x2="350" y2="234" />
+                
+              
+            </g>
+            <g fill="#000">
+              
+                
+              
+                
+                  <text x="89.4" y="244" text-anchor="middle">+1d</text>
+                
+              
+                
+                  <text x="132.9" y="244" text-anchor="middle">+2d</text>
+                
+              
+                
+                  <text x="176.3" y="244" text-anchor="middle">+3d</text>
+                
+              
+                
+                  <text x="219.7" y="244" text-anchor="middle">+4d</text>
+                
+              
+                
+                  <text x="263.1" y="244" text-anchor="middle">+5d</text>
+                
+              
+                
+                  <text x="306.6" y="244" text-anchor="middle">+6d</text>
+                
+              
+                
+                  <text x="350" y="244" text-anchor="middle">+7d</text>
+                
+              
+            </g>
+          
+
+          <!-- Asteroid Markers and Labels -->
+          
+            <g stroke="#000" stroke-width="1.5" clip-path="url(#chart-clip-full)">
+              
+                
+                  <circle cx="50.3" cy="51.1" r="7" fill="#000" />
+                
+              
+                
+                  <circle cx="207.9" cy="41.2" r="9" fill="#000" />
+                
+              
+                
+                  <circle cx="281.4" cy="39.5" r="7" fill="#000" />
+                
+              
+                
+                  <circle cx="130.9" cy="28" r="9" fill="#000" />
+                
+              
+                
+                  <circle cx="89.5" cy="146.4" r="3" fill="none" />
+                
+              
+                
+                  <circle cx="109.5" cy="115.2" r="3" fill="none" />
+                
+              
+                
+                  <circle cx="54.3" cy="85.8" r="3" fill="none" />
+                
+              
+                
+                  <circle cx="94" cy="85.3" r="5" fill="none" />
+                
+              
+                
+                  <circle cx="202.7" cy="84.6" r="5" fill="none" />
+                
+              
+                
+                  <circle cx="339.4" cy="79" r="9" fill="none" />
+                
+              
+                
+                  <circle cx="216.2" cy="64.9" r="3" fill="none" />
+                
+              
+                
+                  <circle cx="117.9" cy="62.4" r="9" fill="none" />
+                
+              
+                
+                  <circle cx="314.2" cy="60.4" r="3" fill="none" />
+                
+              
+                
+                  <circle cx="252.8" cy="55.8" r="5" fill="none" />
+                
+              
+                
+                  <circle cx="79.4" cy="54.9" r="5" fill="none" />
+                
+              
+                
+                  <circle cx="339.9" cy="38.9" r="5" fill="none" />
+                
+              
+                
+                  <circle cx="313.7" cy="38" r="5" fill="none" />
+                
+              
+                
+                  <circle cx="159" cy="27" r="3" fill="none" />
+                
+              
+            </g>
+            <g fill="#000" clip-path="url(#chart-clip-full)">
+              
+                
+                  <text x="60.3" y="54.1" text-anchor="start">JR28</text>
+                
+              
+                
+                  <text x="219.9" y="44.2" text-anchor="start">1998 ..</text>
+                
+              
+                
+                  <text x="291.4" y="42.5" text-anchor="start">HC2</text>
+                
+              
+                
+                  <text x="142.9" y="31" text-anchor="start">CT4</text>
+                
+              
+                
+                  <text x="95.5" y="149.4" text-anchor="start">RH16</text>
+                
+              
+                
+                  <text x="115.5" y="118.2" text-anchor="start">RD2</text>
+                
+              
+                
+                  <text x="60.3" y="88.8" text-anchor="start">HU4</text>
+                
+              
+                
+                  <text x="102" y="88.3" text-anchor="start">RP40</text>
+                
+              
+                
+                  <text x="210.7" y="87.6" text-anchor="start">DM215</text>
+                
+              
+                
+                  <text x="327.4" y="82" text-anchor="end">2007 ..</text>
+                
+              
+                
+                  <text x="222.2" y="67.9" text-anchor="start">QB35</text>
+                
+              
+                
+                  <text x="129.9" y="65.4" text-anchor="start">LL6</text>
+                
+              
+                
+                  <text x="320.2" y="63.4" text-anchor="start">CE22</text>
+                
+              
+                
+                  <text x="260.8" y="58.8" text-anchor="start">PM</text>
+                
+              
+                
+                  <text x="87.4" y="57.9" text-anchor="start">FR</text>
+                
+              
+                
+                  <text x="331.9" y="41.9" text-anchor="end">TH1</text>
+                
+              
+                
+                  <text x="321.7" y="41" text-anchor="start">EY</text>
+                
+              
+                
+                  <text x="165" y="30" text-anchor="start">HE</text>
+                
+              
+            </g>
+          
+        </svg>
+      </div>
+
+      <!-- Right Column: Telemetry Header, Stats & Closest Flybys -->
+      <div class="w--full flex flex--col grow">
+        <div class="flex flex--col gap--space-between w--full grow p--1">
+          
+          <!-- Header / Status Row -->
+          <div class="flex flex--row flex--center-y gap--small w--full">
+            <div>
+              <div class="title title--base">PLANETARY DEFENSE</div>
+              <div class="label">NEO TIMELINE MONITOR</div>
+            </div>
+            
+            <div class="flex flex--row flex--center-y gap--small ml--auto">
+              
+                <div class="label label--outline p--1 flex flex--row flex--center-x">
+                  SYSTEM STATUS: NOMINAL // ALL ENCOUNTERS SAFE
+                </div>
+              
+            </div>
+          </div>
+          
+          <!-- Key Statistics Grid -->
+          <div class="grid grid--cols-2 portrait:grid--cols-1 gap--small w--full">
+            <div class="bg--gray-75 rounded p--1 flex flex--col flex--center-x">
+              <span class="label">UPCOMING (7D)</span>
+              <span class="value value--base portrait:value--small">45</span>
+            </div>
+            <div class="bg--gray-75 rounded p--1 flex flex--col flex--center-x">
+              <span class="label">CLOSEST APPROACH</span>
+              <span class="value value--base portrait:value--small">8.7 LD</span>
+            </div>
+          </div>
+          
+          <!-- Closest Scheduled Flybys -->
+          <div class="flex flex--col gap--xsmall w--full">
+            <div class="label">CLOSEST SCHEDULED FLYBYS</div>
+            
+            
+              <div class="grid grid--cols-1 gap--xsmall w--full">
+                
+                  <div class="rounded bg--gray-75 p--1">
+                    <div class="flex flex--row flex--center-y gap--space-between w--full">
+                      <div class="grow">
+                        <div class="title title--small" data-clamp="1">RH16</div>
+                        <div class="label label--small" data-clamp="1">T+1d 0h &bull; Size: 25m</div>
+                      </div>
+                      <div class="text--right flex flex--col ml--auto">
+                        <div class="value value--small" data-clamp="1">8.7 LD</div>
+                        
+                      </div>
+                    </div>
+                  </div>
+                
+                  <div class="rounded bg--gray-75 p--1">
+                    <div class="flex flex--row flex--center-y gap--space-between w--full">
+                      <div class="grow">
+                        <div class="title title--small" data-clamp="1">RD2</div>
+                        <div class="label label--small" data-clamp="1">T+1d 11h &bull; Size: 16m</div>
+                      </div>
+                      <div class="text--right flex flex--col ml--auto">
+                        <div class="value value--small" data-clamp="1">19.4 LD</div>
+                        
+                      </div>
+                    </div>
+                  </div>
+                
+              </div>
+            
+          </div>
+        </div>
       </div>
     </div>
   

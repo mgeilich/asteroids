@@ -22,37 +22,280 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <!-- class="layout" -->
 <div class="layout layout--col layout--stretch p--0">
   
-    <div class="flex flex--col layout--center grow">
-      <div class="p--4 label">
-        Timeline scan offline. System checking for telemetry updates...
+    <div class="grid grid--cols-12 portrait:grid--cols-1 gap--small p--0.5 grow w--full">
+       
+      <!-- Left Column: Linear Timeline (5 cols) -->
+      <div class="col--span-5 portrait:col--span-12 flex flex--col flex--center-x">
+        <svg width="240" height="140" viewBox="0 0 240 140" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg" class="w--full h--auto max-w--full">
+          <defs>
+            <clipPath id="chart-clip-half-h">
+              <rect x="42" y="14" width="192" height="110" />
+            </clipPath>
+          </defs>
+
+          <!-- Axes -->
+          <g stroke="#000" stroke-width="1.5">
+            <line x1="44" y1="16" x2="44" y2="120" />
+            <line x1="44" y1="120" x2="232" y2="120" stroke-width="2" />
+          </g>
+
+          <!-- Gridlines -->
+          
+            <g stroke="#000" stroke-width="1" stroke-dasharray="2 4">
+              
+                
+                  <line x1="44" y1="89.6" x2="232" y2="89.6" />
+                
+              
+                
+                  <line x1="44" y1="63.5" x2="232" y2="63.5" />
+                
+              
+                
+                  <line x1="44" y1="33.1" x2="232" y2="33.1" />
+                
+              
+                
+                  <line x1="44" y1="20" x2="232" y2="20" />
+                
+              
+            </g>
+            <g fill="#000">
+              
+                
+                  <text x="40" y="89.6" dy="3" text-anchor="end">5 LD</text>
+                
+              
+                
+                  <text x="40" y="63.5" dy="3" text-anchor="end">20 LD</text>
+                
+              
+                
+                  <text x="40" y="33.1" dy="3" text-anchor="end">100 LD</text>
+                
+              
+                
+                  <text x="40" y="20" dy="3" text-anchor="end">200 LD</text>
+                
+              
+              <text x="40" y="120" dy="3" text-anchor="end">Earth</text>
+            </g>
+          
+
+          <!-- Header Labels -->
+          <g fill="#000" font-weight="bold">
+            <text x="44" y="12" text-anchor="start">NOW (T-0)</text>
+            <text x="232" y="12" text-anchor="end">T+7D</text>
+          </g>
+
+          <!-- Time Ticks along Bottom X-axis -->
+          
+            <g stroke="#000" stroke-width="1.5">
+              
+                
+                  <line x1="44" y1="120" x2="44" y2="124" />
+                
+              
+                
+                  <line x1="70.9" y1="120" x2="70.9" y2="124" />
+                
+              
+                
+                  <line x1="97.7" y1="120" x2="97.7" y2="124" />
+                
+              
+                
+                  <line x1="124.6" y1="120" x2="124.6" y2="124" />
+                
+              
+                
+                  <line x1="151.4" y1="120" x2="151.4" y2="124" />
+                
+              
+                
+                  <line x1="178.3" y1="120" x2="178.3" y2="124" />
+                
+              
+                
+                  <line x1="205.1" y1="120" x2="205.1" y2="124" />
+                
+              
+                
+                  <line x1="232" y1="120" x2="232" y2="124" />
+                
+              
+            </g>
+            <g fill="#000">
+              
+                
+              
+                
+                  <text x="70.9" y="134" text-anchor="middle">+1d</text>
+                
+              
+                
+                  <text x="97.7" y="134" text-anchor="middle">+2d</text>
+                
+              
+                
+                  <text x="124.6" y="134" text-anchor="middle">+3d</text>
+                
+              
+                
+                  <text x="151.4" y="134" text-anchor="middle">+4d</text>
+                
+              
+                
+                  <text x="178.3" y="134" text-anchor="middle">+5d</text>
+                
+              
+                
+                  <text x="205.1" y="134" text-anchor="middle">+6d</text>
+                
+              
+                
+                  <text x="232" y="134" text-anchor="middle">+7d</text>
+                
+              
+            </g>
+          
+
+          <!-- Asteroid Markers and Labels -->
+          
+            <g stroke="#000" stroke-width="1.5" clip-path="url(#chart-clip-half-h)">
+              
+                
+                  <circle cx="46.6" cy="32.7" r="5" fill="#000" />
+                
+              
+                
+                  <circle cx="144.1" cy="27.9" r="7" fill="#000" />
+                
+              
+                
+                  <circle cx="189.6" cy="27.1" r="5" fill="#000" />
+                
+              
+                
+                  <circle cx="96.5" cy="21.5" r="7" fill="#000" />
+                
+              
+                
+                  <circle cx="70.9" cy="79.2" r="3" fill="none" />
+                
+              
+                
+                  <circle cx="83.3" cy="64" r="3" fill="none" />
+                
+              
+                
+                  <circle cx="140.9" cy="49.1" r="4" fill="none" />
+                
+              
+                
+                  <circle cx="225.4" cy="46.4" r="7" fill="none" />
+                
+              
+            </g>
+            <g fill="#000" clip-path="url(#chart-clip-half-h)">
+              
+                
+                  <text x="54.6" y="35.7" text-anchor="start">JR28</text>
+                
+              
+                
+                  <text x="154.1" y="30.9" text-anchor="start">1998 ..</text>
+                
+              
+                
+                  <text x="197.6" y="30.1" text-anchor="start">HC2</text>
+                
+              
+                
+                  <text x="106.5" y="24.5" text-anchor="start">CT4</text>
+                
+              
+                
+                  <text x="76.9" y="82.2" text-anchor="start">RH16</text>
+                
+              
+                
+                  <text x="89.3" y="67" text-anchor="start">RD2</text>
+                
+              
+                
+                  <text x="147.9" y="52.1" text-anchor="start">DM215</text>
+                
+              
+                
+                  <text x="215.4" y="49.4" text-anchor="end">2007 ..</text>
+                
+              
+            </g>
+          
+        </svg>
+      </div>
+
+      <!-- Right Column: Status Banner & Summary (7 cols) -->
+      <div class="col--span-7 portrait:col--span-12 flex flex--col gap--xsmall">
+        <!-- Status Row -->
+        <div class="flex flex--row flex--center-y gap--xsmall">
+          <div>
+            <div class="title title--small">ASTEROIDS</div>
+            <div class="label label--small">Planetary Defense</div>
+          </div>
+          
+          <div class="flex flex--row flex--center-y gap--xsmall ml--auto">
+            
+              <span class="label label--outline px--1 py--0.5">NOMINAL</span>
+            
+          </div>
+        </div>
+        
+        <!-- Metrics Row (Reflows to 1 column in portrait) -->
+        <div class="grid grid--cols-2 portrait:grid--cols-1 gap--xsmall">
+          <div class="bg--gray-75 rounded p--0.5 flex flex--row gap--xsmall flex--center-x flex--center-y">
+            <span class="label">UPCOMING:</span>
+            <span class="value value--small">45</span>
+          </div>
+          <div class="bg--gray-75 rounded p--0.5 flex flex--row gap--xsmall flex--center-x flex--center-y">
+            <span class="label">CLOSEST:</span>
+            <span class="value value--small">8.7 LD</span>
+          </div>
+        </div>
+        
+        <!-- Closest List Schedule -->
+        <div class="flex flex--col gap--xsmall">
+          <div class="label">CLOSEST SCHEDULED FLYBYS</div>
+          
+            
+              <div class="flex flex--row flex--center-y gap--space-between p--0.5 rounded bg--gray-75">
+                <div class="grow">
+                  <div class="title title--small" data-clamp="1">RH16</div>
+                  <div class="label label--small" data-clamp="1">T+1d 0h &bull; Size: 25m</div>
+                </div>
+                <div class="text--right flex flex--col ml--auto">
+                  <div class="value value--small" data-clamp="1">8.7 LD</div>
+                  
+                </div>
+              </div>
+            
+              <div class="flex flex--row flex--center-y gap--space-between p--0.5 rounded bg--gray-75">
+                <div class="grow">
+                  <div class="title title--small" data-clamp="1">RD2</div>
+                  <div class="label label--small" data-clamp="1">T+1d 11h &bull; Size: 16m</div>
+                </div>
+                <div class="text--right flex flex--col ml--auto">
+                  <div class="value value--small" data-clamp="1">19.4 LD</div>
+                  
+                </div>
+              </div>
+            
+          
+        </div>
       </div>
     </div>
   
