@@ -36,7 +36,7 @@
     </div>
   {% else %}
     <div class="p--2 label">
-      Timeline scan in progress...
+      {{ last_error | default: 'Timeline scan in progress...' }}
     </div>
   {% endif %}
 </div>

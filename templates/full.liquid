@@ -1,4 +1,4 @@
-<div class="layout layout--col layout--stretch gap--small">
+<div class="layout layout--col layout--stretch p--0">
   {% if scan_completed %}
     <div class="grid grid--cols-2 portrait:grid--cols-1 gap--small w--full grow p--1">
       
@@ -162,7 +162,7 @@
   {% else %}
     <div class="flex flex--col layout--center grow">
       <div class="p--4 label">
-        Timeline scan offline. System checking for telemetry updates...
+        {{ last_error | default: 'Timeline scan offline. System checking for telemetry updates...' }}
       </div>
     </div>
   {% endif %}
