@@ -137,31 +137,35 @@ function run(input) {
 
     // Mode 2 & 3: Ingest from raw NASA NeoWS feed or candidates list
     let rawCandidates = [];
-    if (input.near_earth_objects && typeof input.near_earth_objects === 'object') {
-      Object.keys(input.near_earth_objects).forEach(dateKey => {
-        const list = input.near_earth_objects[dateKey];
-        if (Array.isArray(list)) {
-          list.forEach(ast => {
-            if (ast && ast.close_approach_data && ast.close_approach_data.length > 0) {
-              const app = ast.close_approach_data[0];
-              const epoch = Number(app.epoch_date_close_approach);
-              if (epoch && epoch >= now_ms && epoch <= end_ms) {
-                const diamMin = (ast.estimated_diameter && ast.estimated_diameter.meters) ? ast.estimated_diameter.meters.estimated_diameter_min : 50;
-                const diamMax = (ast.estimated_diameter && ast.estimated_diameter.meters) ? ast.estimated_diameter.meters.estimated_diameter_max : 150;
-                rawCandidates.push({
-                  id: ast.id,
-                  name: ast.name,
-                  miss_distance_ld: parseFloat(app.miss_distance ? app.miss_distance.lunar : 10) || 10,
-                  velocity_kph: parseFloat(app.relative_velocity ? app.relative_velocity.kilometers_per_hour : 35000) || 35000,
-                  avg_diameter: (diamMin + diamMax) / 2,
-                  is_hazardous: Boolean(ast.is_potentially_hazardous_asteroid),
-                  epoch: epoch
-                });
+    if (input.near_earth_objects && typeof input.near_earth_objects === 'object' && input.near_earth_objects !== null && !Array.isArray(input.near_earth_objects)) {
+      try {
+        Object.keys(input.near_earth_objects).forEach(dateKey => {
+          const list = input.near_earth_objects[dateKey];
+          if (Array.isArray(list)) {
+            list.forEach(ast => {
+              if (ast && ast.close_approach_data && Array.isArray(ast.close_approach_data) && ast.close_approach_data.length > 0) {
+                const app = ast.close_approach_data[0];
+                const epoch = Number(app.epoch_date_close_approach);
+                if (epoch && epoch >= now_ms && epoch <= end_ms) {
+                  const diamMin = (ast.estimated_diameter && ast.estimated_diameter.meters) ? ast.estimated_diameter.meters.estimated_diameter_min : 50;
+                  const diamMax = (ast.estimated_diameter && ast.estimated_diameter.meters) ? ast.estimated_diameter.meters.estimated_diameter_max : 150;
+                  rawCandidates.push({
+                    id: ast.id,
+                    name: ast.name,
+                    miss_distance_ld: parseFloat(app.miss_distance ? app.miss_distance.lunar : 10) || 10,
+                    velocity_kph: parseFloat(app.relative_velocity ? app.relative_velocity.kilometers_per_hour : 35000) || 35000,
+                    avg_diameter: (diamMin + diamMax) / 2,
+                    is_hazardous: Boolean(ast.is_potentially_hazardous_asteroid),
+                    epoch: epoch
+                  });
+                }
               }
-            }
-          });
-        }
-      });
+            });
+          }
+        });
+      } catch (ingestErr) {
+        console.error("[transform.js] Error ingesting NASA raw feed:", ingestErr);
+      }
     } else if (Array.isArray(input.candidates) && input.candidates.length > 0) {
       rawCandidates = input.candidates;
     }
@@ -255,109 +259,119 @@ function run(input) {
 
     // Calculate layout coordinates
     Object.keys(LAYOUTS).forEach(key => {
-      const cfg = LAYOUTS[key];
-      const plotW = cfg.x_max - cfg.x_min;
-      const plotH = cfg.y_max - cfg.y_min;
+      try {
+        const cfg = LAYOUTS[key];
+        const plotW = cfg.x_max - cfg.x_min;
+        const plotH = cfg.y_max - cfg.y_min;
 
-      // Logarithmic Gridlines
-      const gridlines = cfg.grid_levels.map(level => {
-        const logVal = Math.log10(Math.max(MIN_LD, level));
-        const norm = (logVal - LOG_MIN) / LOG_RANGE;
-        return {
-          y: parseFloat((cfg.y_max - norm * plotH).toFixed(1)),
-          label: `${level} LD`,
-          x_label: cfg.x_min - 4
-        };
-      });
-
-      // Ticks (0d to +7d)
-      const ticks = [];
-      for (let dayOffset = 0; dayOffset <= 7; dayOffset++) {
-        const tNorm = dayOffset / 7.0;
-        const xPos = parseFloat((cfg.x_min + tNorm * plotW).toFixed(1));
-        let label = dayOffset === 0 ? "NOW" : `+${dayOffset}d`;
-        ticks.push({
-          x: xPos,
-          label: label,
-          is_now: dayOffset === 0,
-          y_tick_top: cfg.y_max,
-          y_tick_bottom: cfg.y_max + 4,
-          y_label: cfg.y_max + 14
+        // Logarithmic Gridlines
+        const gridlines = cfg.grid_levels.map(level => {
+          const logVal = Math.log10(Math.max(MIN_LD, level));
+          const norm = (logVal - LOG_MIN) / LOG_RANGE;
+          return {
+            y: parseFloat((cfg.y_max - norm * plotH).toFixed(1)),
+            label: `${level} LD`,
+            x_label: cfg.x_min - 4
+          };
         });
-      }
 
-      // Asteroids with non-overlap collision filter
-      const selectedAsteroids = [];
+        // Ticks (0d to +7d)
+        const ticks = [];
+        for (let dayOffset = 0; dayOffset <= 7; dayOffset++) {
+          const tNorm = dayOffset / 7.0;
+          const xPos = parseFloat((cfg.x_min + tNorm * plotW).toFixed(1));
+          let label = dayOffset === 0 ? "NOW" : `+${dayOffset}d`;
+          ticks.push({
+            x: xPos,
+            label: label,
+            is_now: dayOffset === 0,
+            y_tick_top: cfg.y_max,
+            y_tick_bottom: cfg.y_max + 4,
+            y_label: cfg.y_max + 14
+          });
+        }
 
-      for (let i = 0; i < prioritized.length; i++) {
-        if (selectedAsteroids.length >= cfg.limit) break;
-        const item = prioritized[i];
+        // Asteroids with non-overlap collision filter
+        const selectedAsteroids = [];
 
-        let tNorm = (item.epoch - now_ms) / total_window_ms;
-        tNorm = Math.max(0.0, Math.min(1.0, tNorm));
-        const xPos = parseFloat((cfg.x_min + tNorm * plotW).toFixed(1));
+        for (let i = 0; i < prioritized.length; i++) {
+          if (selectedAsteroids.length >= cfg.limit) break;
+          const item = prioritized[i];
 
-        const distClamped = Math.max(MIN_LD, Math.min(MAX_LD, item.miss_distance_ld));
-        const dNorm = Math.max(0.0, Math.min(1.0, (Math.log10(distClamped) - LOG_MIN) / LOG_RANGE));
-        const yPos = parseFloat((cfg.y_max - dNorm * plotH).toFixed(1));
+          let tNorm = (item.epoch - now_ms) / total_window_ms;
+          tNorm = Math.max(0.0, Math.min(1.0, tNorm));
+          const xPos = parseFloat((cfg.x_min + tNorm * plotW).toFixed(1));
 
-        // Overlap check
-        let overlap = false;
-        for (let j = 0; j < selectedAsteroids.length; j++) {
-          const ex = selectedAsteroids[j];
-          const dx = Math.abs(xPos - ex.x);
-          const dy = Math.abs(yPos - ex.y);
-          if ((dx < cfg.min_dx && dy < cfg.min_dy) || (dx * dx + dy * dy < cfg.min_r_sq)) {
-            overlap = true;
-            break;
+          const distClamped = Math.max(MIN_LD, Math.min(MAX_LD, item.miss_distance_ld));
+          const dNorm = Math.max(0.0, Math.min(1.0, (Math.log10(distClamped) - LOG_MIN) / LOG_RANGE));
+          const yPos = parseFloat((cfg.y_max - dNorm * plotH).toFixed(1));
+
+          // Overlap check
+          let overlap = false;
+          for (let j = 0; j < selectedAsteroids.length; j++) {
+            const ex = selectedAsteroids[j];
+            const dx = Math.abs(xPos - ex.x);
+            const dy = Math.abs(yPos - ex.y);
+            if ((dx < cfg.min_dx && dy < cfg.min_dy) || (dx * dx + dy * dy < cfg.min_r_sq)) {
+              overlap = true;
+              break;
+            }
           }
+
+          if (overlap) continue;
+
+          let r = 4;
+          if (item.avg_diameter < 30) r = 3;
+          else if (item.avg_diameter < 100) r = 5;
+          else if (item.avg_diameter < 300) r = 7;
+          else r = 9;
+
+          if (key === "quadrant") r = Math.max(2, Math.round(r * 0.6));
+          else if (key === "half_horizontal") r = Math.max(3, Math.round(r * 0.8));
+
+          let labelX = xPos + r + 3;
+          let anchor = "start";
+          if (xPos + r + 3 > cfg.x_max - 15 || xPos + r + 28 > cfg.width) {
+            labelX = xPos - r - 3;
+            anchor = "end";
+          } else if (xPos - r - 3 < cfg.x_min + 5) {
+            labelX = xPos + r + 3;
+            anchor = "start";
+          } else {
+            labelX = xPos + r + 3;
+            anchor = "start";
+          }
+
+          selectedAsteroids.push({
+            name: item.name,
+            x: xPos,
+            y: yPos,
+            r: r,
+            label_x: parseFloat(labelX.toFixed(1)),
+            label_y: parseFloat((yPos + 3).toFixed(1)),
+            anchor: anchor,
+            is_hazardous: !!item.is_hazardous,
+            dist_ld: parseFloat(item.miss_distance_ld.toFixed(1))
+          });
         }
 
-        if (overlap) continue;
-
-        let r = 4;
-        if (item.avg_diameter < 30) r = 3;
-        else if (item.avg_diameter < 100) r = 5;
-        else if (item.avg_diameter < 300) r = 7;
-        else r = 9;
-
-        if (key === "quadrant") r = Math.max(2, Math.round(r * 0.6));
-        else if (key === "half_horizontal") r = Math.max(3, Math.round(r * 0.8));
-
-        let labelX = xPos + r + 3;
-        let anchor = "start";
-        if (xPos + r + 3 > cfg.x_max - 15 || xPos + r + 28 > cfg.width) {
-          labelX = xPos - r - 3;
-          anchor = "end";
-        } else if (xPos - r - 3 < cfg.x_min + 5) {
-          labelX = xPos + r + 3;
-          anchor = "start";
-        } else {
-          labelX = xPos + r + 3;
-          anchor = "start";
-        }
-
-        selectedAsteroids.push({
-          name: item.name,
-          x: xPos,
-          y: yPos,
-          r: r,
-          label_x: parseFloat(labelX.toFixed(1)),
-          label_y: parseFloat((yPos + 3).toFixed(1)),
-          anchor: anchor,
-          is_hazardous: !!item.is_hazardous,
-          dist_ld: parseFloat(item.miss_distance_ld.toFixed(1))
-        });
+        result[`chart_asteroids_${key}`] = selectedAsteroids.filter(a => isFinite(a.x) && isFinite(a.y));
+        result[`chart_ticks_${key}`] = ticks;
+        result[`chart_gridlines_${key}`] = gridlines;
+      } catch (layoutErr) {
+        console.error(`[transform.js] Error calculating layout ${key}:`, layoutErr);
+        result[`chart_asteroids_${key}`] = [];
+        result[`chart_ticks_${key}`] = [];
+        result[`chart_gridlines_${key}`] = [];
       }
-
-      result[`chart_asteroids_${key}`] = selectedAsteroids.filter(a => isFinite(a.x) && isFinite(a.y));
-      result[`chart_ticks_${key}`] = ticks;
-      result[`chart_gridlines_${key}`] = gridlines;
     });
 
     return result;
   } catch (err) {
     console.error("[transform.js] Error in transform script:", err);
-    return emptyPayload;
+    return {
+      ...emptyPayload,
+      last_error: "Telemetry error: " + (err && err.message ? err.message : String(err))
+    };
   }
 }
