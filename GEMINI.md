@@ -39,10 +39,10 @@ Always follow these guidelines when editing or deploying files in this repositor
   ```
 * In every view file (`full.liquid`, `half_horizontal.liquid`, `half_vertical.liquid`, `quadrant.liquid`), place `{% render 'title_bar' %}` at the very end of the file, directly after the closing `</div>` of the root `<div class="layout">`.
 
-## 6. `settings.yml` Custom Fields & `learn_more_url`
+## 6. `settings.yml` Custom Fields & Backend Proxy Architecture
 * **Rule**:
-  - Always include `api_key` custom field under `custom_fields` for optional user-provided NASA API keys.
-  - Always include `author_bio` custom field with `learn_more_url: https://api.nasa.gov/#neo`.
+  - Do NOT expose an `api_key` custom field in `settings.yml`. All NASA API authentication, caching, rate-limiting, and coordinate calculations are securely managed by the Firebase backend (`https://neo-radar-t4xw3htxya-uc.a.run.app`).
+  - Always include the `author_bio` custom field with `learn_more_url: https://api.nasa.gov/#neo`.
   - Keep `description` under 35 characters.
 
 ## 7. Universal 1-bit Badge Classes

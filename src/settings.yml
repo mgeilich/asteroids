@@ -31,11 +31,6 @@ oauth_expiry_field_name: ''
 oauth_expiry_strategy: ''
 oauth_fixed_expiry_ms: ''
 custom_fields:
-- keyname: api_key
-  field_type: string
-  name: NASA API Key (Optional)
-  description: Leave blank to use shared proxy, or input your personal NASA API key from api.nasa.gov.
-  default_value: ''
 - keyname: author_bio
   field_type: author_bio
   name: Support & Creator Info
