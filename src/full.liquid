@@ -77,7 +77,7 @@
             <g fill="#000" font-family="sans-serif" clip-path="url(#chart-clip-full)">
               {% for ast in chart_asteroids_full %}
                 {% if ast and ast.label_x and ast.label_y and ast.name %}
-                  <text x="{{ ast.label_x }}" y="{{ ast.label_y }}" text-anchor="{{ ast.anchor | default: 'start' }}">
+                  <text x="{{ ast.label_x }}" y="{{ ast.label_y }}" text-anchor="{{ ast.anchor | default: 'start' }}" data-clamp="1">
                     {{- ast.name -}}
                   </text>
                 {% endif %}
