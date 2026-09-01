@@ -21,6 +21,37 @@ function cleanAsteroidName(rawName) {
 }
 
 function run(input) {
+  const emptyPayload = {
+    scan_completed: false,
+    system_status: "SYSTEM OFFLINE: NO DATA",
+    is_alert: false,
+    last_error: "Telemetry feed unreachable. Checking for updates...",
+    total_count: "—",
+    upcoming_count: "—",
+    closest_dist_ld: "—",
+    closest_name: "—",
+    max_size_m: "—",
+    last_updated: "—",
+    chart_asteroids_full: [],
+    chart_ticks_full: [],
+    chart_gridlines_full: [],
+    chart_asteroids_half_horizontal: [],
+    chart_ticks_half_horizontal: [],
+    chart_gridlines_half_horizontal: [],
+    chart_asteroids_half_vertical: [],
+    chart_ticks_half_vertical: [],
+    chart_gridlines_half_vertical: [],
+    chart_asteroids_quadrant: [],
+    chart_ticks_quadrant: [],
+    chart_gridlines_quadrant: [],
+    closest_list: []
+  };
+
+  // Explicit null and non-object safety guard
+  if (!input || input === null || typeof input !== 'object' || Object.keys(input).length === 0) {
+    return emptyPayload;
+  }
+
   const LAYOUTS = {
     full: {
       width: 360, height: 260,
@@ -62,37 +93,7 @@ function run(input) {
   const LOG_MAX = Math.log10(MAX_LD);
   const LOG_RANGE = LOG_MAX - LOG_MIN;
 
-  const emptyPayload = {
-    scan_completed: false,
-    system_status: "SYSTEM OFFLINE: NO DATA",
-    is_alert: false,
-    last_error: "Telemetry feed unreachable. Checking for updates...",
-    total_count: "—",
-    upcoming_count: "—",
-    closest_dist_ld: "—",
-    closest_name: "—",
-    max_size_m: "—",
-    last_updated: "—",
-    chart_asteroids_full: [],
-    chart_ticks_full: [],
-    chart_gridlines_full: [],
-    chart_asteroids_half_horizontal: [],
-    chart_ticks_half_horizontal: [],
-    chart_gridlines_half_horizontal: [],
-    chart_asteroids_half_vertical: [],
-    chart_ticks_half_vertical: [],
-    chart_gridlines_half_vertical: [],
-    chart_asteroids_quadrant: [],
-    chart_ticks_quadrant: [],
-    chart_gridlines_quadrant: [],
-    closest_list: []
-  };
-
   try {
-    if (!input || typeof input !== 'object' || Object.keys(input).length === 0) {
-      return emptyPayload;
-    }
-
     const now = new Date();
     const now_ms = now.getTime();
     const end_ms = now_ms + (7 * 24 * 3600 * 1000);

@@ -4,7 +4,7 @@
        
       <!-- Left Column: Linear Timeline (5 cols) -->
       <div class="col--span-5 portrait:col--span-12 flex flex--col flex--center-x">
-        <svg width="240" height="140" viewBox="0 0 240 140" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg" class="w--full h--auto max-w--full">
+        <svg width="240" height="140" viewBox="0 0 240 140" preserveAspectRatio="xMidYMid meet" fill="none" font-family="sans-serif" xmlns="http://www.w3.org/2000/svg" class="w--full h--auto max-w--full">
           <defs>
             <clipPath id="chart-clip-half-h">
               <rect x="42" y="14" width="192" height="110" />
@@ -26,7 +26,7 @@
                 {% endif %}
               {% endfor %}
             </g>
-            <g fill="#000">
+            <g fill="#000" font-family="sans-serif">
               {% for line in chart_gridlines_half_horizontal %}
                 {% if line and line.y and line.label %}
                   <text x="{{ line.x_label | default: 40 }}" y="{{ line.y }}" dy="3" text-anchor="end">
@@ -39,7 +39,7 @@
           {% endif %}
 
           <!-- Header Labels -->
-          <g fill="#000" font-weight="bold">
+          <g fill="#000" font-weight="bold" font-family="sans-serif">
             <text x="44" y="12" text-anchor="start">NOW (T-0)</text>
             <text x="232" y="12" text-anchor="end">T+7D</text>
           </g>
@@ -53,7 +53,7 @@
                 {% endif %}
               {% endfor %}
             </g>
-            <g fill="#000">
+            <g fill="#000" font-family="sans-serif">
               {% for tick in chart_ticks_half_horizontal %}
                 {% if tick and tick.x and tick.label and tick.is_now != true %}
                   <text x="{{ tick.x }}" y="{{ tick.y_label | default: 134 }}" text-anchor="middle">
@@ -73,7 +73,7 @@
                 {% endif %}
               {% endfor %}
             </g>
-            <g fill="#000" clip-path="url(#chart-clip-half-h)">
+            <g fill="#000" font-family="sans-serif" clip-path="url(#chart-clip-half-h)">
               {% for ast in chart_asteroids_half_horizontal %}
                 {% if ast and ast.label_x and ast.label_y and ast.name %}
                   <text x="{{ ast.label_x }}" y="{{ ast.label_y }}" text-anchor="{{ ast.anchor | default: 'start' }}">
@@ -83,7 +83,7 @@
               {% endfor %}
             </g>
           {% else %}
-            <g fill="#000">
+            <g fill="#000" font-family="sans-serif">
               <text x="138" y="70" text-anchor="middle">NO ASTEROIDS IN RANGE</text>
             </g>
           {% endif %}
