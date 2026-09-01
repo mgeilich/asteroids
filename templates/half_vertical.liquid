@@ -2,7 +2,7 @@
   {% if scan_completed %}
     <!-- Top Half: Linear Timeline Chart (360x160) -->
     <div class="w--full flex flex--col flex--center-x">
-      <svg width="360" height="160" viewBox="0 0 360 160" preserveAspectRatio="xMidYMid meet" fill="none" font-family="sans-serif" xmlns="http://www.w3.org/2000/svg" class="w--full h--auto">
+      <svg width="360" height="160" viewBox="0 0 360 160" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg" class="w--full h--auto">
         <defs>
           <clipPath id="chart-clip-half-v">
             <rect x="46" y="16" width="306" height="122" />
@@ -24,7 +24,7 @@
               {% endif %}
             {% endfor %}
           </g>
-          <g fill="#000" font-family="sans-serif">
+          <g fill="#000">
             {% for line in chart_gridlines_half_vertical %}
               {% if line and line.y and line.label %}
                 <text x="{{ line.x_label | default: 44 }}" y="{{ line.y }}" dy="3" text-anchor="end">
@@ -37,7 +37,7 @@
         {% endif %}
 
         <!-- Header Labels -->
-        <g fill="#000" font-weight="bold" font-family="sans-serif">
+        <g fill="#000" font-weight="bold">
           <text x="48" y="12" text-anchor="start">NOW (T-0)</text>
           <text x="350" y="12" text-anchor="end">T+7 DAYS</text>
         </g>
@@ -51,7 +51,7 @@
               {% endif %}
             {% endfor %}
           </g>
-          <g fill="#000" font-family="sans-serif">
+          <g fill="#000">
             {% for tick in chart_ticks_half_vertical %}
               {% if tick and tick.x and tick.label and tick.is_now != true %}
                 <text x="{{ tick.x }}" y="{{ tick.y_label | default: 150 }}" text-anchor="middle">
@@ -71,7 +71,7 @@
               {% endif %}
             {% endfor %}
           </g>
-          <g fill="#000" font-family="sans-serif" clip-path="url(#chart-clip-half-v)">
+          <g fill="#000" clip-path="url(#chart-clip-half-v)">
             {% for ast in chart_asteroids_half_vertical %}
               {% if ast and ast.label_x and ast.label_y and ast.name %}
                 <text x="{{ ast.label_x }}" y="{{ ast.label_y }}" text-anchor="{{ ast.anchor | default: 'start' }}" data-clamp="1">
@@ -81,7 +81,7 @@
             {% endfor %}
           </g>
         {% else %}
-          <g fill="#000" font-family="sans-serif">
+          <g fill="#000">
             <text x="199" y="80" text-anchor="middle">NO ASTEROIDS IN RANGE</text>
           </g>
         {% endif %}
