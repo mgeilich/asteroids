@@ -1,9 +1,9 @@
-<div class="layout layout--col layout--stretch p--0">
+<div class="layout layout--col layout--stretch p--1">
   {% if scan_completed %}
-    <div class="grid grid--cols-2 portrait:grid--cols-1 gap--small w--full grow p--1">
+    <div class="grid grid--cols-2 portrait:grid--cols-1 gap--small w--full grow">
       
       <!-- Left Column: Linear Coordinate Timeline Chart -->
-      <div class="w--full flex flex--col flex--center-x">
+      <div class="w--full flex flex--col flex--center-x flex--center-y grow">
         <svg width="360" height="260" viewBox="0 0 360 260" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg" class="w--full max-w--full h--auto portrait:w--full">
           <defs>
             <clipPath id="chart-clip-full">
@@ -93,7 +93,7 @@
 
       <!-- Right Column: Telemetry Header, Stats & Closest Flybys -->
       <div class="w--full flex flex--col grow">
-        <div class="flex flex--col gap--space-between w--full grow p--1">
+        <div class="flex flex--col gap--space-between w--full grow">
           
           <!-- Header / Status Row -->
           <div class="flex flex--row flex--center-y gap--small w--full">
