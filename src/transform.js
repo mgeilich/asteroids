@@ -7,15 +7,16 @@
  * 3. Static/sample candidate payload (settings.yml test data)
  */
 
-function cleanAsteroidName(rawName) {
+function cleanAsteroidName(rawName, maxLen) {
   if (!rawName) return "—";
+  let limit = maxLen || 14;
   let name = rawName.replace(/\(/g, "").replace(/\)/g, "").trim();
   let parts = name.split(/\s+/);
   if (parts.length > 1 && /^\d+$/.test(parts[0])) {
     name = parts.slice(1).join(" ");
   }
-  if (name.length > 7) {
-    name = name.substring(0, 5) + "..";
+  if (name.length > limit) {
+    name = name.substring(0, limit - 2) + "..";
   }
   return name;
 }
@@ -59,6 +60,7 @@ function run(input) {
       y_min: 25, y_max: 230,
       grid_levels: [2, 5, 10, 25, 50, 100, 200],
       limit: 18,
+      name_limit: 12,
       min_dx: 26, min_dy: 14, min_r_sq: 400
     },
     half_horizontal: {
@@ -67,6 +69,7 @@ function run(input) {
       y_min: 20, y_max: 120,
       grid_levels: [5, 20, 100, 200],
       limit: 8,
+      name_limit: 8,
       min_dx: 24, min_dy: 12, min_r_sq: 324
     },
     half_vertical: {
@@ -75,6 +78,7 @@ function run(input) {
       y_min: 20, y_max: 135,
       grid_levels: [5, 20, 50, 100, 200],
       limit: 10,
+      name_limit: 10,
       min_dx: 26, min_dy: 13, min_r_sq: 361
     },
     quadrant: {
@@ -83,6 +87,7 @@ function run(input) {
       y_min: 15, y_max: 100,
       grid_levels: [10, 50, 200],
       limit: 5,
+      name_limit: 6,
       min_dx: 20, min_dy: 10, min_r_sq: 256
     }
   };
@@ -192,7 +197,7 @@ function run(input) {
       
       candidates.push({
         id: c.id || String(idx),
-        name: cleanAsteroidName(c.name),
+        name: cleanAsteroidName(c.name, 14),
         miss_distance_ld: missDist,
         velocity_kph: Number(c.velocity_kph) || 30000,
         avg_diameter: diam,
@@ -346,7 +351,7 @@ function run(input) {
           }
 
           selectedAsteroids.push({
-            name: item.name,
+            name: cleanAsteroidName(item.name, cfg.name_limit || 12),
             x: xPos,
             y: yPos,
             r: r,

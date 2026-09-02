@@ -5,7 +5,7 @@ from typing import Dict, Any, List, Optional
 
 logger = logging.getLogger(__name__)
 
-def clean_asteroid_name(raw_name: str) -> str:
+def clean_asteroid_name(raw_name: str, max_len: int = 14) -> str:
     """Strips leading/trailing parentheses, spaces, and extraneous numbers from names."""
     if not raw_name:
         return "—"
@@ -13,8 +13,8 @@ def clean_asteroid_name(raw_name: str) -> str:
     parts = name.split()
     if len(parts) > 1 and parts[0].isdigit():
         name = " ".join(parts[1:])
-    if len(name) > 7:
-        name = name[:5] + ".."
+    if len(name) > max_len:
+        name = name[:max_len - 2] + ".."
     return name
 
 def calculate_telemetry(raw_data: Optional[Dict[str, Any]]) -> Dict[str, Any]:
@@ -160,6 +160,7 @@ def calculate_telemetry(raw_data: Optional[Dict[str, Any]]) -> Dict[str, Any]:
             "y_min": 25, "y_max": 230,
             "grid_levels": [2, 5, 10, 25, 50, 100, 200],
             "limit": 18,
+            "name_limit": 12,
             "min_dx": 26, "min_dy": 14, "min_r_sq": 400
         },
         "half_horizontal": {
@@ -168,6 +169,7 @@ def calculate_telemetry(raw_data: Optional[Dict[str, Any]]) -> Dict[str, Any]:
             "y_min": 20, "y_max": 120,
             "grid_levels": [5, 20, 100, 200],
             "limit": 8,
+            "name_limit": 8,
             "min_dx": 24, "min_dy": 12, "min_r_sq": 324
         },
         "half_vertical": {
@@ -176,6 +178,7 @@ def calculate_telemetry(raw_data: Optional[Dict[str, Any]]) -> Dict[str, Any]:
             "y_min": 20, "y_max": 135,
             "grid_levels": [5, 20, 50, 100, 200],
             "limit": 10,
+            "name_limit": 10,
             "min_dx": 26, "min_dy": 13, "min_r_sq": 361
         },
         "quadrant": {
@@ -184,6 +187,7 @@ def calculate_telemetry(raw_data: Optional[Dict[str, Any]]) -> Dict[str, Any]:
             "y_min": 15, "y_max": 100,
             "grid_levels": [10, 50, 200],
             "limit": 5,
+            "name_limit": 6,
             "min_dx": 20, "min_dy": 10, "min_r_sq": 256
         }
     }
@@ -295,7 +299,7 @@ def calculate_telemetry(raw_data: Optional[Dict[str, Any]]) -> Dict[str, Any]:
             label_y = y_pos + 3
             
             asteroids_payload.append({
-                "name": item["name"],
+                "name": clean_asteroid_name(item["name"], cfg.get("name_limit", 12)),
                 "x": round(x_pos, 1),
                 "y": round(y_pos, 1),
                 "r": r,
