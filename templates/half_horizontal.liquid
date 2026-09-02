@@ -19,7 +19,7 @@
 
           <!-- Gridlines -->
           {% if chart_gridlines_half_horizontal and chart_gridlines_half_horizontal.size > 0 %}
-            <g stroke="#000" stroke-width="1" stroke-dasharray="2 4">
+            <g stroke="#000" stroke-width="1" stroke-dasharray="2 2">
               {% for line in chart_gridlines_half_horizontal %}
                 {% if line and line.y %}
                   <line x1="44" y1="{{ line.y }}" x2="232" y2="{{ line.y }}" />

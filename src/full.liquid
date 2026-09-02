@@ -20,7 +20,7 @@
 
           <!-- Horizontal Distance Gridlines -->
           {% if chart_gridlines_full and chart_gridlines_full.size > 0 %}
-            <g stroke="#000" stroke-width="1" stroke-dasharray="2 4">
+            <g stroke="#000" stroke-width="1" stroke-dasharray="2 2">
               {% for line in chart_gridlines_full %}
                 {% if line and line.y %}
                   <line x1="46" y1="{{ line.y }}" x2="350" y2="{{ line.y }}" />
