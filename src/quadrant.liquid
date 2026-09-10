@@ -1,41 +1,59 @@
-<div class="layout layout--col layout--stretch p--0 gap--xsmall">
+<div class="layout layout--col layout--stretch p--0 gap--xsmall lg:gap--small">
   {% if scan_completed %}
     <!-- Header -->
     <div class="flex flex--row flex--center-y gap--xsmall w--full">
-      <div class="title title--small">ASTEROIDS</div>
+      <div class="title title--small lg:title--base">ASTEROIDS</div>
       <div class="ml--auto">
         {% if is_alert %}
-          <span class="label label--filled px--1 py--0.5">ALERT</span>
+          <span class="label label--filled px--1 py--0.5 lg:label--base">ALERT</span>
         {% else %}
-          <span class="label label--outline px--1 py--0.5">NOMINAL</span>
+          <span class="label label--outline px--1 py--0.5 lg:label--base">NOMINAL</span>
         {% endif %}
       </div>
     </div>
     
     <!-- Hero Metric Block -->
-    <div class="flex flex--col flex--center-x py--0.5">
-      <div class="value value--base" data-fit-value="true">{{ total_count | default: '0' }}</div>
-      <div class="label label--small">UPCOMING NEOS (7 DAYS)</div>
+    <div class="flex flex--col flex--center-x py--0.5 lg:py--1">
+      <div class="value value--base lg:value--xlarge" data-fit-value="true">{{ total_count | default: '0' }}</div>
+      <div class="label label--small lg:label--large">UPCOMING NEOS (7 DAYS)</div>
     </div>
     
     <!-- Secondary Glance Callouts -->
-    <div class="grid grid--cols-2 gap--xsmall w--full">
-      <div class="bg--gray-75 rounded p--0.5 flex flex--col flex--center-x">
-        <span class="label label--small">CLOSEST</span>
-        <span class="value value--small">{{ closest_dist_ld | default: '—' }}</span>
+    <div class="grid grid--cols-2 gap--xsmall lg:gap--small w--full">
+      <div class="bg--gray-75 rounded p--0.5 lg:p--1 flex flex--col flex--center-x">
+        <span class="label label--small lg:label--base 1bit:text-stroke 2bit:text-stroke">CLOSEST</span>
+        <span class="value value--small lg:value--base 1bit:text-stroke 2bit:text-stroke">{{ closest_dist_ld | default: '—' }}</span>
       </div>
-      <div class="bg--gray-75 rounded p--0.5 flex flex--col flex--center-x">
-        <span class="label label--small">MAX SIZE</span>
-        <span class="value value--small">{{ max_size_m | default: '—' }}</span>
+      <div class="bg--gray-75 rounded p--0.5 lg:p--1 flex flex--col flex--center-x">
+        <span class="label label--small lg:label--base 1bit:text-stroke 2bit:text-stroke">MAX SIZE</span>
+        <span class="value value--small lg:value--base 1bit:text-stroke 2bit:text-stroke">{{ max_size_m | default: '—' }}</span>
       </div>
     </div>
 
     <!-- Micro-Status Callout -->
-    <div class="rounded bg--gray-75 p--0.5 flex flex--row flex--center-x w--full">
-      <span class="label label--small">{% if is_alert %}HAZARD DETECTED IN SECTOR{% else %}ALL FLYBYS SAFE (NOMINAL){% endif %}</span>
+    <div class="rounded bg--gray-75 p--0.5 lg:p--1 flex flex--row flex--center-x w--full">
+      <span class="label label--small lg:label--base 1bit:text-stroke 2bit:text-stroke">{% if is_alert %}HAZARD DETECTED IN SECTOR{% else %}ALL FLYBYS SAFE (NOMINAL){% endif %}</span>
     </div>
+    
+    <!-- Additional Info on Large Screen (TRMNL X) -->
+    {% if closest_list and closest_list.size > 0 %}
+      <div class="hidden lg:flex flex--col gap--xsmall w--full">
+        <div class="label lg:label--base">NEXT FLYBY:</div>
+        {% for item in closest_list limit: 1 %}
+          <div class="flex flex--row flex--center-y gap--space-between p--0.5 lg:p--1 rounded bg--gray-75">
+            <div class="grow">
+              <div class="title lg:title--small 1bit:text-stroke 2bit:text-stroke" data-clamp="1">{{ item.name }}</div>
+              <div class="label lg:label--small 1bit:text-stroke 2bit:text-stroke" data-clamp="1">{{ item.time_str }}</div>
+            </div>
+            <div class="text--right ml--auto">
+              <div class="value lg:value--small 1bit:text-stroke 2bit:text-stroke">{{ item.dist_ld }} LD</div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
   {% else %}
-    <div class="p--2 label">
+    <div class="p--2 label lg:label--large">
       {{ last_error | default: 'Timeline scan in progress...' }}
     </div>
   {% endif %}

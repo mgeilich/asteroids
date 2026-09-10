@@ -1,6 +1,6 @@
 <div class="layout layout--col layout--stretch p--1">
   {% if scan_completed %}
-    <div class="grid grid--cols-2 portrait:grid--cols-1 gap--small w--full grow">
+    <div class="grid grid--cols-2 portrait:grid--cols-1 gap--small lg:gap--medium w--full grow">
       
       <!-- Left Column: Linear Coordinate Timeline Chart -->
       <div class="w--full flex flex--col flex--center-x flex--center-y grow">
@@ -96,19 +96,19 @@
         <div class="flex flex--col gap--space-between w--full grow">
           
           <!-- Header / Status Row -->
-          <div class="flex flex--row flex--center-y gap--small w--full">
+          <div class="flex flex--row flex--center-y gap--small lg:gap--medium w--full">
             <div>
-              <div class="title title--base">PLANETARY DEFENSE</div>
-              <div class="label">NEO TIMELINE MONITOR</div>
+              <div class="title title--base lg:title--large">PLANETARY DEFENSE</div>
+              <div class="label lg:label--large">NEO TIMELINE MONITOR</div>
             </div>
             
             <div class="flex flex--row flex--center-y gap--small ml--auto">
               {% if is_alert %}
-                <div class="label label--filled p--1 flex flex--row flex--center-x">
+                <div class="label label--filled p--1 lg:p--1.5 lg:label--large flex flex--row flex--center-x">
                   {{ system_status }}
                 </div>
               {% else %}
-                <div class="label label--outline p--1 flex flex--row flex--center-x">
+                <div class="label label--outline p--1 lg:p--1.5 lg:label--large flex flex--row flex--center-x">
                   {{ system_status }}
                 </div>
               {% endif %}
@@ -116,35 +116,35 @@
           </div>
           
           <!-- Key Statistics Grid -->
-          <div class="grid grid--cols-2 portrait:grid--cols-1 gap--small w--full">
-            <div class="bg--gray-75 rounded p--1 flex flex--col flex--center-x">
-              <span class="label">UPCOMING (7D)</span>
-              <span class="value value--base portrait:value--small">{{ total_count | default: '—' }}</span>
+          <div class="grid grid--cols-2 portrait:grid--cols-1 gap--small lg:gap--medium w--full">
+            <div class="bg--gray-75 rounded p--1 lg:p--2 flex flex--col flex--center-x">
+              <span class="label lg:label--large 1bit:text-stroke 2bit:text-stroke">UPCOMING (7D)</span>
+              <span class="value value--base portrait:value--small lg:value--xlarge 1bit:text-stroke 2bit:text-stroke">{{ total_count | default: '—' }}</span>
             </div>
-            <div class="bg--gray-75 rounded p--1 flex flex--col flex--center-x">
-              <span class="label">CLOSEST APPROACH</span>
-              <span class="value value--base portrait:value--small">{{ closest_dist_ld | default: '—' }}</span>
+            <div class="bg--gray-75 rounded p--1 lg:p--2 flex flex--col flex--center-x">
+              <span class="label lg:label--large 1bit:text-stroke 2bit:text-stroke">CLOSEST APPROACH</span>
+              <span class="value value--base portrait:value--small lg:value--xlarge 1bit:text-stroke 2bit:text-stroke">{{ closest_dist_ld | default: '—' }}</span>
             </div>
           </div>
           
           <!-- Closest Scheduled Flybys -->
-          <div class="flex flex--col gap--xsmall w--full">
-            <div class="label">CLOSEST SCHEDULED FLYBYS</div>
+          <div class="flex flex--col gap--xsmall lg:gap--small w--full">
+            <div class="label lg:label--large">CLOSEST SCHEDULED FLYBYS</div>
             
             {% if closest_list and closest_list.size > 0 %}
-              <div class="grid grid--cols-1 gap--xsmall w--full">
-                {% for item in closest_list limit: 2 %}
+              <div class="grid grid--cols-1 gap--xsmall lg:gap--small w--full">
+                {% for item in closest_list limit: 3 %}
                   {% if item and item.name %}
-                    <div class="rounded bg--gray-75 p--1">
+                    <div class="rounded bg--gray-75 p--1 lg:p--1.5 {% if forloop.index == 3 %}hidden lg:block{% endif %}">
                       <div class="flex flex--row flex--center-y gap--space-between w--full">
                         <div class="grow">
-                          <div class="title title--small" data-clamp="1">{{ item.name | default: '—' }}</div>
-                          <div class="label label--small" data-clamp="1">{{ item.time_str | default: '—' }} &bull; Size: {{ item.size_m | default: '—' }}</div>
+                          <div class="title title--small lg:title--base 1bit:text-stroke 2bit:text-stroke" data-clamp="1">{{ item.name | default: '—' }}</div>
+                          <div class="label label--small lg:label--base 1bit:text-stroke 2bit:text-stroke" data-clamp="1">{{ item.time_str | default: '—' }} &bull; Size: {{ item.size_m | default: '—' }}</div>
                         </div>
                         <div class="text--right flex flex--col ml--auto">
-                          <div class="value value--small" data-clamp="1">{{ item.dist_ld | default: '—' }} LD</div>
+                          <div class="value value--small lg:value--base 1bit:text-stroke 2bit:text-stroke" data-clamp="1">{{ item.dist_ld | default: '—' }} LD</div>
                           {% if item.is_hazardous == true %}
-                            <span class="label label--filled px--1">HAZARD</span>
+                            <span class="label label--filled px--1 lg:px--2 lg:label--base">HAZARD</span>
                           {% endif %}
                         </div>
                       </div>
@@ -153,7 +153,7 @@
                 {% endfor %}
               </div>
             {% else %}
-              <div class="p--3 rounded flex flex--row flex--center-x label w--full bg--gray-75">
+              <div class="p--3 rounded flex flex--row flex--center-x label lg:label--large w--full bg--gray-75 1bit:text-stroke 2bit:text-stroke">
                 No NEO activity detected.
               </div>
             {% endif %}
@@ -163,7 +163,7 @@
     </div>
   {% else %}
     <div class="flex flex--col layout--center grow">
-      <div class="p--4 label">
+      <div class="p--4 label lg:label--large">
         {{ last_error | default: 'Timeline scan offline. System checking for telemetry updates...' }}
       </div>
     </div>
