@@ -60,3 +60,12 @@ Always follow these guidelines when editing or deploying files in this repositor
   3. `export LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 && echo "y" | /usr/local/lib/ruby/gems/4.0.0/bin/trmnlp push`
   4. Deploy Firebase if backend changed: `firebase deploy --project neo-radar-trmnl-2026 --only functions:neo_radar`
   5. Commit and push to git: `git add -A && git commit -m "..." && git push`
+
+## 10. 1-Bit & 2-Bit Text Stroke on Grayscale Backgrounds
+* **Rule**: Whenever text, titles, values, or labels are placed inside parent containers with `bg--gray-75` (or other gray background fills), always include `1bit:text-stroke 2bit:text-stroke` with the text classes (e.g. `<span class="label 1bit:text-stroke 2bit:text-stroke">` or `<div class="title title--small 1bit:text-stroke 2bit:text-stroke">`) to preserve crisp contrast against dithering patterns on 1-bit and 2-bit e-paper displays.
+
+## 11. TRMNL X Responsive Scaling (`lg:`) & OG Overrun Prevention
+* **Rule**:
+  - **OG Screen Constraint**: On compact OG resolutions (especially `half_horizontal` 800×240), limit default items (e.g. display top 1 flyby) to avoid vertical overruns.
+  - **TRMNL X Screen Scaling**: Avoid "OG in X screen" empty space on TRMNL X displays by utilizing `lg:` scaling utilities (e.g. `lg:title--base`, `lg:label--large`, `lg:value--xlarge`, `lg:gap--medium`, `lg:p--2`) and conditionally exposing additional data rows using `<div class="hidden lg:flex ...">` or `<div class="hidden lg:block ...">`.
+
