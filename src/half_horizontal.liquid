@@ -4,17 +4,17 @@
        
       <!-- Left Column: Linear Timeline (5 cols landscape, 6 cols portrait) -->
       <div class="col--span-5 portrait:col--span-6 flex flex--col flex--center-x">
-        <svg width="240" height="140" viewBox="0 0 240 140" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg" class="w--full h--auto max-w--full">
+        <svg width="280" height="140" viewBox="0 0 280 140" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg" class="w--full h--auto max-w--full">
           <defs>
             <clipPath id="chart-clip-half-h">
-              <rect x="42" y="14" width="192" height="110" />
+              <rect x="64" y="14" width="196" height="108" />
             </clipPath>
           </defs>
 
           <!-- Axes -->
           <g stroke="#000" stroke-width="1.5">
-            <line x1="44" y1="16" x2="44" y2="120" />
-            <line x1="44" y1="120" x2="232" y2="120" stroke-width="2" />
+            <line x1="68" y1="16" x2="68" y2="120" />
+            <line x1="68" y1="120" x2="256" y2="120" stroke-width="2" />
           </g>
 
           <!-- Gridlines -->
@@ -22,26 +22,26 @@
             <g stroke="#000" stroke-width="1" stroke-dasharray="2 2">
               {% for line in chart_gridlines_half_horizontal %}
                 {% if line and line.y %}
-                  <line x1="44" y1="{{ line.y }}" x2="232" y2="{{ line.y }}" />
+                  <line x1="68" y1="{{ line.y }}" x2="256" y2="{{ line.y }}" />
                 {% endif %}
               {% endfor %}
             </g>
             <g fill="#000">
               {% for line in chart_gridlines_half_horizontal %}
                 {% if line and line.y and line.label %}
-                  <text x="{{ line.x_label | default: 40 }}" y="{{ line.y }}" dy="3" text-anchor="end">
+                  <text x="{{ line.x_label | default: 62 }}" y="{{ line.y }}" dy="3" text-anchor="end">
                     {{- line.label -}}
                   </text>
                 {% endif %}
               {% endfor %}
-              <text x="40" y="120" dy="3" text-anchor="end">Earth</text>
+              <text x="62" y="120" dy="3" text-anchor="end">Earth</text>
             </g>
           {% endif %}
 
           <!-- Header Labels -->
           <g fill="#000" font-weight="bold">
-            <text x="44" y="12" text-anchor="start">NOW (T-0)</text>
-            <text x="232" y="12" text-anchor="end">T+7D</text>
+            <text x="68" y="12" text-anchor="start">NOW (T-0)</text>
+            <text x="256" y="12" text-anchor="end">T+7D</text>
           </g>
 
           <!-- Time Ticks along Bottom X-axis -->

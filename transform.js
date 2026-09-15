@@ -56,7 +56,7 @@ function run(input) {
   const LAYOUTS = {
     full: {
       width: 360, height: 260,
-      x_min: 46, x_max: 350,
+      x_min: 72, x_max: 330,
       y_min: 25, y_max: 230,
       grid_levels: [2, 5, 10, 25, 50, 100, 200],
       limit: 18,
@@ -64,8 +64,8 @@ function run(input) {
       min_dx: 26, min_dy: 14, min_r_sq: 400
     },
     half_horizontal: {
-      width: 240, height: 140,
-      x_min: 44, x_max: 232,
+      width: 280, height: 140,
+      x_min: 68, x_max: 256,
       y_min: 20, y_max: 120,
       grid_levels: [5, 20, 100, 200],
       limit: 8,
@@ -74,7 +74,7 @@ function run(input) {
     },
     half_vertical: {
       width: 360, height: 160,
-      x_min: 48, x_max: 350,
+      x_min: 72, x_max: 330,
       y_min: 20, y_max: 135,
       grid_levels: [5, 20, 50, 100, 200],
       limit: 10,

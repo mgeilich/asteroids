@@ -156,26 +156,29 @@ def calculate_telemetry(raw_data: Optional[Dict[str, Any]]) -> Dict[str, Any]:
     layouts = {
         "full": {
             "width": 360, "height": 260,
-            "x_min": 46, "x_max": 350,
+            "x_min": 72, "x_max": 330,
             "y_min": 25, "y_max": 230,
             "grid_levels": [2, 5, 10, 25, 50, 100, 200],
             "limit": 18,
+            "name_limit": 12,
             "min_dx": 26, "min_dy": 14, "min_r_sq": 400
         },
         "half_horizontal": {
-            "width": 280, "height": 150,
-            "x_min": 48, "x_max": 270,
-            "y_min": 22, "y_max": 128,
+            "width": 280, "height": 140,
+            "x_min": 68, "x_max": 256,
+            "y_min": 20, "y_max": 120,
             "grid_levels": [5, 20, 100, 200],
             "limit": 8,
+            "name_limit": 8,
             "min_dx": 24, "min_dy": 12, "min_r_sq": 324
         },
         "half_vertical": {
             "width": 360, "height": 160,
-            "x_min": 48, "x_max": 350,
+            "x_min": 72, "x_max": 330,
             "y_min": 20, "y_max": 135,
             "grid_levels": [5, 20, 50, 100, 200],
             "limit": 10,
+            "name_limit": 10,
             "min_dx": 26, "min_dy": 13, "min_r_sq": 361
         },
         "quadrant": {
@@ -184,6 +187,7 @@ def calculate_telemetry(raw_data: Optional[Dict[str, Any]]) -> Dict[str, Any]:
             "y_min": 15, "y_max": 100,
             "grid_levels": [10, 50, 200],
             "limit": 5,
+            "name_limit": 6,
             "min_dx": 20, "min_dy": 10, "min_r_sq": 256
         }
     }

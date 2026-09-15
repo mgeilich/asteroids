@@ -5,14 +5,14 @@
       <svg width="360" height="160" viewBox="0 0 360 160" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg" class="w--full h--auto">
         <defs>
           <clipPath id="chart-clip-half-v">
-            <rect x="46" y="16" width="306" height="122" />
+            <rect x="68" y="14" width="266" height="123" />
           </clipPath>
         </defs>
 
         <!-- Axes -->
         <g stroke="#000" stroke-width="1.5">
-          <line x1="48" y1="16" x2="48" y2="135" />
-          <line x1="48" y1="135" x2="350" y2="135" stroke-width="2" />
+          <line x1="72" y1="16" x2="72" y2="135" />
+          <line x1="72" y1="135" x2="330" y2="135" stroke-width="2" />
         </g>
 
         <!-- Horizontal Gridlines -->
@@ -20,26 +20,26 @@
           <g stroke="#000" stroke-width="1" stroke-dasharray="2 2">
             {% for line in chart_gridlines_half_vertical %}
               {% if line and line.y %}
-                <line x1="48" y1="{{ line.y }}" x2="350" y2="{{ line.y }}" />
+                <line x1="72" y1="{{ line.y }}" x2="330" y2="{{ line.y }}" />
               {% endif %}
             {% endfor %}
           </g>
           <g fill="#000">
             {% for line in chart_gridlines_half_vertical %}
               {% if line and line.y and line.label %}
-                <text x="{{ line.x_label | default: 44 }}" y="{{ line.y }}" dy="3" text-anchor="end">
+                <text x="{{ line.x_label | default: 66 }}" y="{{ line.y }}" dy="3" text-anchor="end">
                   {{- line.label -}}
                 </text>
               {% endif %}
             {% endfor %}
-            <text x="44" y="135" dy="3" text-anchor="end">Earth</text>
+            <text x="66" y="135" dy="3" text-anchor="end">Earth</text>
           </g>
         {% endif %}
 
         <!-- Header Labels -->
         <g fill="#000" font-weight="bold">
-          <text x="48" y="12" text-anchor="start">NOW (T-0)</text>
-          <text x="350" y="12" text-anchor="end">T+7 DAYS</text>
+          <text x="72" y="12" text-anchor="start">NOW (T-0)</text>
+          <text x="330" y="12" text-anchor="end">T+7 DAYS</text>
         </g>
 
         <!-- Time Ticks along Bottom X-axis -->
