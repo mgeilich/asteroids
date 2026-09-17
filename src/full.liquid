@@ -1,6 +1,6 @@
 <div class="layout layout--col layout--stretch p--1">
   {% if scan_completed %}
-    <div class="grid grid--cols-2 portrait:grid--cols-1 gap--small lg:gap--medium w--full grow">
+    <div class="grid grid--cols-2 portrait:grid--cols-1 gap--small lg:gap--medium w--full grow"> 
       
       <!-- Left Column: Linear Coordinate Timeline Chart -->
       <div class="w--full flex flex--col flex--center-x flex--center-y grow">
@@ -116,14 +116,14 @@
           </div>
           
           <!-- Key Statistics Grid -->
-          <div class="grid grid--cols-2 portrait:grid--cols-1 gap--small lg:gap--medium w--full">
-            <div class="bg--gray-75 rounded p--1 lg:p--2 flex flex--col flex--center-x">
+          <div class="grid grid--cols-2 lg:portrait:grid--cols-2 gap--small lg:gap--medium w--full">
+            <div class="bg--gray-75 rounded p--1 lg:p--2 flex flex--col lg:portrait:flex--row lg:portrait:gap--xlarge flex--center-x">
               <span class="label lg:label--large 1bit:text-stroke 2bit:text-stroke">UPCOMING (7D)</span>
-              <span class="value value--base portrait:value--small lg:value--xlarge 1bit:text-stroke 2bit:text-stroke">{{ total_count | default: '—' }}</span>
+              <span class="value value--base portrait:value--small lg:value--xlarge lg:portrait:value--base 1bit:text-stroke 2bit:text-stroke">{{ total_count | default: '—' }}</span>
             </div>
-            <div class="bg--gray-75 rounded p--1 lg:p--2 flex flex--col flex--center-x">
+            <div class="bg--gray-75 rounded p--1 lg:p--2 flex flex--col lg:portrait:flex--row lg:portrait:gap--xlarge flex--center-x">
               <span class="label lg:label--large 1bit:text-stroke 2bit:text-stroke">CLOSEST APPROACH</span>
-              <span class="value value--base portrait:value--small lg:value--xlarge 1bit:text-stroke 2bit:text-stroke">{{ closest_dist_ld | default: '—' }}</span>
+              <span class="value value--base portrait:value--small lg:value--xlarge lg:portrait:value--base 1bit:text-stroke 2bit:text-stroke">{{ closest_dist_ld | default: '—' }}</span>
             </div>
           </div>
           

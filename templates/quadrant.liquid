@@ -14,7 +14,7 @@
     
     <!-- Hero Metric Block -->
     <div class="flex flex--col flex--center-x py--0.5 lg:py--1">
-      <div class="value value--base lg:value--xlarge" data-fit-value="true">{{ total_count | default: '0' }}</div>
+      <div class="value value--base lg:value--large" data-fit-value="true">{{ total_count | default: '0' }}</div>
       <div class="label label--small lg:label--large">UPCOMING NEOS (7 DAYS)</div>
     </div>
     
@@ -37,7 +37,7 @@
     
     <!-- Additional Info on Large Screen (TRMNL X) -->
     {% if closest_list and closest_list.size > 0 %}
-      <div class="hidden lg:flex flex--col gap--xsmall w--full">
+      <div class="hidden lg:flex flex--row lg:portrait:flex--col gap--xsmall w--full">
         <div class="label lg:label--base">NEXT FLYBY:</div>
         {% for item in closest_list limit: 1 %}
           <div class="flex flex--row flex--center-y gap--space-between p--0.5 lg:p--1 rounded bg--gray-75">

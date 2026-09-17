@@ -89,23 +89,23 @@
     </div>
     
     <!-- Middle Telemetry Status Row -->
-    <div class="flex flex--row flex--center-y gap--small px--1 py--0.5 lg:py--1 w--full">
+    <div class="flex flex--row lg:portrait:flex--col flex--center-y gap--small px--1 py--0.5 lg:py--1 w--full">
       <div class="flex flex--col">
-        <div class="title title--small lg:title--base">ASTEROIDS</div>
-        <div class="label label--small lg:label--base">UPCOMING: {{ total_count | default: '—' }} NEOs</div>
+        <div class="title title--small lg:title--base lg:portrait:title--large">ASTEROIDS</div>
+        <div class="label label--small lg:label--base lg:portrait:label--large">UPCOMING: {{ total_count | default: '—' }} NEOs</div>
       </div>
       
       <div class="flex flex--row flex--center-y gap--xsmall ml--auto">
         {% if is_alert %}
-          <span class="label label--filled px--1 py--0.5 lg:label--base">ALERT</span>
+          <span class="label label--filled px--1 py--0.5 lg:label--base lg:portrait:label--large">ALERT</span>
         {% else %}
-          <span class="label label--outline px--1 py--0.5 lg:label--base">NOMINAL</span>
+          <span class="label label--outline px--1 py--0.5 lg:label--base lg:portrait:label--large">NOMINAL</span>
         {% endif %}
       </div>
       
       <div class="flex flex--col items--end text--right ml--auto">
-        <span class="label label--small lg:label--base">CLOSEST</span>
-        <span class="value value--small lg:value--base">{{ closest_dist_ld | default: '—' }}</span>
+        <span class="label label--small lg:label--base lg:portrait:label--large">CLOSEST</span>
+        <span class="value value--small lg:value--base lg:portrait:value--large">{{ closest_dist_ld | default: '—' }}</span>
       </div>
     </div>
 
